@@ -1,0 +1,65 @@
+﻿<Window x:Class="GUI.Views.Windows.AdminMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+        xmlns:shared="clr-namespace:GUI.Views.Shared"
+        xmlns:viewModel="clr-namespace:GUI.ViewModels"
+
+        
+
+        xmlns:student="clr-namespace:GUI.Views.Pages.StudentManagement"
+
+        mc:Ignorable="d"
+        Title="Quản trị trung tâm"
+        Height="720" Width="1280"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFFFFF">
+
+    <Window.Resources>
+
+        <!-- ★ Khi CurrentViewModel = StudentManagementVM → tự load StudentPage -->
+        <DataTemplate DataType="{x:Type viewModel:StudentManagementViewModel}">
+            <student:StudentManagementView/>
+        </DataTemplate>
+
+    <!--    <DataTemplate DataType="{x:Type viewModel:TeacherManagementViewModel}">
+            <page:TeacherManagementView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:CourseManagementViewModel}">
+            <page:CourseManagementView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:DashboardViewModel}">
+            <page:DashboardView/>
+        </DataTemplate>
+-->
+    </Window.Resources>
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="SidebarColumn" Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <shared:SidebarView x:Name="FullSidebar" Grid.Column="0" Visibility="Visible"/>
+        <shared:SmallSidebarView x:Name="SmallSidebar" Grid.Column="0" Visibility="Collapsed"/>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <shared:HeaderView Grid.Row="0"
+                           ToggleSidebarClick="HeaderView_ToggleSidebarClick"/>
+
+            <ContentControl x:Name="MainContent"
+                        Grid.Row="1"
+                        Content="{Binding CurrentViewModel}" />
+        </Grid>
+    </Grid>
+</Window>

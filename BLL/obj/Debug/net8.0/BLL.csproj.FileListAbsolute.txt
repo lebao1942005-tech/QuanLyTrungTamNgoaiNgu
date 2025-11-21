@@ -1,0 +1,17 @@
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\bin\Debug\net8.0\BLL.deps.json
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\bin\Debug\net8.0\BLL.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\bin\Debug\net8.0\BLL.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\bin\Debug\net8.0\DAL.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\bin\Debug\net8.0\DTO.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\bin\Debug\net8.0\DAL.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\bin\Debug\net8.0\DTO.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.csproj.AssemblyReference.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.GeneratedMSBuildEditorConfig.editorconfig
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.AssemblyInfoInputs.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.AssemblyInfo.cs
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.csproj.CoreCompileInputs.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.csproj.Up2Date
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\refint\BLL.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\BLL.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\BLL\obj\Debug\net8.0\ref\BLL.dll

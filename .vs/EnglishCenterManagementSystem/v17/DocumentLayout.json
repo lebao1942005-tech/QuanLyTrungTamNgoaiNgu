@@ -1,0 +1,264 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\pages\\studentmanagement\\studentmanagementview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\pages\\studentmanagement\\studentmanagementview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\viewmodels\\studentmanagementviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\viewmodels\\studentmanagementviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\windows\\adminmainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\windows\\adminmainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\viewmodels\\adminmainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\viewmodels\\adminmainwindowviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\pages\\studentmanagement\\addstudentview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\pages\\studentmanagement\\addstudentview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\pages\\studentmanagement\\addstudentview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\pages\\studentmanagement\\addstudentview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\pages\\studentmanagement\\studentmanagementview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\pages\\studentmanagement\\studentmanagementview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\windows\\adminmainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\windows\\adminmainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\shared\\smallsidebarview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\shared\\smallsidebarview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\shared\\smallsidebarview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\shared\\smallsidebarview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\shared\\sidebarview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\shared\\sidebarview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\shared\\sidebarview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\shared\\sidebarview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\shared\\headerview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\shared\\headerview.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|d:\\study\\cuoiky_cnpm\\englishcentermanagementsystem\\gui\\views\\shared\\headerview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{DD3D106A-5155-49AA-9B81-9F3795DA9609}|GUI\\GUI.csproj|solutionrelative:gui\\views\\shared\\headerview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 5,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c64b9c2-e352-428e-a56d-0ace190b99a6}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AddStudentView.xaml.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml.cs",
+              "RelativeDocumentMoniker": "GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml.cs",
+              "RelativeToolTip": "GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T16:58:58.307Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AddStudentView.xaml",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml",
+              "RelativeDocumentMoniker": "GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml",
+              "RelativeToolTip": "GUI\\Views\\Pages\\StudentManagement\\AddStudentView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-20T16:53:51.546Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "StudentManagementView.xaml.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml.cs",
+              "RelativeDocumentMoniker": "GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml.cs",
+              "RelativeToolTip": "GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABEAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T15:22:56.387Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AdminMainWindow.xaml.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Windows\\AdminMainWindow.xaml.cs",
+              "RelativeDocumentMoniker": "GUI\\Views\\Windows\\AdminMainWindow.xaml.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Windows\\AdminMainWindow.xaml.cs",
+              "RelativeToolTip": "GUI\\Views\\Windows\\AdminMainWindow.xaml.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAAABkAAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T14:54:49.697Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AdminMainWindowViewModel.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\ViewModels\\AdminMainWindowViewModel.cs",
+              "RelativeDocumentMoniker": "GUI\\ViewModels\\AdminMainWindowViewModel.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\ViewModels\\AdminMainWindowViewModel.cs",
+              "RelativeToolTip": "GUI\\ViewModels\\AdminMainWindowViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T10:33:38.638Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "StudentManagementViewModel.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\ViewModels\\StudentManagementViewModel.cs",
+              "RelativeDocumentMoniker": "GUI\\ViewModels\\StudentManagementViewModel.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\ViewModels\\StudentManagementViewModel.cs",
+              "RelativeToolTip": "GUI\\ViewModels\\StudentManagementViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-20T10:24:33.477Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "StudentManagementView.xaml",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml",
+              "RelativeDocumentMoniker": "GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml",
+              "RelativeToolTip": "GUI\\Views\\Pages\\StudentManagement\\StudentManagementView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-20T10:21:53.648Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "HeaderView.xaml.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\HeaderView.xaml.cs",
+              "RelativeDocumentMoniker": "GUI\\Views\\Shared\\HeaderView.xaml.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\HeaderView.xaml.cs",
+              "RelativeToolTip": "GUI\\Views\\Shared\\HeaderView.xaml.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAkwDkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T16:34:24.175Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "HeaderView.xaml",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\HeaderView.xaml",
+              "RelativeDocumentMoniker": "GUI\\Views\\Shared\\HeaderView.xaml",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\HeaderView.xaml",
+              "RelativeToolTip": "GUI\\Views\\Shared\\HeaderView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-19T16:33:41.286Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SmallSidebarView.xaml.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SmallSidebarView.xaml.cs",
+              "RelativeDocumentMoniker": "GUI\\Views\\Shared\\SmallSidebarView.xaml.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SmallSidebarView.xaml.cs",
+              "RelativeToolTip": "GUI\\Views\\Shared\\SmallSidebarView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-19T16:23:11.31Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AdminMainWindow.xaml",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Windows\\AdminMainWindow.xaml",
+              "RelativeDocumentMoniker": "GUI\\Views\\Windows\\AdminMainWindow.xaml",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Windows\\AdminMainWindow.xaml",
+              "RelativeToolTip": "GUI\\Views\\Windows\\AdminMainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-18T17:39:16.598Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "SidebarView.xaml.cs",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SidebarView.xaml.cs",
+              "RelativeDocumentMoniker": "GUI\\Views\\Shared\\SidebarView.xaml.cs",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SidebarView.xaml.cs",
+              "RelativeToolTip": "GUI\\Views\\Shared\\SidebarView.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-18T18:14:14.741Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SmallSidebarView.xaml",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SmallSidebarView.xaml",
+              "RelativeDocumentMoniker": "GUI\\Views\\Shared\\SmallSidebarView.xaml",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SmallSidebarView.xaml",
+              "RelativeToolTip": "GUI\\Views\\Shared\\SmallSidebarView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-18T17:45:29.918Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "SidebarView.xaml",
+              "DocumentMoniker": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SidebarView.xaml",
+              "RelativeDocumentMoniker": "GUI\\Views\\Shared\\SidebarView.xaml",
+              "ToolTip": "D:\\STUDY\\CUOIKY_CNPM\\EnglishCenterManagementSystem\\GUI\\Views\\Shared\\SidebarView.xaml",
+              "RelativeToolTip": "GUI\\Views\\Shared\\SidebarView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-11-17T10:18:30.744Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

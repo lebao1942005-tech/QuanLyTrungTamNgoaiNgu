@@ -1,0 +1,11 @@
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\bin\Debug\net8.0\DTO.deps.json
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\bin\Debug\net8.0\DTO.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\bin\Debug\net8.0\DTO.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\DTO.GeneratedMSBuildEditorConfig.editorconfig
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\DTO.AssemblyInfoInputs.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\DTO.AssemblyInfo.cs
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\DTO.csproj.CoreCompileInputs.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\DTO.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\refint\DTO.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\DTO.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DTO\obj\Debug\net8.0\ref\DTO.dll

@@ -1,0 +1,15 @@
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\bin\Debug\net8.0\DAL.deps.json
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\bin\Debug\net8.0\DAL.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\bin\Debug\net8.0\DAL.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\bin\Debug\net8.0\DTO.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\bin\Debug\net8.0\DTO.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.csproj.AssemblyReference.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.GeneratedMSBuildEditorConfig.editorconfig
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.AssemblyInfoInputs.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.AssemblyInfo.cs
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.csproj.CoreCompileInputs.cache
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.csproj.Up2Date
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\refint\DAL.dll
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\DAL.pdb
+D:\STUDY\CUOIKY_CNPM\EnglishCenterManagementSystem\DAL\obj\Debug\net8.0\ref\DAL.dll
