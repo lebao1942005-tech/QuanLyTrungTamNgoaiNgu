@@ -130,19 +130,19 @@
                              Tag="/Resources/Images/student-icon.png"
                              IsChecked="True"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="Student"/>
+                             CommandParameter="StudentManagement"/>
 
-                <RadioButton Content="Giáo viên" 
+                <RadioButton Content="Nhân viên" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/teacher-icon.png"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="Teacher"/>
+                             CommandParameter="TeacherManagement"/>
 
                 <RadioButton Content="Khóa học" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/course-icon.png"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="Course"/>
+                             CommandParameter="CourseManagement"/>
             </StackPanel>
         </ScrollViewer>
     </Grid>

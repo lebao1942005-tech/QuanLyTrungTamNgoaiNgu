@@ -13,6 +13,7 @@
     <None Remove="Resources\Images\menu-icon.png" />
     <None Remove="Resources\Images\notification-icon.png" />
     <None Remove="Resources\Images\teacher-icon.png" />
+    <None Remove="Resources\Images\tuitionFee-icon.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +30,7 @@
     <Resource Include="Resources\Images\menu-icon.png" />
     <Resource Include="Resources\Images\notification-icon.png" />
     <Resource Include="Resources\Images\teacher-icon.png" />
+    <Resource Include="Resources\Images\tuitionFee-icon.png" />
   </ItemGroup>
 
 </Project>
