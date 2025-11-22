@@ -49,7 +49,8 @@ public class TeacherBLL
                 PasswordHash = "123", 
                 Role = "Teacher"
             };
-            userDal.InsertUser(user);
+            int usID = userDal.InsertUserReturnID(user);
+            t.UserID = usID;
             return dal.InsertTeacher(t);
         }
         catch (SqlException ex)

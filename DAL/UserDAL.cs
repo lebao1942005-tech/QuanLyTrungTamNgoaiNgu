@@ -97,5 +97,26 @@ namespace DAL
 
             return db.ExecuteNonQuery(sql, parameters) > 0;
         }
+        public int InsertUserReturnID(UserDTO user)
+        {
+            string sql = @"
+        INSERT INTO Users (Username, PasswordHash, Role)
+        VALUES (@Username, @PasswordHash, @Role);
+        SELECT CAST(SCOPE_IDENTITY() AS INT);";
+
+            SqlParameter[] parameters =
+            {
+        new SqlParameter("@Username", user.Username),
+        new SqlParameter("@PasswordHash", user.PasswordHash),
+        new SqlParameter("@Role", user.Role)
+    };
+
+            // ExecuteScalar sẽ trả về giá trị SCOPE_IDENTITY
+            object result = db.ExecuteScalar(sql, parameters);
+
+            // Chuyển sang int, nếu null trả về 0
+            return result != null ? Convert.ToInt32(result) : 0;
+        }
+
     }
 }
