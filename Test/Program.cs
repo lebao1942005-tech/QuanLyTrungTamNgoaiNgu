@@ -1,85 +1,74 @@
 ﻿using System;
-using DTO;
 using BLL;
+using DTO;
+using System.Data;
 
 class Program
 {
     static void Main(string[] args)
     {
-        StudentBLL bll = new StudentBLL();
+        TeacherBLL teacherBLL = new TeacherBLL();
+        string error;
 
-        Console.WriteLine("=== TEST CRUD STUDENT ===");
+        Console.WriteLine("=== TEST TEACHER BLL ===");
 
-        // ---------------------------
-        // 1. TEST THÊM SINH VIÊN
-        // ---------------------------
-        StudentDTO newStudent = new StudentDTO
+        // 1. Thêm giáo viên
+        TeacherDTO newTeacher = new TeacherDTO
         {
-            Name = "Nguyen Van A",
-            Birthday = new DateTime(2005, 5, 20),
+            Name = "Nguyen Van D",
+            Subject = "Math",
             Phone = "0123456789",
-            Email = "a@student.com"
+            Email = "teacherD@example.com",
+            UserID = 1 // Chỉ cần >0, sẽ tạo User trong BLL
         };
 
-        if (bll.AddStudent(newStudent, out string err1))
-            Console.WriteLine("✓ Thêm sinh viên thành công!");
+        if (teacherBLL.AddTeacher(newTeacher, out error))
+            Console.WriteLine("✓ Thêm giáo viên thành công!");
         else
-            Console.WriteLine("X Thêm thất bại: " + err1);
+            Console.WriteLine("X Thêm thất bại: " + error);
 
-
-        // ---------------------------
-        // 2. TEST LẤY DANH SÁCH
-        // ---------------------------
-        Console.WriteLine("\n=== DANH SÁCH SINH VIÊN ===");
-        var table = bll.GetAllStudents();
-        foreach (System.Data.DataRow row in table.Rows)
+        // 2. Lấy danh sách giáo viên
+        Console.WriteLine("\n--- Danh sách giáo viên ---");
+        DataTable dt = teacherBLL.GetAllTeachers();
+        foreach (DataRow row in dt.Rows)
         {
-            Console.WriteLine($"ID: {row["StudentID"]}, Name: {row["Name"]}, Phone: {row["Phone"]}");
+            Console.WriteLine($"{row["TeacherID"]} | {row["Name"]} | {row["Subject"]} | {row["Email"]}");
         }
 
-
-        // ---------------------------
-        // 3. TEST LẤY MỘT SINH VIÊN
-        // ---------------------------
-        Console.WriteLine("\nNhập ID để xem chi tiết:");
+        // 3. Lấy 1 giáo viên theo ID
+        Console.WriteLine("\nNhập ID giáo viên để xem chi tiết:");
         int id = int.Parse(Console.ReadLine());
-
-        var st = bll.GetStudentById(id);
-        if (st != null)
+        var teacher = teacherBLL.GetTeacherById(id);
+        if (teacher != null)
         {
-            Console.WriteLine($"ID: {st.StudentID}");
-            Console.WriteLine($"Name: {st.Name}");
-            Console.WriteLine($"Phone: {st.Phone}");
+            Console.WriteLine($"ID: {teacher.TeacherID}");
+            Console.WriteLine($"Name: {teacher.Name}");
+            Console.WriteLine($"Email: {teacher.Email}");
+            Console.WriteLine($"UserID: {teacher.UserID}");
         }
         else
         {
-            Console.WriteLine("Không tìm thấy sinh viên!");
+            Console.WriteLine("Không tìm thấy giáo viên!");
         }
 
-
-        // ---------------------------
-        // 4. TEST CẬP NHẬT
-        // ---------------------------
-        Console.WriteLine("\n=== TEST SỬA ===");
-        st.Name = "Tên mới cập nhật";
-        if (bll.UpdateStudent(st, out string err2))
+        // 4. Cập nhật giáo viên
+        Console.WriteLine("\n=== Cập nhật giáo viên ===");
+        teacher.Name += " (Updated)";
+        if (teacherBLL.UpdateTeacher(teacher, out error))
             Console.WriteLine("✓ Cập nhật thành công!");
         else
-            Console.WriteLine("X Cập nhật thất bại: " + err2);
+            Console.WriteLine("X Cập nhật thất bại: " + error);
 
-
-        // ---------------------------
-        // 5. TEST XÓA
-        // ---------------------------
-        Console.WriteLine("\nNhập ID để xóa:");
+        // 5. Xóa giáo viên
+        Console.WriteLine("\nNhập ID giáo viên để xóa (tài khoản User cũng sẽ bị xóa):");
         int deleteId = int.Parse(Console.ReadLine());
 
-        if (bll.DeleteStudent(deleteId, out string err3))
-            Console.WriteLine("✓ Xóa thành công!");
+        if (teacherBLL.DeleteTeacher(deleteId, out error))
+            Console.WriteLine("✓ Xóa giáo viên và tài khoản thành công!");
         else
-            Console.WriteLine("X Xóa thất bại: " + err3);
+            Console.WriteLine("X Xóa thất bại: " + error);
 
-        Console.WriteLine("\n--- KẾT THÚC ---");
+        Console.WriteLine("\n--- KẾT THÚC TEST ---");
         Console.ReadKey();
     }
 }
