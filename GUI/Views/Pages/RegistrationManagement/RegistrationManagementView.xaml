@@ -1,0 +1,251 @@
+﻿<UserControl x:Class="GUI.Views.Pages.RegistrationManagement.RegistrationManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:GUI.ViewModels"
+             xmlns:local="clr-namespace:GUI.Views.Pages.RegistrationManagement"
+             mc:Ignorable="d"
+             d:DesignHeight="700" d:DesignWidth="1200"
+             Background="#F3F4F6" FontFamily="Segoe UI">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
+        <SolidColorBrush x:Key="LightBlueBg" Color="#DBEAFE"/>
+
+        <!-- Style cho ListBoxItem -->
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#EFF6FF"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter TargetName="Border" Property="BorderThickness" Value="1"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#F9FAFB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="25">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header -->
+            <RowDefinition Height="*"/>
+            <!-- Main Content -->
+            <RowDefinition Height="Auto"/>
+            <!-- Footer Action -->
+        </Grid.RowDefinitions>
+
+        <!-- 1. Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock Text="Đăng Ký Lớp Học" FontSize="24" FontWeight="Bold" Foreground="#111827"/>
+                <TextBlock Text="Chọn học viên và lớp học để tiến hành ghi danh" Foreground="#6B7280" Margin="0,5,0,0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- 2. Main Content (2 Cột) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT: STUDENTS -->
+            <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <!-- Title -->
+                        <RowDefinition Height="Auto"/>
+                        <!-- Search -->
+                        <RowDefinition Height="*"/>
+                        <!-- List -->
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#F9FAFB" CornerRadius="12,12,0,0" Padding="15" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#DBEAFE" Width="24" Height="24" CornerRadius="12" Margin="0,0,10,0">
+                                <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#1D4ED8" FontSize="12"/>
+                            </Border>
+                            <TextBlock Text="Chọn Học Viên" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Padding="15" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                        <TextBox Text="{Binding StudentSearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                 TextChanged="StudentSearchBox_TextChanged"
+                                 Padding="10" BorderThickness="1" BorderBrush="#E5E7EB" Background="White" Tag="Tìm kiếm học viên...">
+                            <TextBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </Border>
+
+                    <ListBox Grid.Row="2" ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}" 
+                             Padding="15" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="#111827"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                            <TextBlock Text="📞 " FontSize="11"/>
+                                            <TextBlock Text="{Binding Phone}" FontSize="12" Foreground="#6B7280" Margin="0,0,10,0"/>
+                                            <TextBlock Text="📧 " FontSize="11"/>
+                                            <TextBlock Text="{Binding Email}" FontSize="12" Foreground="#6B7280"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                    <Border Grid.Column="1" Background="#EFF6FF" CornerRadius="4" Padding="6,2" VerticalAlignment="Top">
+                                        <TextBlock Text="{Binding StudentId}" FontSize="11" FontWeight="SemiBold" Foreground="#1D4ED8"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- RIGHT: CLASSES -->
+            <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" Background="#F9FAFB" CornerRadius="12,12,0,0" Padding="15" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal">
+                            <Border Background="#DBEAFE" Width="24" Height="24" CornerRadius="12" Margin="0,0,10,0">
+                                <TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#1D4ED8" FontSize="12"/>
+                            </Border>
+                            <TextBlock Text="Chọn Lớp Học" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Padding="15" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
+                        <TextBox Text="{Binding ClassSearchText, UpdateSourceTrigger=PropertyChanged}" 
+                                 TextChanged="ClassSearchBox_TextChanged"
+                                 Padding="10" BorderThickness="1" BorderBrush="#E5E7EB" Background="White" Tag="Tìm kiếm lớp học...">
+                            <TextBox.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="8"/>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </Border>
+
+                    <ListBox Grid.Row="2" ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}" 
+                             Padding="15" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <!-- Row 1: Name & Fee -->
+                                    <Grid Grid.Row="0">
+                                        <TextBlock Text="{Binding ClassName}" FontWeight="SemiBold" Foreground="#111827"/>
+                                        <TextBlock Text="5,000,000 đ" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#1D4ED8"/>
+                                        <!-- Mock Fee -->
+                                    </Grid>
+
+                                    <!-- Row 2: Teacher & Schedule -->
+                                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,2,0,0">
+                                        <TextBlock Text="{Binding TeacherName, StringFormat='GV: {0}'}" FontSize="12" Foreground="#6B7280" Margin="0,0,10,0"/>
+                                        <TextBlock Text="•" FontSize="12" Foreground="#9CA3AF" Margin="0,0,10,0"/>
+                                        <TextBlock Text="{Binding Schedule}" FontSize="12" Foreground="#6B7280"/>
+                                    </StackPanel>
+
+                                    <!-- Row 3: Capacity & Status -->
+                                    <Grid Grid.Row="2" Margin="0,8,0,0">
+                                        <Border HorizontalAlignment="Left" Background="#D1FAE5" CornerRadius="4" Padding="6,2">
+                                            <TextBlock Text="{Binding CapacityDisplay, StringFormat='Sĩ số: {0}'}" FontSize="11" FontWeight="SemiBold" Foreground="#059669"/>
+                                        </Border>
+                                        <TextBlock Text="{Binding StartDate, StringFormat='Khai giảng: {0:dd/MM/yyyy}'}" HorizontalAlignment="Right" FontSize="11" Foreground="#9CA3AF" VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- 3. Footer Action Bar -->
+        <Border Grid.Row="2" Background="White" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1" Margin="0,20,0,0" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Summary Info -->
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <StackPanel Margin="0,0,30,0">
+                        <TextBlock Text="HỌC VIÊN" FontSize="10" FontWeight="Bold" Foreground="#9CA3AF" Margin="0,0,0,2"/>
+                        <TextBlock Text="{Binding SelectedStudent.Name, TargetNullValue='---'}" FontWeight="Bold" Foreground="#111827"/>
+                    </StackPanel>
+
+                    <Border Width="1" Background="#E5E7EB" Margin="0,0,30,0"/>
+
+                    <StackPanel Margin="0,0,30,0">
+                        <TextBlock Text="LỚP ĐĂNG KÝ" FontSize="10" FontWeight="Bold" Foreground="#9CA3AF" Margin="0,0,0,2"/>
+                        <TextBlock Text="{Binding SelectedClass.ClassName, TargetNullValue='---'}" FontWeight="Bold" Foreground="#1D4ED8"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Register Button -->
+                <Button Grid.Column="1" Command="{Binding RegisterCommand}" 
+                        Content="Xác nhận Đăng Ký"
+                        Background="{StaticResource PrimaryBlue}" Foreground="White" 
+                        FontWeight="Bold" Padding="25,12" BorderThickness="0" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                        <!-- Trigger to disable style when command cannot execute -->
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.5"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

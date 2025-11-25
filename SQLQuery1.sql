@@ -1,4 +1,4 @@
-USE master;
+﻿USE master;
 GO
 IF EXISTS (SELECT name FROM sys.databases WHERE name = N'EducationDB')
 BEGIN
@@ -99,7 +99,7 @@ CREATE TABLE Enrollment (
     Status NVARCHAR(30) DEFAULT 'Active',
     FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
     FOREIGN KEY (ClassID) REFERENCES Class(ClassID),
-    CONSTRAINT UQ_Enrollment UNIQUE(StudentID, ClassID) -- 1 h?c vi�n ??ng k� 1 l?p duy nh?t
+    CONSTRAINT UQ_Enrollment UNIQUE(StudentID, ClassID) -- 1 h?c viên ??ng ký 1 l?p duy nh?t
 );
 
 -------------------------------------------------------
@@ -153,3 +153,103 @@ CREATE TABLE Certificate (
     FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
     FOREIGN KEY (ResultID) REFERENCES ExamResult(ResultID)
 );
+
+
+
+
+
+
+
+
+
+INSERT INTO Student (Name, Birthday, Phone, Email)
+VALUES 
+(N'Nguyễn Văn An', '2003-05-15', '0901234567', 'an.nguyen@gmail.com'),
+(N'Trần Thị Bích', '2004-08-20', '0912345678', 'bich.tran@gmail.com'),
+(N'Lê Hoàng Nam', '2002-12-10', '0987654321', 'nam.le@gmail.com'),
+(N'Phạm Minh Tuấn', '2005-01-30', '0933445566', 'tuan.pham@outlook.com'),
+(N'Hoàng Thị Lan', '2003-11-25', '0945678901', 'lan.hoang@yahoo.com');
+GO
+
+
+
+
+
+-- =============================================
+-- 1. Giáo viên dạy TIẾNG NHẬT
+-- =============================================
+-- Username là Email
+INSERT INTO Users (Username, PasswordHash, Role)
+VALUES ('akira.nguyen@email.com', '123456', 'Teacher'); 
+
+DECLARE @UserID1 INT = SCOPE_IDENTITY();
+
+INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
+VALUES (N'Nguyễn Akira', N'Tiếng Nhật', '0901112233', 'akira.nguyen@email.com', @UserID1);
+
+
+-- =============================================
+-- 2. Giáo viên dạy TIẾNG PHÁP
+-- =============================================
+INSERT INTO Users (Username, PasswordHash, Role)
+VALUES ('pierre.tran@email.com', '123456', 'Teacher');
+
+DECLARE @UserID2 INT = SCOPE_IDENTITY();
+
+INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
+VALUES (N'Trần Pierre', N'Tiếng Pháp', '0912223344', 'pierre.tran@email.com', @UserID2);
+
+
+-- =============================================
+-- 3. Giáo viên dạy TIẾNG TRUNG
+-- =============================================
+INSERT INTO Users (Username, PasswordHash, Role)
+VALUES ('mei.le@email.com', '123456', 'Teacher');
+
+DECLARE @UserID3 INT = SCOPE_IDENTITY();
+
+INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
+VALUES (N'Lê Tiểu Mei', N'Tiếng Trung', '0983334455', 'mei.le@email.com', @UserID3);
+
+
+-- =============================================
+-- 4. Giáo viên dạy IELTS
+-- =============================================
+INSERT INTO Users (Username, PasswordHash, Role)
+VALUES ('john.pham@email.com', '123456', 'Teacher');
+
+DECLARE @UserID4 INT = SCOPE_IDENTITY();
+
+INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
+VALUES (N'Phạm John', N'IELTS', '0974445566', 'john.pham@email.com', @UserID4);
+
+
+-- =============================================
+-- 5. Giáo viên dạy TOEIC
+-- =============================================
+INSERT INTO Users (Username, PasswordHash, Role)
+VALUES ('david.hoang@email.com', '123456', 'Teacher');
+
+DECLARE @UserID5 INT = SCOPE_IDENTITY();
+
+INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
+VALUES (N'Hoàng David', N'TOEIC', '0935556677', 'david.hoang@email.com', @UserID5);
+
+
+
+-- =============================================
+-- TẠO TÀI KHOẢN ADMIN
+-- =============================================
+
+-- 1. Tạo User (Username là Email)
+INSERT INTO Users (Username, PasswordHash, Role)
+VALUES ('lebao1942005@gmail.com', '123', 'Admin'); -- Mật khẩu demo là 123
+
+-- 2. Lấy UserID vừa tạo
+DECLARE @AdminUserID INT = SCOPE_IDENTITY();
+
+-- 3. Tạo thông tin chi tiết trong bảng Admin
+INSERT INTO Admin (Name, Birthday, Phone, Email, UserID)
+VALUES (N'Bao', '1990-01-01', '0999888777', 'admin@gmail.com', @AdminUserID);
+
+GO

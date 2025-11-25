@@ -1,5 +1,4 @@
-﻿using GUI.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,17 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GUI.Views.Pages.StudentManagement
+namespace GUI.Views.Pages.TeacherManagement
 {
     /// <summary>
-    /// Interaction logic for StudentManagementView.xaml
+    /// Interaction logic for DeleteTeacherView.xaml
     /// </summary>
-    public partial class StudentManagementView : UserControl
+    public partial class DeleteTeacherView : UserControl
     {
-        public StudentManagementView()
+        public DeleteTeacherView()
         {
             InitializeComponent();
-            this.DataContext = new StudentManagementViewModel();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GUI.Views.Pages.StudentManagement.AddStudentView"
+﻿<UserControl x:Class="GUI.Views.Pages.StudentManagement.EditStudentView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -8,8 +8,10 @@
              Background="Transparent" FontFamily="Segoe UI">
 
     <UserControl.Resources>
+        <!-- Màu chủ đạo (có thể đổi sang màu cam/vàng để phân biệt với Thêm nếu thích) -->
         <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
 
+        <!-- Style TextBox chung -->
         <Style TargetType="TextBox">
             <Setter Property="Padding" Value="10"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -25,6 +27,13 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <!-- Style cho TextBox bị khóa (Read-only) -->
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                    <Setter Property="Foreground" Value="#6B7280"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="DatePicker">
@@ -46,10 +55,10 @@
 
             <!-- Header -->
             <Grid Grid.Row="0" Margin="0,0,0,20">
-                <TextBlock Text="Thêm học viên mới" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                <TextBlock Text="Cập nhật thông tin học viên" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
 
-                <!-- ĐÃ SỬA: Binding CancelAddStudentCommand -->
-                <Button Command="{Binding CancelAddStudentCommand}"
+                <!-- Nút Đóng (X) -->
+                <Button Command="{Binding CancelEditStudentCommand}"
                         Content="&#xE711;" FontFamily="Segoe MDL2 Assets" 
                         FontSize="12" Width="30" Height="30" 
                         Background="Transparent" BorderThickness="0" 
@@ -59,9 +68,23 @@
             <!-- Form Fields -->
             <StackPanel Grid.Row="1" VerticalAlignment="Top">
 
-                <TextBlock Text="Họ và tên" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                <!-- ĐÃ SỬA: Binding NewStudentName -->
-                <TextBox Text="{Binding NewStudentName, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,15"/>
+                <!-- Mã học viên (Chỉ đọc) -->
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="Mã HV" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <TextBox Text="{Binding EditStudentId, Mode=OneWay}" IsReadOnly="True" FontWeight="Bold"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="Họ và tên" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <!-- Binding EditStudentName -->
+                        <TextBox Text="{Binding EditStudentName, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+                </Grid>
 
                 <Grid Margin="0,0,0,15">
                     <Grid.ColumnDefinitions>
@@ -72,26 +95,27 @@
 
                     <StackPanel Grid.Column="0">
                         <TextBlock Text="Số điện thoại" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                        <!-- ĐÃ SỬA: Binding NewStudentPhone -->
-                        <TextBox Text="{Binding NewStudentPhone, UpdateSourceTrigger=PropertyChanged}"/>
+                        <!-- Binding EditStudentPhone -->
+                        <TextBox Text="{Binding EditStudentPhone, UpdateSourceTrigger=PropertyChanged}"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Ngày sinh" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                        <!-- ĐÃ SỬA: Binding NewStudentBirthday -->
-                        <DatePicker SelectedDate="{Binding NewStudentBirthday, UpdateSourceTrigger=PropertyChanged}" 
+                        <!-- Binding EditStudentBirthday -->
+                        <DatePicker SelectedDate="{Binding EditStudentBirthday, UpdateSourceTrigger=PropertyChanged}" 
                                     Height="38" VerticalContentAlignment="Center" 
                                     BorderBrush="#E5E7EB" BorderThickness="1" Background="White"/>
                     </StackPanel>
                 </Grid>
 
                 <TextBlock Text="Email" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                <!-- ĐÃ SỬA: Binding NewStudentEmail -->
-                <TextBox Text="{Binding NewStudentEmail, UpdateSourceTrigger=PropertyChanged}"/>
+                <!-- Binding EditStudentEmail -->
+                <TextBox Text="{Binding EditStudentEmail, UpdateSourceTrigger=PropertyChanged}"/>
 
+                <!-- Note nhỏ -->
                 <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
-                    <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" Foreground="#6B7280" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <TextBlock Text="Mã học viên sẽ được hệ thống tự động tạo." Foreground="#6B7280" FontSize="12" FontStyle="Italic"/>
+                    <TextBlock Text="&#xE7BA;" FontFamily="Segoe MDL2 Assets" Foreground="#F59E0B" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <TextBlock Text="Vui lòng kiểm tra kỹ thông tin trước khi cập nhật." Foreground="#6B7280" FontSize="12" FontStyle="Italic"/>
                 </StackPanel>
             </StackPanel>
 
@@ -102,8 +126,8 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- ĐÃ SỬA: Binding CancelAddStudentCommand -->
-                <Button Content="Hủy bỏ" Command="{Binding CancelAddStudentCommand}"
+                <!-- Nút Hủy -->
+                <Button Content="Hủy bỏ" Command="{Binding CancelEditStudentCommand}"
                         Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Foreground="#374151"
                         Height="40" Margin="0,0,5,0" FontWeight="SemiBold" Cursor="Hand">
                     <Button.Template>
@@ -115,8 +139,8 @@
                     </Button.Template>
                 </Button>
 
-                <!-- ĐÃ SỬA: Binding SaveNewStudentCommand -->
-                <Button Content="Lưu thông tin" Command="{Binding SaveNewStudentCommand}" Grid.Column="1"
+                <!-- Nút Lưu thay đổi (ConfirmEditStudentCommand) -->
+                <Button Content="Lưu thay đổi" Command="{Binding ConfirmEditStudentCommand}" Grid.Column="1"
                         Background="{StaticResource PrimaryBlue}" Foreground="White" BorderThickness="0"
                         Height="40" Margin="5,0,0,0" FontWeight="SemiBold" Cursor="Hand">
                     <Button.Template>

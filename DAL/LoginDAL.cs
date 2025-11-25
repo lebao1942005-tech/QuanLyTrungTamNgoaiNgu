@@ -51,6 +51,7 @@ namespace DAL
             return affected > 0; // Đổi mật khẩu thành công
         }
         //check mail đăng nhập
+        /*
         public bool CheckEmailExists(string email)
         {
             string query ="SELECT COUNT(*) FROM Users WHERE Email = @Email";
@@ -62,5 +63,23 @@ namespace DAL
             int count = result == null ? 0 : Convert.ToInt32(result);
             return count > 0;
         }
+        */
+
+
+        public bool CheckEmailExists(string email)
+        {
+            string query = "SELECT COUNT(*) FROM Users WHERE Username = @Email";
+
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@Email", email)
+            };
+
+            object result = dt.ExecuteScalar(query, parameters);
+            int count = result == null ? 0 : Convert.ToInt32(result);
+            return count > 0;
+        }
+
+
     }
 }

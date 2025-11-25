@@ -5,7 +5,7 @@ using System.Data;
 public class Database
 {
     private readonly string connectionString =
-        "Data Source=DESKTOP-4JTJGR2\\SQLEXPRESS;Initial Catalog=EducationDB;Integrated Security=True;Trust Server Certificate=True";
+        "Data Source=LAPTOP-JH9IJG9F\\SQLEXPRESS;Initial Catalog=EducationDB;Integrated Security=True;Trust Server Certificate=True";
 
     // ✔ Hàm SELECT, trả về DataTable
     public DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)

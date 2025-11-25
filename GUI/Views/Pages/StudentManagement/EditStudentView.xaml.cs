@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GUI.Views.Pages.StaffManagement
+namespace GUI.Views.Pages.StudentManagement
 {
     /// <summary>
-    /// Interaction logic for StaffManagementView.xaml
+    /// Interaction logic for EditStudentView.xaml
     /// </summary>
-    public partial class StaffManagementView : UserControl
+    public partial class EditStudentView : UserControl
     {
-        public StaffManagementView()
+        public EditStudentView()
         {
             InitializeComponent();
         }

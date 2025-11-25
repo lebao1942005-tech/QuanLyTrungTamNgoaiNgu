@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GUI.Views.Pages.StaffManagement
+namespace GUI.Views.Pages.RegistrationManagement
 {
     /// <summary>
-    /// Interaction logic for AddStaffView.xaml
+    /// Interaction logic for RegistrationManagementView.xaml
     /// </summary>
-    public partial class AddStaffView : UserControl
+    public partial class RegistrationManagementView : UserControl
     {
-        public AddStaffView()
+        public RegistrationManagementView()
         {
             InitializeComponent();
         }

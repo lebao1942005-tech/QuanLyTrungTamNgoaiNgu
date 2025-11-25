@@ -35,7 +35,7 @@ namespace GUI.ViewModels
                     break;
 
                 case "TeacherManagement":
-                    MessageBox.Show("Trang quản lý nhân viên đang phát triển và sẽ có trong phiên bản sau.");
+                    CurrentViewModel = new TeacherManagementViewModel();
                     break;
 
                 case "CourseManagement":

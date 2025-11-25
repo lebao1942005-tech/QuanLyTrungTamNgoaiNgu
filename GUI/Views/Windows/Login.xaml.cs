@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using GUI.ViewModels;
 
 namespace GUI.Views.Windows
 {
@@ -8,16 +9,19 @@ namespace GUI.Views.Windows
         public Login()
         {
             InitializeComponent();
+            // Kết nối View với ViewModel
+            this.DataContext = new LoginViewModel();
         }
 
+        // Các logic điều khiển cửa sổ (Window Chrome) giữ nguyên ở code-behind
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close(); // hoặc để trống
+            this.Close();
         }
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Minimized; // hoặc để trống
+            this.WindowState = WindowState.Minimized;
         }
 
         private void MaximizeButton_Click(object sender, RoutedEventArgs e)
@@ -28,14 +32,28 @@ namespace GUI.Views.Windows
                 this.WindowState = WindowState.Maximized;
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
-        {
-            // TODO: xử lý đăng nhập sau
-        }
-
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove(); // cho phép kéo cửa sổ
+            this.DragMove();
+        }
+
+        // --- LOGIC GỌI VIEWMODEL ---
+
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is LoginViewModel viewModel)
+            {
+                // Truyền PasswordBox vào Command để ViewModel xử lý
+                viewModel.LoginCommand.Execute(PasswordBox);
+            }
+        }
+
+        private void ForgotPassword_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is LoginViewModel viewModel)
+            {
+                viewModel.ForgotPasswordCommand.Execute(null);
+            }
         }
     }
 }

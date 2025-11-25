@@ -132,7 +132,7 @@
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="StudentManagement"/>
 
-                <RadioButton Content="Nhân viên" 
+                <RadioButton Content="Giáo viên" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/teacher-icon.png"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"

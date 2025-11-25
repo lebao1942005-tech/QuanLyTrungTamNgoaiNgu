@@ -1,29 +1,21 @@
-﻿<UserControl x:Class="GUI.Views.Pages.StudentManagement.StudentManagementView"
+﻿<UserControl x:Class="GUI.Views.Pages.TeacherManagement.TeacherManagementView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GUI.Views.Pages.StudentManagement"
-             mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:GUI.Views.Pages.TeacherManagement"
+             mc:Ignorable="d"
              d:DesignHeight="700" d:DesignWidth="1200"
              Background="#F3F4F6" FontFamily="Segoe UI">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
-
         <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
-        <SolidColorBrush x:Key="LightBlueBg" Color="#DBEAFE"/>
-        <SolidColorBrush x:Key="GreenText" Color="#059669"/>
-        <SolidColorBrush x:Key="GreenBg" Color="#D1FAE5"/>
-        <SolidColorBrush x:Key="PinkText" Color="#DB2777"/>
-        <SolidColorBrush x:Key="PinkBg" Color="#FCE7F6"/>
-        <SolidColorBrush x:Key="YellowText" Color="#D97706"/>
-        <SolidColorBrush x:Key="YellowBg" Color="#FEF3C7"/>
-        <SolidColorBrush x:Key="RedText" Color="#DC2626"/>
         <SolidColorBrush x:Key="OrangeBg" Color="#F97316"/>
         <SolidColorBrush x:Key="GrayText" Color="#4B5563"/>
         <SolidColorBrush x:Key="GrayBg" Color="#E5E7EB"/>
 
+        <!-- Toolbar Button Style -->
         <Style x:Key="ToolbarButtonStyle" TargetType="Button">
             <Setter Property="Padding" Value="15,8"/>
             <Setter Property="Margin" Value="5,0"/>
@@ -44,6 +36,7 @@
             </Setter>
         </Style>
 
+        <!-- DataGrid Action Button -->
         <Style x:Key="GridActionButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -69,9 +62,10 @@
         </Style>
     </UserControl.Resources>
 
-
+    <!-- GRID TỔNG (ROOT) - Không có Margin để Popup phủ kín -->
     <Grid>
 
+        <!-- GRID NỘI DUNG CHÍNH - Có Margin 20 -->
         <Grid Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -79,50 +73,47 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="Danh sách học viên" FontSize="24" FontWeight="Bold" 
-                       Foreground="#111827" Margin="0,0,0,20"/>
+            <!-- Header -->
+            <TextBlock Text="Danh sách giáo viên" FontSize="24" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
 
+            <!-- Toolbar -->
             <Grid Grid.Row="1" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal">
-                    <Button Width="40" Height="40" Background="White" BorderBrush="#E5E7EB" BorderThickness="1">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="8" BorderBrush="{TemplateBinding BorderBrush}">
-                                    <TextBlock Text="&#xE71C;" FontFamily="Segoe MDL2 Assets" 
-                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-
-                    <Border Margin="10,0,0,0" Width="300" Height="40" Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8">
+                <!-- Search Box -->
+                <StackPanel Orientation="Horizontal" Grid.Column="0">
+                    <ComboBox Width="200" SelectedIndex="0" Margin="0,0,10,0" Height="40" Padding="10,0" VerticalContentAlignment="Center">
+                        <ComboBoxItem Content="Tất cả bộ môn"/>
+                        <ComboBoxItem Content="Tiếng Anh"/>
+                        <ComboBoxItem Content="Tin học"/>
+                    </ComboBox>
+                    <Border Width="300" Height="40" Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8">
                         <Grid>
-                            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" 
-                                       VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#9CA3AF"/>
-                            <TextBox VerticalAlignment="Center" Margin="35,0,10,0" BorderThickness="0" Text="Tìm kiếm"/>
+                            <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#9CA3AF"/>
+                            <TextBox VerticalAlignment="Center" Margin="35,0,10,0" BorderThickness="0" Background="Transparent" Text="Tìm kiếm"/>
                         </Grid>
                     </Border>
                 </StackPanel>
 
-                <StackPanel Orientation="Horizontal" Grid.Column="2">
-                    <Button Content="Thêm học viên" Tag="&#xE710;" Background="{StaticResource PrimaryBlue}" Foreground="White"
-                            Style="{StaticResource ToolbarButtonStyle}" Command="{Binding AddStudentCommand}"/>
-
+                <!-- Buttons -->
+                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <Button Content="Thêm giáo viên" Tag="&#xE710;"
+                            Background="{StaticResource PrimaryBlue}" Foreground="White"
+                            Style="{StaticResource ToolbarButtonStyle}"
+                            Command="{Binding OpenAddTeacherPopupCommand}"/>
                     <Button Content="Xuất file" Tag="&#xE78C;" Background="{StaticResource OrangeBg}" Foreground="White"
                             Style="{StaticResource ToolbarButtonStyle}"/>
                 </StackPanel>
             </Grid>
 
-            <!-- Thêm AlternationCount -->
+            <!-- DataGrid -->
+            <!-- Thêm AlternationCount để hỗ trợ hiển thị STT -->
             <Border Grid.Row="2" Background="White" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1" Padding="0">
-                <DataGrid ItemsSource="{Binding Students}" AutoGenerateColumns="False"
-                          CanUserAddRows="False" HeadersVisibility="Column" BorderThickness="0"
+                <DataGrid ItemsSource="{Binding Teachers}" AutoGenerateColumns="False" CanUserAddRows="False"
+                          HeadersVisibility="Column" BorderThickness="0"
                           GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6"
                           Background="White" RowHeight="70"
                           AlternationCount="10000">
@@ -139,8 +130,7 @@
                     </DataGrid.ColumnHeaderStyle>
 
                     <DataGrid.Columns>
-
-                        <!-- Cột STT Mới -->
+                        <!-- STT (Mới thêm) -->
                         <DataGridTemplateColumn Header="STT" Width="60">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -151,25 +141,24 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
+                        <!-- Thông tin -->
                         <DataGridTemplateColumn Header="THÔNG TIN" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <!-- Thêm VerticalAlignment="Center" -->
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <StackPanel Margin="5,0,0,0">
-                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
-                                            <TextBlock Text="{Binding StudentID}" FontSize="12" Foreground="#6B7280"/>
-                                            <TextBlock Text="{Binding Birthday, StringFormat='dd/MM/yyyy'}" FontSize="12" Foreground="#6B7280"/>
-                                        </StackPanel>
+                                    <!-- Đã thêm VerticalAlignment="Center" -->
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding TeacherID}" FontSize="12" Foreground="#6B7280"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
+                        <!-- Liên hệ -->
                         <DataGridTemplateColumn Header="LIÊN HỆ" Width="2*">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <!-- Thêm VerticalAlignment="Center" -->
+                                    <!-- Đã thêm VerticalAlignment="Center" -->
                                     <StackPanel VerticalAlignment="Center">
                                         <TextBlock Text="{Binding Phone, StringFormat='Điện thoại: {0}'}"/>
                                         <TextBlock Text="{Binding Email, StringFormat='Email: {0}'}" FontSize="12"/>
@@ -178,67 +167,53 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="TRẠNG THÁI" Width="180">
+                        <!-- Bộ môn -->
+                        <DataGridTemplateColumn Header="BỘ MÔN" Width="180">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock x:Name="StatusText" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                                    <DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding Status}" Value="1">
-                                            <Setter TargetName="StatusText" Property="Foreground" Value="{StaticResource GrayText}"/>
-                                            <Setter TargetName="StatusText" Property="Text" Value="Không lớp"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="2">
-                                            <Setter TargetName="StatusText" Property="Foreground" Value="{StaticResource PrimaryBlue}"/>
-                                            <Setter TargetName="StatusText" Property="Text" Value="Đang học"/>
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>
+                                    <Border Background="#DBEAFE" CornerRadius="12" Padding="12,6" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Subject}" Foreground="#1D4ED8" FontSize="12" FontWeight="SemiBold"/>
+                                    </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
+                        <!-- Chức năng -->
                         <DataGridTemplateColumn Header="CHỨC NĂNG" Width="Auto">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <!-- Thêm VerticalAlignment="Center" -->
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-
-                                        <Button Content="&#xE70F;" 
+                                        <Button Content="&#xE70F;"
                                                 Style="{StaticResource GridActionButton}"
                                                 ToolTip="Chỉnh sửa"
-                                                Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Command="{Binding DataContext.EditTeacherCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"/>
-
-                                        <Button Content="&#xE74D;" 
+                                        <Button Content="&#xE74D;"
                                                 Style="{StaticResource GridActionButton}"
                                                 ToolTip="Xóa"
-                                                Command="{Binding DataContext.RequestDeleteStudentCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                Command="{Binding DataContext.RequestDeleteTeacherCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
                     </DataGrid.Columns>
                 </DataGrid>
             </Border>
         </Grid>
 
+        <!-- PHẦN POPUP & OVERLAY - Nằm ngoài Grid nội dung để phủ toàn bộ -->
 
+        <!-- Overlay -->
         <Border Background="#80000000">
             <Border.Style>
                 <Style TargetType="Border">
                     <Setter Property="Visibility" Value="Collapsed"/>
                     <Style.Triggers>
-                        <!-- Hiện khi popup THÊM mở -->
-                        <DataTrigger Binding="{Binding IsAddStudentPopupVisible}" Value="True">
+                        <DataTrigger Binding="{Binding IsAddTeacherPopupVisible}" Value="True">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
-                        <!-- Hiện khi popup XÓA mở -->
-                        <DataTrigger Binding="{Binding IsDeleteStudentPopupVisible}" Value="True">
-                            <Setter Property="Visibility" Value="Visible"/>
-                        </DataTrigger>
-                        <!-- Hiện khi popup SỬA mở (MỚI THÊM) -->
-                        <DataTrigger Binding="{Binding IsEditStudentPopupVisible}" Value="True">
+                        <DataTrigger Binding="{Binding IsDeleteTeacherPopupVisible}" Value="True">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
                     </Style.Triggers>
@@ -246,23 +221,22 @@
             </Border.Style>
         </Border>
 
-        <local:AddStudentView
-            Visibility="{Binding IsAddStudentPopupVisible, Converter={StaticResource BoolToVis}}"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
+        <!-- Popups -->
+        <local:AddTeacherView
+            Visibility="{Binding IsAddTeacherPopupVisible, Converter={StaticResource BoolToVis}}"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            DataContext="{Binding}"/>
+
+        <local:DeleteTeacherView
+            Visibility="{Binding IsDeleteTeacherPopupVisible, Converter={StaticResource BoolToVis}}"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
             DataContext="{Binding}"/>
 
 
-        <local:DeleteStudentView
-            Visibility="{Binding IsDeleteStudentPopupVisible, Converter={StaticResource BoolToVis}}"
-            HorizontalAlignment="Center" VerticalAlignment="Center" DataContext="{Binding}"/>
-
-
-        <local:EditStudentView 
-            Visibility="{Binding IsEditStudentPopupVisible, Converter={StaticResource BoolToVis}}"
-            HorizontalAlignment="Center" VerticalAlignment="Center" DataContext="{Binding}"/>
-
+        <local:EditTeacherView
+            Visibility="{Binding IsEditTeacherPopupVisible, Converter={StaticResource BoolToVis}}"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            DataContext="{Binding}"/>
 
     </Grid>
-
 </UserControl>

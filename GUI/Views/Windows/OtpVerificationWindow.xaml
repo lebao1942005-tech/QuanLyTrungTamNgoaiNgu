@@ -1,0 +1,169 @@
+﻿<Window x:Class="GUI.Views.Windows.OtpVerificationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GUI.Views.Windows"
+        mc:Ignorable="d"
+        Title="Xác thực OTP" Height="600" Width="500"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        FontFamily="Roboto">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
+        <SolidColorBrush x:Key="GrayText" Color="#6B7280"/>
+
+        <!-- Style cho ô nhập OTP (Điều chỉnh kích thước nhỏ hơn để vừa 6 ô) -->
+        <Style x:Key="OtpBoxStyle" TargetType="TextBox">
+            <Setter Property="Width" Value="50"/>
+            <!-- Giảm từ 60 -->
+            <Setter Property="Height" Value="55"/>
+            <!-- Giảm từ 60 -->
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="MaxLength" Value="1"/>
+            <Setter Property="Margin" Value="4"/>
+            <!-- Giảm margin -->
+            <Setter Property="Background" Value="#F9FAFB"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="10">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter TargetName="border" Property="Background" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style nút điều khiển cửa sổ -->
+        <Style x:Key="WindowControlButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="4,0,0,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <TextBlock Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" FontSize="12" Foreground="{StaticResource GrayText}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="White" CornerRadius="20" BorderBrush="#E5E7EB" BorderThickness="1" Margin="10">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="10" Opacity="0.1" Color="Gray"/>
+        </Border.Effect>
+
+        <Grid Margin="30">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <Button Command="{Binding BackToLoginCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE72B;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{StaticResource GrayText}" VerticalAlignment="Center"/>
+                        <TextBlock Text="Quay lại" Margin="8,0,0,0" FontSize="14" Foreground="{StaticResource GrayText}" FontWeight="Medium"/>
+                    </StackPanel>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <ContentPresenter/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                    <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xE921;" Click="MinimizeButton_Click" ToolTip="Thu nhỏ"/>
+                    <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xE922;" Click="MaximizeButton_Click" ToolTip="Phóng to"/>
+                    <Button Style="{StaticResource WindowControlButtonStyle}" Content="&#xE8BB;" Click="CloseButton_Click" ToolTip="Đóng" Foreground="#EF4444"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Content -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <Border Background="#EFF6FF" Width="80" Height="80" CornerRadius="40" HorizontalAlignment="Center" Margin="0,0,0,25">
+                    <TextBlock Text="&#xE890;" FontFamily="Segoe MDL2 Assets" FontSize="36" Foreground="{StaticResource PrimaryBlue}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+
+                <TextBlock Text="Xác thực OTP" FontSize="26" FontWeight="Bold" Foreground="#111827" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Vui lòng nhập mã xác thực gồm 6 chữ số đã được gửi đến email của bạn." 
+                           FontSize="14" Foreground="{StaticResource GrayText}" TextWrapping="Wrap" TextAlignment="Center" 
+                           MaxWidth="320" Margin="0,0,0,30"/>
+
+                <!-- 6 Ô OTP -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,30">
+                    <TextBox Style="{StaticResource OtpBoxStyle}" x:Name="OtpBox1" Text="{Binding Otp1, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Style="{StaticResource OtpBoxStyle}" x:Name="OtpBox2" Text="{Binding Otp2, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Style="{StaticResource OtpBoxStyle}" x:Name="OtpBox3" Text="{Binding Otp3, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Style="{StaticResource OtpBoxStyle}" x:Name="OtpBox4" Text="{Binding Otp4, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Style="{StaticResource OtpBoxStyle}" x:Name="OtpBox5" Text="{Binding Otp5, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Style="{StaticResource OtpBoxStyle}" x:Name="OtpBox6" Text="{Binding Otp6, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+
+                <Button Command="{Binding VerifyOtpCommand}" Content="Xác nhận"
+                        Background="{StaticResource PrimaryBlue}" Foreground="White"
+                        FontSize="16" FontWeight="Bold" Height="50" Width="320"
+                        Cursor="Hand" Margin="0,0,0,20">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="12">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.9"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter TargetName="border" Property="Opacity" Value="0.8"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="Bạn chưa nhận được mã?" Foreground="{StaticResource GrayText}" FontSize="14"/>
+                    <Button Command="{Binding ResendOtpCommand}" Content="Gửi lại"
+                            Background="Transparent" BorderThickness="0" Foreground="{StaticResource PrimaryBlue}"
+                            FontSize="14" FontWeight="Bold" Margin="5,0,0,0" Cursor="Hand">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <ContentPresenter/>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

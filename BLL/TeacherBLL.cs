@@ -33,11 +33,15 @@ public class TeacherBLL
             return false;
         }
 
-        if (t.UserID <= 0)
+        // === NGUYÊN NHÂN GÂY LỖI LÀ ĐÂY ===
+        // Bạn hãy xóa hoặc comment đoạn này đi:
+        /* if (t.UserID <= 0)
         {
             error = "UserID không hợp lệ.";
             return false;
         }
+        */
+        // ==================================
 
         try
         {
