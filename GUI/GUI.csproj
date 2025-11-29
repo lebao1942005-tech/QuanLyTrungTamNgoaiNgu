@@ -12,12 +12,14 @@
     <None Remove="Resources\Images\course-icon.png" />
     <None Remove="Resources\Images\menu-icon.png" />
     <None Remove="Resources\Images\notification-icon.png" />
+    <None Remove="Resources\Images\register-icon.png" />
     <None Remove="Resources\Images\teacher-icon.png" />
     <None Remove="Resources\Images\tuitionFee-icon.png" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +28,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\Images\course-icon.png" />
+    <Resource Include="Resources\Images\register-icon.png" />
     <Resource Include="Resources\Images\student-icon.png" />
     <Resource Include="Resources\Images\menu-icon.png" />
     <Resource Include="Resources\Images\notification-icon.png" />

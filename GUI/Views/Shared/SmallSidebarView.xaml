@@ -65,16 +65,17 @@
             </Border>
 
             <!-- MENU ITEMS -->
-            <RadioButton 
+        <!--    <RadioButton 
                 Style="{StaticResource SmallSidebarButton}"
                 Tag="/Resources/Icons/dashboard.png"
                 IsChecked="True"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="Overview"/>
-
+-->
             <RadioButton 
                 Style="{StaticResource SmallSidebarButton}"
                 Tag="/Resources/Images/student-icon.png"
+                IsChecked="True"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="StudentManagement"/>
 
@@ -88,13 +89,13 @@
                 Style="{StaticResource SmallSidebarButton}"
                 Tag="/Resources/Images/course-icon.png"
                 Command="{Binding NavigateCommand}"
-                CommandParameter="CourseManagement"/>
+                CommandParameter="ClassManagement"/>
 
             <RadioButton
                 Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Icons/report.png"
+                Tag="/Resources/Icons/register-icon.png"
                 Command="{Binding NavigateCommand}"
-                CommandParameter="ReportPage"/>
+                CommandParameter="RegistrationManagement"/>
         </StackPanel>
 
         <!-- Nút logout bên dưới -->

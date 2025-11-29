@@ -9,6 +9,8 @@
         
         xmlns:student="clr-namespace:GUI.Views.Pages.StudentManagement"
         xmlns:teacher="clr-namespace:GUI.Views.Pages.TeacherManagement" 
+        xmlns:class="clr-namespace:GUI.Views.Pages.ClassManagement"
+        xmlns:register="clr-namespace:GUI.Views.Pages.RegistrationManagement"
 
         mc:Ignorable="d"
         Title="Quản trị trung tâm" Height="720" Width="1280"
@@ -26,6 +28,16 @@
         <DataTemplate DataType="{x:Type viewModel:TeacherManagementViewModel}">
             <teacher:TeacherManagementView/>
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:ClassManagementViewModel}">
+            <class:ClassManagementView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type viewModel:RegistrationManagementViewModel}">
+            <register:RegistrationManagementView/>
+        </DataTemplate>
+
+
     </Window.Resources>
 
     <Grid>

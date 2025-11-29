@@ -94,7 +94,7 @@
 
                     <Border Grid.Row="1" Padding="15" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                         <TextBox Text="{Binding StudentSearchText, UpdateSourceTrigger=PropertyChanged}" 
-                                 TextChanged="StudentSearchBox_TextChanged"
+                                 
                                  Padding="10" BorderThickness="1" BorderBrush="#E5E7EB" Background="White" Tag="Tìm kiếm học viên...">
                             <TextBox.Resources>
                                 <Style TargetType="Border">
@@ -152,7 +152,7 @@
 
                     <Border Grid.Row="1" Padding="15" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1">
                         <TextBox Text="{Binding ClassSearchText, UpdateSourceTrigger=PropertyChanged}" 
-                                 TextChanged="ClassSearchBox_TextChanged"
+                                 
                                  Padding="10" BorderThickness="1" BorderBrush="#E5E7EB" Background="White" Tag="Tìm kiếm lớp học...">
                             <TextBox.Resources>
                                 <Style TargetType="Border">

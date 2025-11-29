@@ -138,11 +138,19 @@
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="TeacherManagement"/>
 
-                <RadioButton Content="Khóa học" 
+                <RadioButton Content="Lớp học" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/course-icon.png"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="CourseManagement"/>
+                             CommandParameter="ClassManagement"/>
+
+
+                <RadioButton Content="Đăng ký" 
+                             Style="{StaticResource SidebarRadioButton}" 
+                             Tag="/Resources/Images/register-icon.png"
+                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                             CommandParameter="RegistrationManagement"/>
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

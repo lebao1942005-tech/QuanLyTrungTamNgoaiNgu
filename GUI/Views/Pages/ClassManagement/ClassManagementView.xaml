@@ -3,70 +3,77 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:GUI.Views.Pages.ClassManagement"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1200"
+             
+             xmlns:viewModel="clr-namespace:GUI.ViewModels"
+             xmlns:local="clr-namespace:GUI.Views.Pages.ClassManagement"
+             
+             d:DesignHeight="750" d:DesignWidth="1200"
              Background="#F3F4F6" FontFamily="Segoe UI">
 
     <UserControl.Resources>
-        <!-- ================= COLORS ================= -->
+
+        <DataTemplate DataType="{x:Type viewModel:ClassInfoViewModel}">
+            <local:ClassInfoView/>
+        </DataTemplate>
+
+
+        <DataTemplate DataType="{x:Type viewModel:ClassStudentListViewModel}">
+            <local:ClassStudentListView/>
+        </DataTemplate>
+
+
         <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
-        <SolidColorBrush x:Key="OrangeBg" Color="#F97316"/>
+        <SolidColorBrush x:Key="GreenText" Color="#15803D"/>
+        <SolidColorBrush x:Key="GreenBg" Color="#DCFCE7"/>
 
-        <!-- Status Colors -->
-        <SolidColorBrush x:Key="GreenText" Color="#059669"/>
-        <SolidColorBrush x:Key="GreenBg" Color="#D1FAE5"/>
-        <SolidColorBrush x:Key="YellowText" Color="#D97706"/>
-        <SolidColorBrush x:Key="YellowBg" Color="#FEF3C7"/>
-        <SolidColorBrush x:Key="RedText" Color="#C2410C"/>
-        <!-- Màu cam đậm cho Kết thúc -->
-        <SolidColorBrush x:Key="RedBg" Color="#FFEDD5"/>
-
-        <!-- ================= STYLES ================= -->
-
-        <!-- Style cho nút Toolbar -->
-        <Style x:Key="ToolbarButtonStyle" TargetType="Button">
-            <Setter Property="Padding" Value="15,8"/>
-            <Setter Property="Margin" Value="5,0"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="BorderThickness" Value="0"/>
+        <!-- Style Sidebar Item -->
+        <Style TargetType="ListBoxItem">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                <TextBlock Text="{TemplateBinding Tag}" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <ContentPresenter VerticalAlignment="Center"/>
-                            </StackPanel>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="Border" Padding="16,12" Background="Transparent" 
+                                BorderThickness="4,0,0,1" BorderBrush="Transparent">
+                            <ContentPresenter />
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#EFF6FF"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#F9FAFB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Opacity" Value="0.9"/>
-                </Trigger>
-            </Style.Triggers>
         </Style>
 
-        <!-- Style cho nút hành động trong bảng -->
-        <Style x:Key="GridActionButton" TargetType="Button">
+        <!-- Style Tab Header (RadioButton) -->
+        <Style x:Key="HeaderTabRadioButtonStyle" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Width" Value="30"/>
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Margin" Value="0,0,24,0"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" CornerRadius="15">
-                            <TextBlock Text="{TemplateBinding Content}" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Foreground="#6B7280"/>
-                        </Border>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                            <!-- Thanh gạch chân -->
+                            <Border x:Name="BottomBar" Height="3" Background="{StaticResource PrimaryBlue}" VerticalAlignment="Bottom" Visibility="Collapsed" CornerRadius="1.5"/>
+                        </Grid>
                         <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter TargetName="BottomBar" Property="Visibility" Value="Visible"/>
+                            </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#F3F4F6"/>
+                                <Setter Property="Foreground" Value="#374151"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -75,151 +82,166 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid Margin="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <!-- Header -->
-            <RowDefinition Height="Auto"/>
-            <!-- Toolbar -->
-            <RowDefinition Height="*"/>
-            <!-- Table -->
-        </Grid.RowDefinitions>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <!-- Sidebar -->
+            <ColumnDefinition Width="*"/>
+            <!-- Content -->
+        </Grid.ColumnDefinitions>
 
-        <!-- 1. Header -->
-        <TextBlock Text="Danh sách lớp học" FontSize="24" FontWeight="Bold" Foreground="#111827" Margin="0,0,0,20"/>
+        <!-- LEFT SIDEBAR -->
+        <Border Grid.Column="0" Background="White" BorderBrush="#E5E7EB" BorderThickness="0,0,1,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-        <!-- 2. Toolbar -->
-        <Grid Grid.Row="1" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                <!-- Header Sidebar -->
+                <StackPanel Grid.Row="0" Margin="16">
+                    <TextBlock Text="Danh sách lớp" FontSize="18" FontWeight="Bold" Foreground="#1F2937" Margin="0,0,0,12"/>
 
-            <!-- Search Box -->
-            <Border Grid.Column="0" Width="300" Height="40" Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="8" HorizontalAlignment="Left">
-                <Grid>
-                    <TextBlock Text="&#xE721;" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center" Margin="10,0,0,0" Foreground="#9CA3AF"/>
-                    <TextBox Text="Tìm lớp học..." VerticalAlignment="Center" Margin="35,0,10,0" BorderThickness="0" Background="Transparent" Foreground="#6B7280"/>
-                </Grid>
+                    <!-- Action Buttons (Tạo, Sửa, Xóa) -->
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Nút Tạo Lớp -->
+                        <Button Content="Tạo lớp" Background="{StaticResource PrimaryBlue}" Foreground="White" Height="36" Margin="0,0,8,0" Style="{StaticResource {x:Type Button}}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <TextBlock Text="&#xE710;" FontFamily="Segoe MDL2 Assets" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Tạo lớp" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <!-- Nút Sửa Lớp (Mới thêm) -->
+                        <Button Grid.Column="1" Width="40" Height="36" Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Cursor="Hand" ToolTip="Sửa lớp đang chọn" Margin="0,0,8,0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                                        <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" Foreground="#6B7280" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <!-- Nút Xóa Lớp -->
+                        <Button Grid.Column="2" Width="40" Height="36" Background="#FEF2F2" BorderBrush="#FEE2E2" BorderThickness="1" Cursor="Hand" ToolTip="Xóa lớp đang chọn">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                                        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" Foreground="#DC2626" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </StackPanel>
+
+                <!-- ListBox -->
+                <ListBox Grid.Row="2" ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}" 
+                         Background="White" BorderThickness="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding ClassName}" FontWeight="Bold" Foreground="#111827"/>
+                                <TextBlock Text="{Binding ClassId}" FontSize="12" Foreground="Gray"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!-- RIGHT CONTENT -->
+        <Grid Grid.Column="1" Background="#F9FAFB">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Header + Tabs -->
+                <RowDefinition Height="*"/>
+                <!-- Dynamic Content -->
+            </Grid.RowDefinitions>
+
+            <!-- 1. Header & Tabs Container -->
+            <Border Grid.Row="0" Background="White" BorderBrush="#E5E7EB" BorderThickness="0,0,0,1" Padding="32,24,32,0">
+                <StackPanel>
+                    <!-- Class Info Tóm tắt -->
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <TextBlock Text="{Binding SelectedClass.ClassName}" FontSize="24" FontWeight="Bold" Foreground="#111827"/>
+                        <Border Background="{StaticResource GreenBg}" CornerRadius="12" Padding="10,2" Margin="16,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="Đang học" FontSize="12" FontWeight="Bold" Foreground="{StaticResource GreenText}"/>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
+                        <TextBlock Text="GV: " Foreground="#6B7280" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding SelectedClass.TeacherName}" Foreground="#374151" Margin="0,0,16,0"/>
+                        <TextBlock Text="Phòng: " Foreground="#6B7280" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding SelectedClass.RoomName}" Foreground="#374151" Margin="0,0,16,0"/>
+                    </StackPanel>
+
+                    <!-- Custom Tabs (RadioButtons) -->
+                    <StackPanel Orientation="Horizontal">
+
+                        <RadioButton Content="Thông tin" IsChecked="True" Style="{StaticResource HeaderTabRadioButtonStyle}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <!-- SỬA: Truyền chuỗi "Info" trực tiếp -->
+                                    <i:InvokeCommandAction Command="{Binding SwitchTabCommand}" CommandParameter="Info"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
+
+                        <RadioButton Content="Danh sách học viên" Style="{StaticResource HeaderTabRadioButtonStyle}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <!-- SỬA: Truyền chuỗi "Students" trực tiếp -->
+                                    <i:InvokeCommandAction Command="{Binding SwitchTabCommand}" CommandParameter="Students"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
+
+                        <RadioButton Content="Chấm điểm" Style="{StaticResource HeaderTabRadioButtonStyle}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <!-- SỬA: Truyền chuỗi "Grading" trực tiếp -->
+                                    <i:InvokeCommandAction Command="{Binding SwitchTabCommand}" CommandParameter="Grading"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
+
+                        <RadioButton Content="Điểm danh" Style="{StaticResource HeaderTabRadioButtonStyle}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="Checked">
+                                    <!-- SỬA: Truyền chuỗi "Attendance" trực tiếp -->
+                                    <i:InvokeCommandAction Command="{Binding SwitchTabCommand}" CommandParameter="Attendance"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </RadioButton>
+
+                    </StackPanel>
+
+
+                </StackPanel>
             </Border>
 
-            <!-- Action Buttons -->
-            <StackPanel Orientation="Horizontal" Grid.Column="2">
-                <Button x:Name="BtnAddClass" Content="Thêm lớp" Tag="&#xE710;" Background="{StaticResource PrimaryBlue}" Foreground="White" Style="{StaticResource ToolbarButtonStyle}"/>
-                
-            </StackPanel>
+            <!-- 2. Dynamic Content Area -->
+            <ContentControl x:Name="TabContent" 
+                Grid.Row="1" 
+                Margin="10,10,10,10"
+                Content="{Binding CurrentView}" />
+
         </Grid>
-
-        <!-- 3. Data Grid -->
-        <Border Grid.Row="2" Background="White" CornerRadius="12" Padding="0" BorderBrush="#E5E7EB" BorderThickness="1" ClipToBounds="True">
-            <DataGrid ItemsSource="{Binding Classes}" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column"
-                      GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6" BorderThickness="0" Background="White" RowHeight="70">
-
-                <DataGrid.ColumnHeaderStyle>
-                    <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="{StaticResource PrimaryBlue}"/>
-                        <Setter Property="Foreground" Value="White"/>
-                        <Setter Property="Padding" Value="15,12"/>
-                        <Setter Property="FontSize" Value="13"/>
-                        <Setter Property="FontWeight" Value="SemiBold"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                    </Style>
-                </DataGrid.ColumnHeaderStyle>
-
-                <DataGrid.CellStyle>
-                    <Style TargetType="DataGridCell">
-                        <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Padding" Value="10,0"/>
-                        <Setter Property="VerticalContentAlignment" Value="Center"/>
-                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-                    </Style>
-                </DataGrid.CellStyle>
-
-                <DataGrid.Columns>
-                    <!-- Cột 1: Lớp học (Avatar + Tên + Mã) -->
-                    <DataGridTemplateColumn Header="LỚP HỌC" Width="2.5*">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <!-- Avatar Lớp (Chữ cái đầu) -->
-                                    <Border Width="40" Height="40" CornerRadius="8" Background="#E0E7FF" Margin="0,0,12,0">
-                                        <TextBlock Text="{Binding ClassInitial}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" Foreground="{StaticResource PrimaryBlue}"/>
-                                    </Border>
-                                    <StackPanel VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding ClassName}" FontWeight="SemiBold" FontSize="14" Foreground="#111827"/>
-                                        <TextBlock Text="{Binding ClassId}" FontSize="12" Foreground="#6B7280" Margin="0,2,0,0"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <!-- Cột 2: Giảng viên -->
-                    <DataGridTextColumn Header="GIẢNG VIÊN" Binding="{Binding TeacherName}" Width="1.5*" FontWeight="Medium" Foreground="#374151"/>
-
-                    <!-- Cột 3: Lịch học -->
-                    <DataGridTextColumn Header="LỊCH HỌC" Binding="{Binding Schedule}" Width="1.5*" Foreground="#6B7280"/>
-
-                    <!-- Cột 4: Phòng -->
-                    <DataGridTextColumn Header="PHÒNG" Binding="{Binding RoomName}" Width="100" Foreground="#374151"/>
-
-                    <!-- Cột 5: Sĩ số -->
-                    <DataGridTemplateColumn Header="SĨ SỐ" Width="100">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Border Background="#F3F4F6" CornerRadius="6" Padding="8,2" HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding CapacityDisplay}" FontSize="12" FontWeight="SemiBold" Foreground="#374151"/>
-                                </Border>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <!-- Cột 6: Trạng thái (Badge màu) -->
-                    <DataGridTemplateColumn Header="TRẠNG THÁI" Width="150">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <Border CornerRadius="12" Padding="10,4" HorizontalAlignment="Left" x:Name="StatusBorder">
-                                    <TextBlock x:Name="StatusText" Text="{Binding Status}" FontSize="12" FontWeight="SemiBold"/>
-                                </Border>
-
-                                <!-- Triggers đổi màu theo trạng thái -->
-                                <DataTemplate.Triggers>
-                                    <!-- Đang học -> Xanh lá -->
-                                    <DataTrigger Binding="{Binding Status}" Value="Đang học">
-                                        <Setter TargetName="StatusBorder" Property="Background" Value="{StaticResource GreenBg}"/>
-                                        <Setter TargetName="StatusText" Property="Foreground" Value="{StaticResource GreenText}"/>
-                                    </DataTrigger>
-                                    <!-- Sắp mở -> Vàng -->
-                                    <DataTrigger Binding="{Binding Status}" Value="Sắp mở">
-                                        <Setter TargetName="StatusBorder" Property="Background" Value="{StaticResource YellowBg}"/>
-                                        <Setter TargetName="StatusText" Property="Foreground" Value="{StaticResource YellowText}"/>
-                                    </DataTrigger>
-                                    <!-- Kết thúc -> Cam/Đỏ -->
-                                    <DataTrigger Binding="{Binding Status}" Value="Kết thúc">
-                                        <Setter TargetName="StatusBorder" Property="Background" Value="{StaticResource RedBg}"/>
-                                        <Setter TargetName="StatusText" Property="Foreground" Value="{StaticResource RedText}"/>
-                                    </DataTrigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <!-- Cột 7: Chức năng -->
-                    <DataGridTemplateColumn Header="CHỨC NĂNG" Width="Auto">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <Button Content="&#xE7B3;" ToolTip="Xem chi tiết" Style="{StaticResource GridActionButton}" Foreground="#1D4ED8"/>
-                                    <Button Content="&#xE70F;" ToolTip="Chỉnh sửa" Style="{StaticResource GridActionButton}" Foreground="#D97706"/>
-                                    <Button Content="&#xE74D;" ToolTip="Xóa" Style="{StaticResource GridActionButton}" Foreground="#DC2626"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                </DataGrid.Columns>
-            </DataGrid>
-        </Border>
     </Grid>
 </UserControl>

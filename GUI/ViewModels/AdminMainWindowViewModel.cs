@@ -38,12 +38,12 @@ namespace GUI.ViewModels
                     CurrentViewModel = new TeacherManagementViewModel();
                     break;
 
-                case "CourseManagement":
-                    MessageBox.Show("Trang quản lý lớp đang phát triển và sẽ có trong phiên bản sau.");
+                case "ClassManagement":
+                    CurrentViewModel = new ClassManagementViewModel();
                     break;
 
-                case "ReportPage":
-                    MessageBox.Show("Trang báo c đang phát triển và sẽ có trong phiên bản sau.");
+                case "RegistrationManagement":
+                    CurrentViewModel = new RegistrationManagementViewModel();
                     break;
 
                 
