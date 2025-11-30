@@ -26,6 +26,10 @@ namespace BLL
         {
             return dal.GetAllClassesDetailed();
         }
+        public DataTable GetStudentsByClassID(int classID)
+        {
+            return dal.GetStudentsByClassID(classID);
+        }
 
         public bool InsertClass(ClassDTO c)
         {
