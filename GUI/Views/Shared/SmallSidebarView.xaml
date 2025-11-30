@@ -87,15 +87,23 @@
 
             <RadioButton 
                 Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Images/course-icon.png"
+                Tag="/Resources/Images/classroom-icon.png"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="ClassManagement"/>
 
             <RadioButton
                 Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Icons/register-icon.png"
+                Tag="/Resources/Images/register-icon.png"
                 Command="{Binding NavigateCommand}"
                 CommandParameter="RegistrationManagement"/>
+
+            <RadioButton
+                Style="{StaticResource SmallSidebarButton}"
+                Tag="/Resources/Images/course-icon.png"
+                Command="{Binding NavigateCommand}"
+                CommandParameter="CourseManagement"/>
+
+
         </StackPanel>
 
         <!-- Nút logout bên dưới -->

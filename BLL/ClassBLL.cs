@@ -15,9 +15,16 @@ namespace BLL
         private readonly ClassDAL dal = new ClassDAL();
         private readonly CourseDAL courseDal = new CourseDAL();
 
-        public DataTable GetAllClasses()
+     /*   public DataTable GetAllClasses()
         {
             return dal.GetAllClasses();
+           
+        }
+     */
+
+        public List<ClassDTO> GetAllClasses()
+        {
+            return dal.GetAllClassesDetailed();
         }
 
         public bool InsertClass(ClassDTO c)
@@ -44,10 +51,17 @@ namespace BLL
         {
             return dal.GetFreeTeachersBySchedule(schedule);
         }
-        public DataTable GetAllCourses()
+        /*    public DataTable GetAllCourses()
+            {
+                return courseDal.GetAllCourses();
+            }
+        */
+
+        public List<CourseDTO> GetAllCourses()
         {
             return courseDal.GetAllCourses();
         }
+
     }
     
 }

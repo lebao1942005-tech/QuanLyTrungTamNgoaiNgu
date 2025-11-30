@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Images\course-icon.png" />
     <None Remove="Resources\Images\menu-icon.png" />
     <None Remove="Resources\Images\notification-icon.png" />
     <None Remove="Resources\Images\register-icon.png" />
@@ -27,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Images\classroom-icon.png" />
     <Resource Include="Resources\Images\course-icon.png" />
     <Resource Include="Resources\Images\register-icon.png" />
     <Resource Include="Resources\Images\student-icon.png" />

@@ -4,14 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="800"
+             d:DesignHeight="600" d:DesignWidth="800"
              Background="Transparent">
 
     <Border Background="White" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1" 
             HorizontalAlignment="Stretch" 
             VerticalAlignment="Stretch">
         <StackPanel Margin="24">
-            <!-- Header -->
             <Grid Margin="0,0,0,24">
                 <TextBlock Text="Thông tin chi tiết" FontSize="16" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center"/>
                 <Button HorizontalAlignment="Right" Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Padding="12,6" Cursor="Hand">
@@ -29,9 +28,11 @@
                 </Button>
             </Grid>
 
-            <!-- Content Grid -->
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -43,19 +44,39 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Row="0" Grid.Column="0" Text="Mã lớp" Foreground="#6B7280" Margin="0,0,0,16"/>
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedClass.ClassId}" FontWeight="Bold" FontSize="15" Foreground="#111827"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedClass.ClassID}" FontWeight="Bold" FontSize="15" Foreground="#111827"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Khóa học" Foreground="#6B7280" Margin="0,0,0,16"/>
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="Tiếng Anh Căn Bản" FontWeight="SemiBold" Foreground="#1D4ED8"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Tên lớp" Foreground="#6B7280" Margin="0,0,0,16"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding SelectedClass.ClassName}" FontWeight="Bold" Foreground="#111827"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Sĩ số" Foreground="#6B7280" Margin="0,0,0,16"/>
-                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal">
-                    <TextBlock Text="15 / 20" FontWeight="Bold" Foreground="#111827" Margin="0,0,12,0"/>
-                    <ProgressBar Value="75" Maximum="100" Width="100" Height="6" BorderThickness="0" Background="#E5E7EB" Foreground="#22C55E"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Khóa học" Foreground="#6B7280" Margin="0,0,0,16"/>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding SelectedClass.CourseName}" FontWeight="SemiBold" Foreground="#1D4ED8"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Giáo viên" Foreground="#6B7280" Margin="0,0,0,16"/>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding SelectedClass.TeacherName}" FontWeight="SemiBold" Foreground="#111827"/>
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Lịch học" Foreground="#6B7280" Margin="0,0,0,16"/>
+                <StackPanel Grid.Row="4" Grid.Column="1" Margin="0,0,0,16">
+                    <TextBlock Text="{Binding SelectedClass.Schedule}" FontWeight="Medium" Foreground="#374151"/>
+                    <TextBlock Text="{Binding SelectedClass.DurationDisplay}" FontSize="12" Foreground="#6B7280" Margin="0,2,0,0"/>
                 </StackPanel>
 
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Ghi chú" Foreground="#6B7280"/>
-                <TextBlock Grid.Row="3" Grid.Column="1" Text="Lớp học yêu cầu bài tập về nhà." FontStyle="Italic" Foreground="#4B5563"/>
+                <TextBlock Grid.Row="5" Grid.Column="0" Text="Học phí" Foreground="#6B7280" Margin="0,0,0,16"/>
+                <TextBlock Grid.Row="5" Grid.Column="1" Text="{Binding SelectedClass.FeeDisplay}" FontWeight="Bold" Foreground="#DC2626"/>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Text="Sĩ số" Foreground="#6B7280"/>
+                <StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock FontWeight="Bold" Foreground="#111827" Margin="0,0,12,0" VerticalAlignment="Center">
+                        <Run Text="{Binding SelectedClass.CurrentStudents, Mode=OneWay}"/>
+                        <Run Text=" / "/>
+                        <Run Text="{Binding SelectedClass.MaxStudents, Mode=OneWay}"/>
+                    </TextBlock>
+
+                    <ProgressBar Value="{Binding SelectedClass.CurrentStudents, Mode=OneWay}" 
+                                 Maximum="{Binding SelectedClass.MaxStudents, Mode=OneWay}" 
+                                 Width="120" Height="8" BorderThickness="0" Background="#E5E7EB" Foreground="#22C55E"/>
+                </StackPanel>
+
             </Grid>
         </StackPanel>
     </Border>

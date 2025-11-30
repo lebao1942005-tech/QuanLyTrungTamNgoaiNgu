@@ -13,7 +13,16 @@ namespace BLL
     {
         private readonly CourseDAL dal = new CourseDAL();
 
-        public DataTable GetAllCourses()
+     /*   public DataTable GetAllCourses()
+        {
+            return dal.GetAllCourses();
+        }
+     */
+
+
+
+
+        public List<CourseDTO> GetAllCourses()
         {
             return dal.GetAllCourses();
         }

@@ -140,7 +140,7 @@
 
                 <RadioButton Content="Lớp học" 
                              Style="{StaticResource SidebarRadioButton}" 
-                             Tag="/Resources/Images/course-icon.png"
+                             Tag="/Resources/Images/classroom-icon.png"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="ClassManagement"/>
 
@@ -150,6 +150,13 @@
                              Tag="/Resources/Images/register-icon.png"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="RegistrationManagement"/>
+
+
+                <RadioButton Content="Khóa học" 
+                             Style="{StaticResource SidebarRadioButton}" 
+                             Tag="/Resources/Images/course-icon.png"
+                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                             CommandParameter="CourseManagement"/>
 
             </StackPanel>
         </ScrollViewer>

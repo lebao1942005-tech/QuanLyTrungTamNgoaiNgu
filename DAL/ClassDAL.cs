@@ -95,18 +95,18 @@ namespace DAL
             SqlParameter[] parameters = {
                 new SqlParameter("@TeacherID", c.TeacherID),
                 new SqlParameter("@Schedule", (object)c.Schedule ?? DBNull.Value),
-                new SqlParameter("@ClassID", c.ClassID) // loại trừ chính lớp đang update
+                new SqlParameter("@ClassID", c.ClassID)
             };
 
             int count = (int)db.ExecuteScalar(query, parameters);
             return count > 0;
         }
 
-        // Lấy danh sách giáo viên đang bận trong lịch
         public DataTable GetTeachersBySchedule(string schedule)
         {
+            // SỬA: Đổi t.TeacherName thành t.Name
             string query = @"
-                SELECT DISTINCT t.TeacherID, t.TeacherName
+                SELECT DISTINCT t.TeacherID, t.Name as TeacherName
                 FROM Teacher t
                 INNER JOIN Class c ON t.TeacherID = c.TeacherID
                 WHERE c.Schedule = @Schedule";
@@ -115,11 +115,11 @@ namespace DAL
             return db.ExecuteQuery(query, parameters);
         }
 
-        // Lấy danh sách giáo viên trống lịch
         public DataTable GetFreeTeachersBySchedule(string schedule)
         {
+            // SỬA: Đổi TeacherName thành Name
             string query = @"
-                SELECT TeacherID, TeacherName
+                SELECT TeacherID, Name as TeacherName
                 FROM Teacher
                 WHERE TeacherID NOT IN (
                     SELECT TeacherID FROM Class WHERE Schedule = @Schedule
@@ -127,6 +127,47 @@ namespace DAL
 
             SqlParameter[] parameters = { new SqlParameter("@Schedule", schedule) };
             return db.ExecuteQuery(query, parameters);
+        }
+
+        public List<ClassDTO> GetAllClassesDetailed()
+        {
+            // JOIN 3 bảng: Class, Teacher, Course
+            // SỬA LỖI TẠI ĐÂY: Thay "t.TeacherName" thành "t.Name AS TeacherName"
+            string query = @"
+                SELECT 
+                    c.ClassID, c.ClassName, c.Schedule, c.StartDate, c.EndDate, c.MaxStudents, 
+                    c.TeacherID, c.CourseID,
+                    t.Name AS TeacherName,  
+                    co.CourseName, co.BaseFee
+                FROM Class c
+                LEFT JOIN Teacher t ON c.TeacherID = t.TeacherID
+                LEFT JOIN Course co ON c.CourseID = co.CourseID";
+
+            DataTable dt = db.ExecuteQuery(query);
+            List<ClassDTO> list = new List<ClassDTO>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                list.Add(new ClassDTO
+                {
+                    ClassID = Convert.ToInt32(row["ClassID"]),
+                    ClassName = row["ClassName"].ToString(),
+                    Schedule = row["Schedule"].ToString(),
+                    StartDate = row["StartDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(row["StartDate"]),
+                    EndDate = row["EndDate"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(row["EndDate"]),
+                    MaxStudents = Convert.ToInt32(row["MaxStudents"]),
+
+                    // Các ID để dùng khi cần update
+                    TeacherID = Convert.ToInt32(row["TeacherID"]),
+                    CourseID = Convert.ToInt32(row["CourseID"]),
+
+                    // Dữ liệu JOIN (Bây giờ row["TeacherName"] đã có dữ liệu nhờ AS TeacherName)
+                    TeacherName = row["TeacherName"].ToString(),
+                    CourseName = row["CourseName"].ToString(),
+                    TuitionFee = row["BaseFee"] == DBNull.Value ? 0 : Convert.ToDecimal(row["BaseFee"])
+                });
+            }
+            return list;
         }
     }
 }

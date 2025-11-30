@@ -1,0 +1,144 @@
+﻿<UserControl x:Class="GUI.Views.Pages.ClassManagement.AddClassView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             Width="500" Height="Auto"
+             Background="Transparent" FontFamily="Segoe UI">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
+
+        <!-- Style chung cho TextBox và DatePicker -->
+        <Style TargetType="Control" x:Key="InputControl">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="White"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Border Background="White" CornerRadius="12" BorderBrush="#E5E7EB" BorderThickness="1" Margin="10">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="5" Opacity="0.2" Color="Gray"/>
+        </Border.Effect>
+
+        <Grid Margin="25">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Header -->
+                <RowDefinition Height="*"/>
+                <!-- Form -->
+                <RowDefinition Height="Auto"/>
+                <!-- Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,20">
+                <TextBlock Text="Mở lớp học mới" FontSize="20" FontWeight="Bold" Foreground="#111827" VerticalAlignment="Center"/>
+                <Button Command="{Binding CancelAddCommand}" Content="&#xE711;" FontFamily="Segoe MDL2 Assets" 
+                        FontSize="12" Width="30" Height="30" Background="Transparent" BorderThickness="0" 
+                        HorizontalAlignment="Right" Cursor="Hand"/>
+            </Grid>
+
+            <!-- Form -->
+            <StackPanel Grid.Row="1" VerticalAlignment="Top">
+
+                <!-- Tên lớp -->
+                <TextBlock Text="Tên lớp học" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                <TextBox Text="{Binding NewClassName, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputControl}" Margin="0,0,0,15"/>
+
+                <!-- Khóa học & Giáo viên (ComboBox) -->
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Thuộc khóa học" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <ComboBox ItemsSource="{Binding Courses}" 
+                                  SelectedItem="{Binding NewSelectedCourse}"
+                                  DisplayMemberPath="CourseName"
+                                  Padding="10,8" BorderBrush="#E5E7EB" Background="White"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Giáo viên phụ trách" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <ComboBox ItemsSource="{Binding Teachers}" 
+                                  SelectedItem="{Binding NewSelectedTeacher}"
+                                  DisplayMemberPath="Name"
+                                  Padding="10,8" BorderBrush="#E5E7EB" Background="White"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Lịch học & Sĩ số -->
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Lịch học (VD: 2-4-6, 17h-19h)" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <TextBox Text="{Binding NewSchedule, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputControl}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Sĩ số tối đa" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <TextBox Text="{Binding NewMaxStudents, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputControl}"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Thời gian -->
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Ngày bắt đầu" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <DatePicker SelectedDate="{Binding NewStartDate}" Padding="5" BorderBrush="#E5E7EB"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="Ngày kết thúc" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+                        <DatePicker SelectedDate="{Binding NewEndDate, Mode=OneWay}" 
+                                    Padding="5" BorderBrush="#E5E7EB" 
+                                    IsHitTestVisible="False" Focusable="False" Background="#F3F4F6"
+                                    ToolTip="Ngày kết thúc được tự động tính dựa trên thời lượng khóa học"/>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+
+            <!-- Footer -->
+            <Grid Grid.Row="2" Margin="0,25,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Content="Hủy bỏ" Command="{Binding CancelAddCommand}" 
+                        Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Foreground="#374151" 
+                        Height="40" Margin="0,0,5,0" FontWeight="SemiBold" Cursor="Hand"/>
+
+                <Button Content="Tạo lớp học" Command="{Binding SaveNewClassCommand}" Grid.Column="1" 
+                        Background="{StaticResource PrimaryBlue}" Foreground="White" BorderThickness="0" 
+                        Height="40" Margin="5,0,0,0" FontWeight="SemiBold" Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="8"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

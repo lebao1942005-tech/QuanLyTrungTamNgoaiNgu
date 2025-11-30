@@ -1,0 +1,138 @@
+﻿<UserControl x:Class="GUI.Views.Pages.RegistrationManagement.NewRegistrationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1200"
+             Background="#F3F4F6">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#E5E7EB"/>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="24"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="White" CornerRadius="12" BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="#F9FAFB" CornerRadius="12,12,0,0" Padding="16" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#DBEAFE" Width="24" Height="24" CornerRadius="12" Margin="0,0,10,0">
+                            <TextBlock Text="1" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#1D4ED8" FontSize="12"/>
+                        </Border>
+                        <TextBlock Text="Chọn Học Viên" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="1" Padding="16" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1">
+                    <TextBox Text="{Binding StudentSearchText, UpdateSourceTrigger=PropertyChanged}" 
+                             Padding="10" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="White" Tag="Tìm tên, mã HV, SĐT...">
+                        <TextBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </Border>
+
+                <ListBox Grid.Row="2" ItemsSource="{Binding Students}" SelectedItem="{Binding SelectedStudent}" BorderThickness="0" Padding="16" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="#111827"/>
+                                    <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                                        <TextBlock Text="{Binding Phone}" FontSize="12" Foreground="#6B7280"/>
+                                        <TextBlock Text=" • " FontSize="12" Foreground="#9CA3AF" Margin="4,0"/>
+                                        <TextBlock Text="{Binding Email}" FontSize="12" Foreground="#6B7280"/>
+                                    </StackPanel>
+                                </StackPanel>
+                                <Border Grid.Column="1" Background="#EFF6FF" CornerRadius="4" Padding="6,2" VerticalAlignment="Top">
+                                    <TextBlock Text="{Binding StudentId}" FontSize="11" FontWeight="Bold" Foreground="#1D4ED8"/>
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="2" Background="White" CornerRadius="12" BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Border Grid.Row="0" Background="#F9FAFB" CornerRadius="12,12,0,0" Padding="16" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Border Background="#DBEAFE" Width="24" Height="24" CornerRadius="12" Margin="0,0,10,0">
+                            <TextBlock Text="2" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#1D4ED8" FontSize="12"/>
+                        </Border>
+                        <TextBlock Text="Chọn Lớp Học" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Row="1" Padding="16" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1">
+                    <TextBox Text="{Binding ClassSearchText, UpdateSourceTrigger=PropertyChanged}" 
+                             Padding="10" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" Background="White" Tag="Tìm lớp học...">
+                        <TextBox.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </TextBox.Resources>
+                    </TextBox>
+                </Border>
+
+                <ListBox Grid.Row="2" ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}" BorderThickness="0" Padding="16" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{Binding ClassName}" FontWeight="SemiBold" Foreground="#111827"/>
+                                    <TextBlock Text="{Binding Schedule}" FontSize="12" Foreground="#6B7280" Margin="0,4,0,0"/>
+                                    <Border Background="#DCFCE7" CornerRadius="4" Padding="6,2" HorizontalAlignment="Left" Margin="0,6,0,0">
+                                        <TextBlock Text="{Binding CapacityDisplay, StringFormat='Sĩ số: {0}'}" FontSize="11" FontWeight="Bold" Foreground="#15803D"/>
+                                    </Border>
+                                </StackPanel>
+                                <TextBlock Grid.Column="1" Text="5,000,000 đ" FontWeight="Bold" Foreground="#1D4ED8" VerticalAlignment="Top"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <Border Grid.Row="3" Padding="20" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,1,0,0">
+                    <Button Command="{Binding RegisterCommand}" Content="Xác nhận Đăng Ký" Height="45" Background="{StaticResource PrimaryBlue}" Foreground="White" FontWeight="Bold">
+                        <Button.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="CornerRadius" Value="8"/>
+                            </Style>
+                        </Button.Resources>
+                    </Button>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

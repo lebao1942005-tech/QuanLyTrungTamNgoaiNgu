@@ -46,7 +46,11 @@ namespace GUI.ViewModels
                     CurrentViewModel = new RegistrationManagementViewModel();
                     break;
 
-                
+
+                case "CourseManagement":
+                    CurrentViewModel = new CourseManagementViewModel();
+                    break;
+
             }
         }
 
