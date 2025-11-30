@@ -19,6 +19,17 @@ namespace DAL
             string query = "SELECT * FROM Class";
             return db.ExecuteQuery(query);
         }
+        //Lấy học sinh theo lớp học
+        public DataTable GetStudentsByClassID(int classID)
+        {
+            string query = @"
+                SELECT s.StudentID, s.Name, s.Birthday, s.Phone, s.Email
+                FROM Student s
+                INNER JOIN Enrollment e ON s.StudentID = e.StudentID
+                WHERE e.ClassID = @ClassID";
+            SqlParameter[] parameters = { new SqlParameter("@ClassID", classID) };
+            return db.ExecuteQuery(query, parameters);
+        }
 
         // Thêm lớp học
         public bool InsertClass(ClassDTO c)
