@@ -7,7 +7,7 @@ BEGIN
 END
 GO
 
--- T?o l?i database
+-- Tạo lại database
 CREATE DATABASE EducationDB;
 GO
 
@@ -15,7 +15,7 @@ USE EducationDB;
 GO
 
 -------------------------------------------------------
--- B?ng Users
+-- Bảng Users
 -------------------------------------------------------
 CREATE TABLE Users (
     UserID INT IDENTITY(1,1) PRIMARY KEY,
@@ -26,7 +26,7 @@ CREATE TABLE Users (
 );
 
 -------------------------------------------------------
--- B?ng Admin (1-1 Users)
+-- Bảng Admin (1-1 Users)
 -------------------------------------------------------
 CREATE TABLE Admin (
     AdminID INT IDENTITY(1,1) PRIMARY KEY,
@@ -39,7 +39,7 @@ CREATE TABLE Admin (
 );
 
 -------------------------------------------------------
--- B?ng Teacher (1-1 Users)
+-- Bảng Teacher (1-1 Users)
 -------------------------------------------------------
 CREATE TABLE Teacher (
     TeacherID INT IDENTITY(1,1) PRIMARY KEY,
@@ -52,7 +52,7 @@ CREATE TABLE Teacher (
 );
 
 -------------------------------------------------------
--- B?ng Student
+-- Bảng Student
 -------------------------------------------------------
 CREATE TABLE Student (
     StudentID INT IDENTITY(1,1) PRIMARY KEY,
@@ -63,17 +63,18 @@ CREATE TABLE Student (
 );
 
 -------------------------------------------------------
--- B?ng Course
+-- Bảng Course
 -------------------------------------------------------
 CREATE TABLE Course (
     CourseID INT IDENTITY(1,1) PRIMARY KEY,
     CourseName NVARCHAR(200) NOT NULL,
-    Certificate NVARCHAR(100),
+    DurationMonths INT NOT NULL,   -- số tháng học
     BaseFee DECIMAL(12,2) DEFAULT 0.00
 );
 
+
 -------------------------------------------------------
--- B?ng Class
+-- Bảng Class
 -------------------------------------------------------
 CREATE TABLE Class (
     ClassID INT IDENTITY(1,1) PRIMARY KEY,
@@ -89,7 +90,7 @@ CREATE TABLE Class (
 );
 
 -------------------------------------------------------
--- B?ng Enrollment
+-- Bảng Enrollment
 -------------------------------------------------------
 CREATE TABLE Enrollment (
     EnrollmentID INT IDENTITY(1,1) PRIMARY KEY,
@@ -99,23 +100,55 @@ CREATE TABLE Enrollment (
     Status NVARCHAR(30) DEFAULT 'Active',
     FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
     FOREIGN KEY (ClassID) REFERENCES Class(ClassID),
-    CONSTRAINT UQ_Enrollment UNIQUE(StudentID, ClassID) -- 1 h?c viên ??ng ký 1 l?p duy nh?t
+    CONSTRAINT UQ_Enrollment UNIQUE(StudentID, ClassID)
 );
 
 -------------------------------------------------------
--- B?ng Tuition
+-- Bảng Tuition (Amount tự động lấy BaseFee từ Course)
 -------------------------------------------------------
 CREATE TABLE Tuition (
     TuitionID INT IDENTITY(1,1) PRIMARY KEY,
     EnrollmentID INT NOT NULL UNIQUE,
-    Amount DECIMAL(12,2) NOT NULL,
+    Amount DECIMAL(12,2) NULL,
     Status NVARCHAR(20) DEFAULT 'Unpaid',
     PaidAt DATETIME,
     FOREIGN KEY (EnrollmentID) REFERENCES Enrollment(EnrollmentID)
 );
+GO
+
+-- Trigger tự động gán Amount = BaseFee
+CREATE TRIGGER trg_Tuition_Insert
+ON Tuition
+AFTER INSERT
+AS
+BEGIN
+    UPDATE t
+    SET t.Amount = c.BaseFee
+    FROM Tuition t
+    JOIN Enrollment e ON t.EnrollmentID = e.EnrollmentID
+    JOIN Class cl ON e.ClassID = cl.ClassID
+    JOIN Course c ON cl.CourseID = c.CourseID
+    WHERE t.Amount IS NULL;
+END;
+GO
+
+CREATE TRIGGER trg_Class_Insert
+ON Class
+AFTER INSERT
+AS
+BEGIN
+    UPDATE cl
+    SET cl.EndDate = DATEADD(MONTH, c.DurationMonths, cl.StartDate)
+    FROM Class cl
+    JOIN Course c ON cl.CourseID = c.CourseID
+    JOIN inserted i ON cl.ClassID = i.ClassID
+    WHERE cl.EndDate IS NULL;
+END;
+GO
+
 
 -------------------------------------------------------
--- B?ng ExamResult
+-- Bảng ExamResult
 -------------------------------------------------------
 CREATE TABLE ExamResult (
     ResultID INT IDENTITY(1,1) PRIMARY KEY,
@@ -127,7 +160,7 @@ CREATE TABLE ExamResult (
 );
 
 -------------------------------------------------------
--- B?ng Attendance
+-- Bảng Attendance
 -------------------------------------------------------
 CREATE TABLE Attendance (
     AttendanceID INT IDENTITY(1,1) PRIMARY KEY,
@@ -141,27 +174,8 @@ CREATE TABLE Attendance (
 );
 
 -------------------------------------------------------
--- B?ng Certificate
+-- Dữ liệu mẫu Student
 -------------------------------------------------------
-CREATE TABLE Certificate (
-    CertificateID INT IDENTITY(1,1) PRIMARY KEY,
-    StudentID INT NOT NULL,
-    CourseID INT NOT NULL,
-    ResultID INT NOT NULL UNIQUE,
-    IssueDate DATETIME DEFAULT GETUTCDATE(),
-    FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
-    FOREIGN KEY (ResultID) REFERENCES ExamResult(ResultID)
-);
-
-
-
-
-
-
-
-
-
 INSERT INTO Student (Name, Birthday, Phone, Email)
 VALUES 
 (N'Nguyễn Văn An', '2003-05-15', '0901234567', 'an.nguyen@gmail.com'),
@@ -171,85 +185,50 @@ VALUES
 (N'Hoàng Thị Lan', '2003-11-25', '0945678901', 'lan.hoang@yahoo.com');
 GO
 
-
-
-
-
--- =============================================
--- 1. Giáo viên dạy TIẾNG NHẬT
--- =============================================
--- Username là Email
+-------------------------------------------------------
+-- Dữ liệu mẫu Teacher + Users
+-------------------------------------------------------
+-- Giáo viên Tiếng Nhật
 INSERT INTO Users (Username, PasswordHash, Role)
-VALUES ('akira.nguyen@email.com', '123456', 'Teacher'); 
-
+VALUES ('akira.nguyen@email.com', '123456', 'Teacher');  
 DECLARE @UserID1 INT = SCOPE_IDENTITY();
-
 INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
 VALUES (N'Nguyễn Akira', N'Tiếng Nhật', '0901112233', 'akira.nguyen@email.com', @UserID1);
 
-
--- =============================================
--- 2. Giáo viên dạy TIẾNG PHÁP
--- =============================================
+-- Giáo viên Tiếng Pháp
 INSERT INTO Users (Username, PasswordHash, Role)
-VALUES ('pierre.tran@email.com', '123456', 'Teacher');
-
+VALUES ('pierre.tran@email.com', '123456', 'Teacher');  
 DECLARE @UserID2 INT = SCOPE_IDENTITY();
-
 INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
 VALUES (N'Trần Pierre', N'Tiếng Pháp', '0912223344', 'pierre.tran@email.com', @UserID2);
 
-
--- =============================================
--- 3. Giáo viên dạy TIẾNG TRUNG
--- =============================================
+-- Giáo viên Tiếng Trung
 INSERT INTO Users (Username, PasswordHash, Role)
-VALUES ('mei.le@email.com', '123456', 'Teacher');
-
+VALUES ('mei.le@email.com', '123456', 'Teacher');  
 DECLARE @UserID3 INT = SCOPE_IDENTITY();
-
 INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
 VALUES (N'Lê Tiểu Mei', N'Tiếng Trung', '0983334455', 'mei.le@email.com', @UserID3);
 
-
--- =============================================
--- 4. Giáo viên dạy IELTS
--- =============================================
+-- Giáo viên IELTS
 INSERT INTO Users (Username, PasswordHash, Role)
-VALUES ('john.pham@email.com', '123456', 'Teacher');
-
+VALUES ('john.pham@email.com', '123456', 'Teacher');  
 DECLARE @UserID4 INT = SCOPE_IDENTITY();
-
 INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
 VALUES (N'Phạm John', N'IELTS', '0974445566', 'john.pham@email.com', @UserID4);
 
-
--- =============================================
--- 5. Giáo viên dạy TOEIC
--- =============================================
+-- Giáo viên TOEIC
 INSERT INTO Users (Username, PasswordHash, Role)
-VALUES ('david.hoang@email.com', '123456', 'Teacher');
-
+VALUES ('david.hoang@email.com', '123456', 'Teacher');  
 DECLARE @UserID5 INT = SCOPE_IDENTITY();
-
 INSERT INTO Teacher (Name, Subject, Phone, Email, UserID)
 VALUES (N'Hoàng David', N'TOEIC', '0935556677', 'david.hoang@email.com', @UserID5);
 
-
-
--- =============================================
--- TẠO TÀI KHOẢN ADMIN
--- =============================================
-
--- 1. Tạo User (Username là Email)
+-------------------------------------------------------
+-- Admin
+-------------------------------------------------------
 INSERT INTO Users (Username, PasswordHash, Role)
-VALUES ('lebao1942005@gmail.com', '123', 'Admin'); -- Mật khẩu demo là 123
-
--- 2. Lấy UserID vừa tạo
+VALUES ('lebao1942005@gmail.com', '123', 'Admin');  
 DECLARE @AdminUserID INT = SCOPE_IDENTITY();
-
--- 3. Tạo thông tin chi tiết trong bảng Admin
 INSERT INTO Admin (Name, Birthday, Phone, Email, UserID)
 VALUES (N'Bao', '1990-01-01', '0999888777', 'admin@gmail.com', @AdminUserID);
-
 GO

@@ -1,11 +1,7 @@
 ﻿using DTO;
 using Microsoft.Data.SqlClient;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -24,12 +20,12 @@ namespace DAL
         public bool InsertCourse(CourseDTO c)
         {
             string query = @"
-                INSERT INTO Course (CourseName, Certificate, BaseFee)
-                VALUES (@CourseName, @Certificate, @BaseFee)";
+                INSERT INTO Course (CourseName, DurationMonths, BaseFee)
+                VALUES (@CourseName, @DurationMonths, @BaseFee)";
 
             SqlParameter[] parameters = {
                 new SqlParameter("@CourseName", c.CourseName),
-                new SqlParameter("@Certificate", (object)c.Certificate ?? DBNull.Value),
+                new SqlParameter("@DurationMonths", c.DurationMonths),
                 new SqlParameter("@BaseFee", c.BaseFee)
             };
 
@@ -42,14 +38,14 @@ namespace DAL
             string query = @"
                 UPDATE Course
                 SET CourseName = @CourseName,
-                    Certificate = @Certificate,
+                    DurationMonths = @DurationMonths,
                     BaseFee = @BaseFee
                 WHERE CourseID = @CourseID";
 
             SqlParameter[] parameters = {
                 new SqlParameter("@CourseID", c.CourseID),
                 new SqlParameter("@CourseName", c.CourseName),
-                new SqlParameter("@Certificate", (object)c.Certificate ?? DBNull.Value),
+                new SqlParameter("@DurationMonths", c.DurationMonths),
                 new SqlParameter("@BaseFee", c.BaseFee)
             };
 
@@ -60,7 +56,10 @@ namespace DAL
         public bool DeleteCourse(int courseID)
         {
             string query = "DELETE FROM Course WHERE CourseID = @CourseID";
-            SqlParameter[] parameters = { new SqlParameter("@CourseID", courseID) };
+            SqlParameter[] parameters = {
+                new SqlParameter("@CourseID", courseID)
+            };
+
             return db.ExecuteNonQuery(query, parameters) > 0;
         }
     }
