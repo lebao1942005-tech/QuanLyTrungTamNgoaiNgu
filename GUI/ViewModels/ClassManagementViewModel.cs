@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
+using GUI.Utilities;
 
 namespace GUI.ViewModels
 {
@@ -29,6 +30,10 @@ namespace GUI.ViewModels
         partial void OnSelectedClassChanged(ClassDTO value)
         {
             if (InfoVM != null) InfoVM.SelectedClass = value;
+            if (StudentListVM != null) StudentListVM.SelectedClass = value;
+            if (GradingVM != null) GradingVM.SelectedClass = value;
+
+            if (AttendanceVM != null) AttendanceVM.SelectedClass = value;
         }
 
         // --- TAB VIEW ---

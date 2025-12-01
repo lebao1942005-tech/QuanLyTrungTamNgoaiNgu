@@ -12,8 +12,9 @@
         <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
         <SolidColorBrush x:Key="GrayText" Color="#6B7280"/>
         <SolidColorBrush x:Key="BorderColor" Color="#E5E7EB"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
-        <!-- STYLE: Score TextBox (Ô nhập điểm nhỏ gọn) -->
+        <!-- STYLE 1: Score TextBox (Ô nhập điểm nhỏ, căn giữa) -->
         <Style x:Key="ScoreTextBoxStyle" TargetType="TextBox">
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
@@ -35,6 +36,44 @@
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
                             </Trigger>
+                            <Trigger Property="IsReadOnly" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- STYLE 2: Note TextBox (Ô ghi chú rộng, căn trái, thêm khung) -->
+        <Style x:Key="NoteTextBoxStyle" TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <!-- Padding rộng hơn chút -->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                            </Trigger>
+                            <!-- Khi ở chế độ Xem (ReadOnly) thì ẩn khung đi -->
+                            <Trigger Property="IsReadOnly" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="0,6"/>
+                                <!-- Giảm padding khi không có khung -->
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -46,9 +85,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <!-- Toolbar -->
                 <RowDefinition Height="*"/>
-                <!-- DataGrid -->
             </Grid.RowDefinitions>
 
             <!-- 1. TOOLBAR -->
@@ -61,15 +98,21 @@
 
                     <!-- Title & Stats -->
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="Bảng điểm lớp (15/20)" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center" FontSize="16"/>
+                        <TextBlock Text="Bảng điểm lớp" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center" FontSize="16"/>
+                        <TextBlock Text="{Binding GradingList.Count, StringFormat='({0})', TargetNullValue='(0)'}" FontWeight="Bold" Foreground="#374151" VerticalAlignment="Center" FontSize="16" Margin="4,0,0,0"/>
+
                         <Border Margin="16,0,0,0" Background="#EFF6FF" CornerRadius="6" Padding="10,4" BorderThickness="1" BorderBrush="#DBEAFE">
-                            <TextBlock Text="TB 4 kỹ năng: 7.5" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBlue}"/>
+                            <TextBlock Text="{Binding ClassAverageScore, StringFormat='Điểm TB: {0:N1}'}" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBlue}"/>
                         </Border>
                     </StackPanel>
 
                     <!-- Actions -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
-                        <Button Background="White" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" Padding="12,8" Margin="0,0,10,0" Cursor="Hand">
+
+                        <!-- NHÓM 1: Hiện khi KHÔNG Ở chế độ sửa -->
+                        <Button Background="White" BorderBrush="{StaticResource PrimaryBlue}" BorderThickness="1" Padding="16,8" Cursor="Hand"
+                                Command="{Binding StartEditCommand}"
+                                Visibility="{Binding IsReadOnlyMode, Converter={StaticResource BoolToVis}}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
@@ -78,24 +121,43 @@
                                 </ControlTemplate>
                             </Button.Template>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE78C;" FontFamily="Segoe MDL2 Assets" Foreground="#6B7280" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Xuất Excel" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+                                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource PrimaryBlue}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Nhập điểm" FontSize="13" FontWeight="Bold" Foreground="{StaticResource PrimaryBlue}"/>
                             </StackPanel>
                         </Button>
 
-                        <Button Background="{StaticResource PrimaryBlue}" BorderThickness="0" Padding="16,8" Cursor="Hand">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
-                                        <ContentPresenter Margin="{TemplateBinding Padding}"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Lưu bảng điểm" FontSize="13" FontWeight="Bold" Foreground="White"/>
-                            </StackPanel>
-                        </Button>
+                        <!-- NHÓM 2: Hiện khi ĐANG Ở chế độ sửa -->
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}">
+                            <!-- Nút Hủy -->
+                            <Button Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Padding="16,8" Margin="0,0,10,0" Cursor="Hand"
+                                    Command="{Binding CancelEditCommand}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <TextBlock Text="Hủy bỏ" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+                            </Button>
+
+                            <!-- Nút Lưu -->
+                            <Button Background="{StaticResource PrimaryBlue}" BorderThickness="0" Padding="16,8" Cursor="Hand"
+                                    Command="{Binding SaveGradingCommand}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Lưu lại" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
                     </StackPanel>
                 </Grid>
             </Border>
@@ -107,7 +169,7 @@
                       CanUserAddRows="False" 
                       BorderThickness="0" 
                       Background="White" 
-                      RowHeight="60"
+                      RowHeight="50"
                       HeadersVisibility="Column"
                       GridLinesVisibility="Horizontal" 
                       HorizontalGridLinesBrush="#F3F4F6"
@@ -123,7 +185,7 @@
                         <Setter Property="Height" Value="40"/>
                         <Setter Property="BorderThickness" Value="0,0,0,1"/>
                         <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
-                        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Left"/>
                         <Setter Property="VerticalContentAlignment" Value="Bottom"/>
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
@@ -138,79 +200,71 @@
                 </DataGrid.CellStyle>
 
                 <DataGrid.Columns>
-                    <!-- STT -->
-                    <DataGridTextColumn Header="STT" Binding="{Binding Index}" Width="60" Foreground="{StaticResource GrayText}">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Center"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <!-- Mã HV -->
-                    <DataGridTextColumn Header="MÃ HV" Binding="{Binding StudentId}" Width="100" Foreground="{StaticResource PrimaryBlue}" FontWeight="Medium">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Left"/>
-                                <Setter Property="Padding" Value="10,0,0,0"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <!-- Họ tên -->
-                    <DataGridTextColumn Header="HỌ TÊN" Binding="{Binding Name}" Width="250" FontWeight="SemiBold" Foreground="#111827">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="HorizontalAlignment" Value="Left"/>
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-
-                    <!-- 4 KỸ NĂNG -->
-                    <DataGridTemplateColumn Header="NGHE" Width="80">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBox Text="{Binding ListeningScore}" Style="{StaticResource ScoreTextBoxStyle}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="NÓI" Width="80">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBox Text="{Binding SpeakingScore}" Style="{StaticResource ScoreTextBoxStyle}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="ĐỌC" Width="80">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBox Text="{Binding ReadingScore}" Style="{StaticResource ScoreTextBoxStyle}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <DataGridTemplateColumn Header="VIẾT" Width="80">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBox Text="{Binding WritingScore}" Style="{StaticResource ScoreTextBoxStyle}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-
-                    <!-- Trung Bình -->
-                    <DataGridTextColumn Header="TB" Binding="{Binding AverageScore}" Width="80" FontWeight="Bold" Foreground="#111827">
+                    <!-- STT (Căn giữa chiều dọc) -->
+                    <DataGridTextColumn Header="STT" Binding="{Binding Index}" Width="50" Foreground="{StaticResource GrayText}" IsReadOnly="True">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
                                 <Setter Property="HorizontalAlignment" Value="Center"/>
                                 <Setter Property="VerticalAlignment" Value="Center"/>
-                                <Setter Property="FontSize" Value="14"/>
-                                <Setter Property="Background" Value="#F9FAFB"/>
-                                <!-- Nền xám nhẹ -->
+                                <!-- Căn giữa dọc -->
                             </Style>
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
+
+                    <!-- Mã HV (Căn giữa chiều dọc) -->
+                    <DataGridTextColumn Header="MÃ HV" Binding="{Binding StudentCode}" Width="120" Foreground="{StaticResource PrimaryBlue}" FontWeight="Medium" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <!-- Căn giữa dọc -->
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- Họ tên (Căn giữa chiều dọc) -->
+                    <DataGridTextColumn Header="HỌ TÊN" Binding="{Binding Name}" Width="250" FontWeight="SemiBold" Foreground="#111827" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <!-- Căn giữa dọc -->
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+
+                    <!-- ĐIỂM SỐ -->
+                    <DataGridTemplateColumn Header="ĐIỂM SỐ" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Score, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource ScoreTextBoxStyle}"
+                                         IsReadOnly="{Binding DataContext.IsReadOnlyMode, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- NGÀY CHẤM (Vô hiệu hóa) -->
+                    <DataGridTemplateColumn Header="NGÀY CHẤM" Width="160">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <!-- Luôn vô hiệu hóa để đảm bảo tính tự động -->
+                                <DatePicker SelectedDate="{Binding GradingDate}" 
+                                            BorderThickness="0" VerticalAlignment="Center" Padding="2"
+                                            IsEnabled="False"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <!-- GHI CHÚ (Áp dụng Style mới có khung) -->
+                    <DataGridTemplateColumn Header="GHI CHÚ" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource NoteTextBoxStyle}" 
+                                         Foreground="#374151" TextWrapping="NoWrap"
+                                         IsReadOnly="{Binding DataContext.IsReadOnlyMode, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
 
                 </DataGrid.Columns>
             </DataGrid>

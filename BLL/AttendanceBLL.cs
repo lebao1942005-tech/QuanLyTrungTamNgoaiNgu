@@ -18,5 +18,12 @@ namespace BLL
         public bool Insert(AttendanceDTO a) => dal.Insert(a);
         public bool Update(AttendanceDTO a) => dal.Update(a);
         public bool Delete(int id) => dal.Delete(id);
+
+
+        public DataTable GetAttendanceByClassAndDate(int classId, DateTime date)
+            => dal.GetAttendanceByClassAndDate(classId, date);
+
+
+        public List<DateTime> GetHistoryDates(int classId) => dal.GetHistoryDates(classId);
     }
 }

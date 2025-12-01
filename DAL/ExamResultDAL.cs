@@ -86,5 +86,29 @@ namespace DAL
             return db.ExecuteQuery(q, p);
 
         }
+
+
+        public DataTable GetGradingListByClass(int classId)
+        {
+            // Kỹ thuật LEFT JOIN: Lấy tất cả học viên trong lớp (Enrollment + Student)
+            // Kết hợp với bảng ExamResult. Nếu chưa chấm điểm thì các cột Score, Note sẽ là NULL.
+            string query = @"
+                SELECT 
+                    e.EnrollmentID,
+                    s.StudentID,
+                    s.Name,
+                    er.ResultID,
+                    er.Score,
+                    er.GradingDate,
+                    er.Note
+                FROM Enrollment e
+                JOIN Student s ON e.StudentID = s.StudentID
+                LEFT JOIN ExamResult er ON e.EnrollmentID = er.EnrollmentID
+                WHERE e.ClassID = @ClassID AND e.Status = 'Active'";
+
+            SqlParameter[] parameters = { new SqlParameter("@ClassID", classId) };
+            return db.ExecuteQuery(query, parameters);
+        }
+
     }
 }

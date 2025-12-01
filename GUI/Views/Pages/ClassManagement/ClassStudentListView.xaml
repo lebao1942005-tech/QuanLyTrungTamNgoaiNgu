@@ -16,7 +16,7 @@
         <SolidColorBrush x:Key="BorderColor" Color="#E5E7EB"/>
         <SolidColorBrush x:Key="HoverColor" Color="#F9FAFB"/>
 
-        <!-- STYLE: ICON BUTTON (Sửa/Xóa) -->
+        <!-- STYLE: ICON BUTTON (Sửa/Xóa) - Đã không còn dùng nhưng giữ lại nếu cần tái sử dụng -->
         <Style x:Key="IconButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -51,7 +51,7 @@
                 <!-- DataGrid -->
             </Grid.RowDefinitions>
 
-            <!-- 1. TOOLBAR: Tiêu đề & Nút Thêm -->
+            <!-- 1. TOOLBAR: Tiêu đề -->
             <Grid Grid.Row="0" Margin="24,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -61,28 +61,11 @@
                 <!-- Tiêu đề danh sách -->
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <TextBlock Text="Danh sách học viên" FontSize="16" FontWeight="Bold" Foreground="#111827"/>
-                    <TextBlock Text="(15/20)" FontSize="16" FontWeight="Medium" Foreground="{StaticResource GrayText}" Margin="8,0,0,0"/>
+                    <!-- Hiển thị sĩ số thực tế -->
+                    <TextBlock Text="{Binding ClassStudents.Count, StringFormat='({0})', TargetNullValue='(0)'}" FontSize="16" FontWeight="Medium" Foreground="{StaticResource GrayText}" Margin="8,0,0,0"/>
                 </StackPanel>
 
-                <!-- Nút Thêm vào lớp -->
-                <Button Grid.Column="1" 
-                        Content="+ Thêm vào lớp" 
-                        Background="{StaticResource PrimaryBlue}" Foreground="White" 
-                        FontSize="13" FontWeight="SemiBold"
-                        Padding="16,8" BorderThickness="0" Cursor="Hand">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" CornerRadius="8">
-                                <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Opacity" Value="0.9"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                <!-- ĐÃ XÓA NÚT "+ Thêm vào lớp" TẠI ĐÂY -->
             </Grid>
 
             <!-- 2. DATAGRID: Danh sách -->
@@ -156,13 +139,13 @@
                 </DataGrid.RowStyle>
 
                 <DataGrid.Columns>
-                    <!-- Cột 1: MÃ HV -->
-                    <DataGridTextColumn Header="MÃ HV" Binding="{Binding StudentId}" Width="140" 
+                    <!-- Cột 1: MÃ HV (Tỷ lệ 1) -->
+                    <DataGridTextColumn Header="MÃ HV" Binding="{Binding StudentCode}" Width="1*" 
                                         Foreground="{StaticResource GrayText}" 
                                         ElementStyle="{StaticResource {x:Type TextBlock}}"/>
 
-                    <!-- Cột 2: HỌ TÊN (In đậm) -->
-                    <DataGridTemplateColumn Header="HỌ TÊN" Width="2*">
+                    <!-- Cột 2: HỌ TÊN (Tỷ lệ 2.5 - Rộng hơn để hiển thị tên dài) -->
+                    <DataGridTemplateColumn Header="HỌ TÊN" Width="2.5*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Foreground="#111827" FontSize="14"/>
@@ -170,16 +153,16 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <!-- Cột 3: NGÀY SINH -->
-                    <DataGridTextColumn Header="NGÀY SINH" Binding="{Binding DateOfBirth, StringFormat='dd/MM/yyyy'}" Width="160" 
+                    <!-- Cột 3: NGÀY SINH (Tỷ lệ 1.2) -->
+                    <DataGridTextColumn Header="NGÀY SINH" Binding="{Binding DateOfBirth, StringFormat='dd/MM/yyyy'}" Width="1.2*" 
                                         Foreground="{StaticResource GrayText}"/>
 
-                    <!-- Cột 4: SĐT -->
-                    <DataGridTextColumn Header="SĐT" Binding="{Binding Phone}" Width="160" 
+                    <!-- Cột 4: SĐT (Tỷ lệ 1.2) -->
+                    <DataGridTextColumn Header="SĐT" Binding="{Binding Phone}" Width="1.2*" 
                                         Foreground="{StaticResource GrayText}"/>
 
-                    <!-- Cột 5: TRẠNG THÁI (Badge) -->
-                    <DataGridTemplateColumn Header="TRẠNG THÁI" Width="160">
+                    <!-- Cột 5: TRẠNG THÁI (Tỷ lệ 1.2) -->
+                    <DataGridTemplateColumn Header="TRẠNG THÁI" Width="1.2*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <Border Background="{StaticResource GreenBg}" CornerRadius="12" Padding="10,4" HorizontalAlignment="Left">
@@ -190,24 +173,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <!-- Cột 6: HÀNH ĐỘNG (Sửa/Xóa) -->
-                    <DataGridTemplateColumn Header="HÀNH ĐỘNG" Width="Auto">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <!-- Nút Sửa -->
-                                    <Button Style="{StaticResource IconButtonStyle}" ToolTip="Chỉnh sửa" Margin="0,0,4,0">
-                                        <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#D97706"/>
-                                    </Button>
-
-                                    <!-- Nút Xóa -->
-                                    <Button Style="{StaticResource IconButtonStyle}" ToolTip="Xóa khỏi lớp">
-                                        <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#EF4444"/>
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    <!-- ĐÃ XÓA CỘT HÀNH ĐỘNG TẠI ĐÂY -->
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

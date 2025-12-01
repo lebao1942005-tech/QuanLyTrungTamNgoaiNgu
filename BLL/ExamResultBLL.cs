@@ -18,5 +18,7 @@ namespace BLL
         public bool Insert(ExamResultDTO r) => dal.Insert(r);
         public bool Update(ExamResultDTO r) => dal.Update(r);
         public bool Delete(int id) => dal.Delete(id);
+
+        public DataTable GetGradingListByClass(int classId) => dal.GetGradingListByClass(classId);
     }
 }

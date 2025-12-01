@@ -12,6 +12,7 @@
         <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
         <SolidColorBrush x:Key="GrayText" Color="#6B7280"/>
         <SolidColorBrush x:Key="BorderColor" Color="#E5E7EB"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
         <!-- Status Colors -->
         <SolidColorBrush x:Key="GreenText" Color="#15803D"/>
@@ -23,7 +24,7 @@
         <SolidColorBrush x:Key="YellowText" Color="#B45309"/>
         <SolidColorBrush x:Key="YellowBg" Color="#FEF3C7"/>
 
-        <!-- STYLE: Stat Badge (Thẻ thống kê: Có mặt: 13...) -->
+        <!-- STYLE: Stat Badge (Thống kê trên toolbar) -->
         <Style x:Key="StatBadgeStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="6"/>
             <Setter Property="Padding" Value="10,4"/>
@@ -31,22 +32,93 @@
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
 
-        <!-- STYLE: Radio Button Điểm danh -->
-        <!-- Custom Template để RadioButton trông gọn gàng hơn -->
-        <Style x:Key="AttendanceRadioButton" TargetType="RadioButton">
-            <Setter Property="Margin" Value="4,0"/>
+        <!-- STYLE: Attendance Chip RadioButton (Nút bấm chọn trạng thái) -->
+        <Style x:Key="AttendanceChipStyle" TargetType="RadioButton">
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="0,0,4,0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border x:Name="bdr" Background="Transparent" BorderBrush="#D1D5DB" BorderThickness="1" CornerRadius="4" Padding="8,4">
-                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <Border x:Name="bdr" Background="White" BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="12,6" MinWidth="70">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="bdr" Property="BorderThickness" Value="0"/>
                             </Trigger>
-                            <!-- Màu sắc riêng cho từng loại sẽ được set trực tiếp khi sử dụng hoặc qua Trigger data -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bdr" Property="Background" Value="#F9FAFB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styles màu sắc cho nút -->
+        <Style x:Key="ChipPresent" TargetType="RadioButton" BasedOn="{StaticResource AttendanceChipStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="{StaticResource GreenBg}"/>
+                    <Setter Property="Foreground" Value="{StaticResource GreenText}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ChipAbsent" TargetType="RadioButton" BasedOn="{StaticResource AttendanceChipStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="{StaticResource RedBg}"/>
+                    <Setter Property="Foreground" Value="{StaticResource RedText}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ChipExcused" TargetType="RadioButton" BasedOn="{StaticResource AttendanceChipStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="{StaticResource BlueBg}"/>
+                    <Setter Property="Foreground" Value="{StaticResource BlueText}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="ChipLate" TargetType="RadioButton" BasedOn="{StaticResource AttendanceChipStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="{StaticResource YellowBg}"/>
+                    <Setter Property="Foreground" Value="{StaticResource YellowText}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- STYLE MỚI: Note TextBox (Ô ghi chú có khung rõ ràng) -->
+        <Style x:Key="NoteTextBoxStyle" TargetType="TextBox">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="6">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                            </Trigger>
+                            <!-- Khi ở chế độ Xem (ReadOnly) thì ẩn khung đi -->
+                            <Trigger Property="IsReadOnly" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="Padding" Value="4,6"/>
+                            </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -54,14 +126,11 @@
         </Style>
     </UserControl.Resources>
 
-    <!-- Container chính -->
     <Border Background="White" CornerRadius="12" BorderBrush="{StaticResource BorderColor}" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <!-- Toolbar -->
                 <RowDefinition Height="*"/>
-                <!-- DataGrid -->
             </Grid.RowDefinitions>
 
             <!-- 1. TOOLBAR -->
@@ -72,91 +141,97 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Left: Date Picker + Stats -->
+                    <!-- Left -->
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 
-                        <!-- Chọn buổi học -->
+                        <!-- Chọn buổi học (Cập nhật thêm ComboBox Lịch sử) -->
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,24,0">
-                            <Border Background="White" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="6" Padding="4,0">
-                                <ComboBox Width="180" Height="32" BorderThickness="0" Background="Transparent" SelectedIndex="0" VerticalContentAlignment="Center">
-                                    <ComboBoxItem Content="📅 Hôm nay (27/11/2023)" IsSelected="True"/>
-                                    <ComboBoxItem Content="✅ 25/11/2023"/>
-                                    <ComboBoxItem Content="✅ 23/11/2023"/>
-                                </ComboBox>
-                            </Border>
+                            <!-- DatePicker -->
+                            <StackPanel>
+                                <TextBlock Text="Ngày điểm danh" FontSize="10" Foreground="#6B7280" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <DatePicker SelectedDate="{Binding SelectedDate}" Width="130" Padding="4" BorderBrush="#D1D5DB" VerticalContentAlignment="Center"/>
+                            </StackPanel>
 
-                            <!-- Nút Ngày khác -->
-                            <Button Margin="8,0,0,0" Background="White" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" Padding="10,0" Height="34" Cursor="Hand">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
-                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                                <TextBlock Text="+" Margin="0,0,4,0" Foreground="#6B7280"/>
-                                                <TextBlock Text="Ngày khác" FontSize="12" Foreground="#6B7280"/>
-                                            </StackPanel>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Button.Template>
-                            </Button>
+                            <Border Width="1" Height="24" Background="#E5E7EB" Margin="16,0"/>
+
+                            <!-- ComboBox Lịch sử (Mới thêm) -->
+                            <StackPanel>
+                                <TextBlock Text="Lịch sử điểm danh" FontSize="10" Foreground="#6B7280" Margin="0,0,0,2" FontWeight="SemiBold"/>
+                                <ComboBox ItemsSource="{Binding AttendanceDates}" 
+                                          SelectedItem="{Binding SelectedDate}"
+                                          Width="150" Height="32" 
+                                          Padding="6,4" BorderBrush="#D1D5DB"
+                                          VerticalContentAlignment="Center"
+                                          ItemStringFormat="dd/MM/yyyy"
+                                          Background="White"/>
+                            </StackPanel>
                         </StackPanel>
 
-                        <!-- Thống kê -->
+                        <!-- Stats -->
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <!-- Có mặt -->
                             <Border Style="{StaticResource StatBadgeStyle}" Background="{StaticResource GreenBg}" BorderBrush="{StaticResource GreenBg}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="8" Height="8" Fill="{StaticResource GreenText}" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Có mặt: 13" FontSize="12" FontWeight="Bold" Foreground="{StaticResource GreenText}"/>
-                                </StackPanel>
+                                <TextBlock Text="{Binding CountPresent, StringFormat='Có mặt: {0}'}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource GreenText}"/>
                             </Border>
-                            <!-- Vắng -->
                             <Border Style="{StaticResource StatBadgeStyle}" Background="{StaticResource RedBg}" BorderBrush="{StaticResource RedBg}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="8" Height="8" Fill="{StaticResource RedText}" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Vắng: 1" FontSize="12" FontWeight="Bold" Foreground="{StaticResource RedText}"/>
-                                </StackPanel>
+                                <TextBlock Text="{Binding CountAbsent, StringFormat='Vắng: {0}'}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource RedText}"/>
                             </Border>
-                            <!-- Phép -->
                             <Border Style="{StaticResource StatBadgeStyle}" Background="{StaticResource BlueBg}" BorderBrush="{StaticResource BlueBg}">
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="8" Height="8" Fill="{StaticResource BlueText}" Margin="0,0,6,0"/>
-                                    <TextBlock Text="Phép: 1" FontSize="12" FontWeight="Bold" Foreground="{StaticResource BlueText}"/>
-                                </StackPanel>
+                                <TextBlock Text="{Binding CountExcused, StringFormat='Phép: {0}'}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource BlueText}"/>
+                            </Border>
+                            <Border Style="{StaticResource StatBadgeStyle}" Background="{StaticResource YellowBg}" BorderBrush="{StaticResource YellowBg}">
+                                <TextBlock Text="{Binding CountLate, StringFormat='Trễ: {0}'}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource YellowText}"/>
                             </Border>
                         </StackPanel>
                     </StackPanel>
 
-                    <!-- Right: Action Buttons -->
+                    <!-- Right: Buttons -->
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <!-- Nút Chỉnh sửa -->
-                        <Button Margin="0,0,8,0" Background="White" BorderBrush="{StaticResource PrimaryBlue}" BorderThickness="1" Padding="12,6" Cursor="Hand">
+                        <Button Background="White" BorderBrush="{StaticResource PrimaryBlue}" BorderThickness="1" Padding="16,8" Cursor="Hand"
+                                Command="{Binding StartEditCommand}"
+                                Visibility="{Binding IsReadOnlyMode, Converter={StaticResource BoolToVis}}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="6">
+                                    <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
                                         <ContentPresenter Margin="{TemplateBinding Padding}"/>
                                     </Border>
                                 </ControlTemplate>
                             </Button.Template>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource PrimaryBlue}" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Chỉnh sửa" FontSize="12" FontWeight="Bold" Foreground="{StaticResource PrimaryBlue}"/>
+                                <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" Foreground="{StaticResource PrimaryBlue}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="Điểm danh" FontSize="13" FontWeight="Bold" Foreground="{StaticResource PrimaryBlue}"/>
                             </StackPanel>
                         </Button>
 
-                        <!-- Nút Lưu -->
-                        <Button Background="{StaticResource PrimaryBlue}" BorderThickness="0" Padding="16,6" Cursor="Hand">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                                        <ContentPresenter Margin="{TemplateBinding Padding}"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets" Foreground="White" Margin="0,0,6,0" VerticalAlignment="Center"/>
-                                <TextBlock Text="Lưu" FontSize="12" FontWeight="Bold" Foreground="White"/>
-                            </StackPanel>
-                        </Button>
+                        <!-- Nhóm Lưu/Hủy -->
+                        <StackPanel Orientation="Horizontal" Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}">
+                            <Button Background="White" BorderBrush="#D1D5DB" BorderThickness="1" Padding="16,8" Margin="0,0,10,0" Cursor="Hand"
+                                    Command="{Binding CancelEditCommand}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <TextBlock Text="Hủy bỏ" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+                            </Button>
+
+                            <Button Background="{StaticResource PrimaryBlue}" BorderThickness="0" Padding="16,8" Cursor="Hand"
+                                    Command="{Binding SaveAttendanceCommand}">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets" Foreground="White" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Lưu lại" FontSize="13" FontWeight="Bold" Foreground="White"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -164,14 +239,9 @@
             <!-- 2. DATAGRID -->
             <DataGrid Grid.Row="1" 
                       ItemsSource="{Binding AttendanceList}" 
-                      AutoGenerateColumns="False" 
-                      CanUserAddRows="False" 
-                      BorderThickness="0" 
-                      Background="White" 
-                      RowHeight="60"
-                      HeadersVisibility="Column"
-                      GridLinesVisibility="Horizontal" 
-                      HorizontalGridLinesBrush="#F3F4F6"
+                      AutoGenerateColumns="False" CanUserAddRows="False" 
+                      BorderThickness="0" Background="White" RowHeight="60"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F3F4F6"
                       Padding="0,0,0,10">
 
                 <DataGrid.ColumnHeaderStyle>
@@ -188,7 +258,6 @@
                         <Setter Property="VerticalContentAlignment" Value="Bottom"/>
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
-
                 <DataGrid.CellStyle>
                     <Style TargetType="DataGridCell">
                         <Setter Property="BorderThickness" Value="0"/>
@@ -199,126 +268,99 @@
                 </DataGrid.CellStyle>
 
                 <DataGrid.Columns>
-                    <!-- STT -->
-                    <DataGridTextColumn Header="STT" Binding="{Binding Index}" Width="60" Foreground="{StaticResource GrayText}"/>
+                    <DataGridTextColumn Header="STT" Binding="{Binding Index}" Width="60" Foreground="{StaticResource GrayText}">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Center"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                    <!-- Mã HV -->
-                    <DataGridTextColumn Header="MÃ HV" Binding="{Binding StudentId}" Width="100" Foreground="{StaticResource PrimaryBlue}" FontWeight="Medium"/>
+                    <DataGridTextColumn Header="MÃ HV" Binding="{Binding StudentCode}" Width="100" Foreground="{StaticResource PrimaryBlue}" FontWeight="Medium">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                    <!-- Họ tên -->
-                    <DataGridTextColumn Header="HỌ TÊN" Binding="{Binding Name}" Width="200" FontWeight="SemiBold" Foreground="#111827"/>
+                    <DataGridTextColumn Header="HỌ TÊN" Binding="{Binding Name}" Width="200" FontWeight="SemiBold" Foreground="#111827">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
 
-                    <!-- TRẠNG THÁI (Radio Buttons Group) -->
-                    <DataGridTemplateColumn Header="TRẠNG THÁI" Width="320">
+                    <!-- CỘT TRẠNG THÁI -->
+                    <DataGridTemplateColumn Header="TRẠNG THÁI" Width="360">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <Grid>
+                                    <!-- 1. VIEW MODE (Chỉ hiện Badge kết quả) -->
+                                    <Border x:Name="ViewBadge" CornerRadius="6" Padding="12,6" HorizontalAlignment="Left"
+                                            Visibility="{Binding DataContext.IsReadOnlyMode, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}">
+                                        <TextBlock x:Name="ViewText" FontSize="12" FontWeight="Bold"/>
+                                    </Border>
 
-                                    <!-- Có mặt -->
-                                    <RadioButton GroupName="{Binding StudentId}" Content="Có mặt" IsChecked="{Binding IsPresent}" Style="{StaticResource AttendanceRadioButton}">
-                                        <RadioButton.Resources>
-                                            <Style TargetType="Border">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Background" Value="{StaticResource GreenBg}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="FontSize" Value="12"/>
-                                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                                <Setter Property="Foreground" Value="#6B7280"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Foreground" Value="{StaticResource GreenText}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </RadioButton.Resources>
-                                    </RadioButton>
+                                    <!-- 2. EDIT MODE (Hiện 4 nút chọn) -->
+                                    <StackPanel Orientation="Horizontal"
+            Visibility="{Binding DataContext.IsEditing, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource BoolToVis}}">
 
-                                    <!-- Vắng -->
-                                    <RadioButton GroupName="{Binding StudentId}" Content="Vắng" IsChecked="{Binding IsAbsent}" Style="{StaticResource AttendanceRadioButton}">
-                                        <RadioButton.Resources>
-                                            <Style TargetType="Border">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Background" Value="{StaticResource RedBg}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="FontSize" Value="12"/>
-                                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                                <Setter Property="Foreground" Value="#6B7280"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Foreground" Value="{StaticResource RedText}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </RadioButton.Resources>
-                                    </RadioButton>
+                                        <RadioButton Content="Có mặt"
+                 IsChecked="{Binding IsPresent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource ChipPresent}" />
 
-                                    <!-- Phép -->
-                                    <RadioButton GroupName="{Binding StudentId}" Content="Phép" IsChecked="{Binding IsExcused}" Style="{StaticResource AttendanceRadioButton}">
-                                        <RadioButton.Resources>
-                                            <Style TargetType="Border">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Background" Value="{StaticResource BlueBg}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="FontSize" Value="12"/>
-                                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                                <Setter Property="Foreground" Value="#6B7280"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Foreground" Value="{StaticResource BlueText}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </RadioButton.Resources>
-                                    </RadioButton>
+                                        <RadioButton Content="Vắng"
+                 IsChecked="{Binding IsAbsent, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource ChipAbsent}" />
 
-                                    <!-- Trễ -->
-                                    <RadioButton GroupName="{Binding StudentId}" Content="Trễ" IsChecked="{Binding IsLate}" Style="{StaticResource AttendanceRadioButton}">
-                                        <RadioButton.Resources>
-                                            <Style TargetType="Border">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Background" Value="{StaticResource YellowBg}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="FontSize" Value="12"/>
-                                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                                <Setter Property="Foreground" Value="#6B7280"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsChecked, RelativeSource={RelativeSource AncestorType=RadioButton}}" Value="True">
-                                                        <Setter Property="Foreground" Value="{StaticResource YellowText}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </RadioButton.Resources>
-                                    </RadioButton>
+                                        <RadioButton Content="Phép"
+                 IsChecked="{Binding IsExcused, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource ChipExcused}" />
 
-                                </StackPanel>
+                                        <RadioButton Content="Trễ"
+                 IsChecked="{Binding IsLate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                 Style="{StaticResource ChipLate}" />
+
+                                    </StackPanel>
+                                </Grid>
+
+                                <DataTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding Status}" Value="Present">
+                                        <Setter TargetName="ViewBadge" Property="Background" Value="{StaticResource GreenBg}"/>
+                                        <Setter TargetName="ViewText" Property="Text" Value="Có mặt"/>
+                                        <Setter TargetName="ViewText" Property="Foreground" Value="{StaticResource GreenText}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Absent">
+                                        <Setter TargetName="ViewBadge" Property="Background" Value="{StaticResource RedBg}"/>
+                                        <Setter TargetName="ViewText" Property="Text" Value="Vắng"/>
+                                        <Setter TargetName="ViewText" Property="Foreground" Value="{StaticResource RedText}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Excused">
+                                        <Setter TargetName="ViewBadge" Property="Background" Value="{StaticResource BlueBg}"/>
+                                        <Setter TargetName="ViewText" Property="Text" Value="Phép"/>
+                                        <Setter TargetName="ViewText" Property="Foreground" Value="{StaticResource BlueText}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Status}" Value="Late">
+                                        <Setter TargetName="ViewBadge" Property="Background" Value="{StaticResource YellowBg}"/>
+                                        <Setter TargetName="ViewText" Property="Text" Value="Trễ"/>
+                                        <Setter TargetName="ViewText" Property="Foreground" Value="{StaticResource YellowText}"/>
+                                    </DataTrigger>
+                                </DataTemplate.Triggers>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
 
-                    <!-- Ghi chú -->
+                    <!-- GHI CHÚ (ÁP DỤNG STYLE MỚI) -->
                     <DataGridTemplateColumn Header="GHI CHÚ" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding Note}" 
-                                         BorderThickness="0,0,0,1" BorderBrush="#E5E7EB" 
-                                         Background="Transparent" VerticalContentAlignment="Center"
-                                         Foreground="#374151"/>
+                                <TextBox Text="{Binding Note, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{StaticResource NoteTextBoxStyle}"
+                                         Foreground="#374151"
+                                         IsReadOnly="{Binding DataContext.IsReadOnlyMode, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
