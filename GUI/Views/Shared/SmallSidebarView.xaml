@@ -6,12 +6,14 @@
              Background="White">
 
     <UserControl.Resources>
-
         <!-- Style nút menu dạng icon -->
         <Style x:Key="SmallSidebarButton" TargetType="RadioButton">
             <Setter Property="Width" Value="50"/>
             <Setter Property="Height" Value="50"/>
             <Setter Property="Margin" Value="10"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="GroupName" Value="SmallSidebarGroup"/>
+            <!-- GroupName không còn quá quan trọng khi đã binding 2 chiều, nhưng giữ lại cũng không sao -->
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -26,31 +28,23 @@
                                    VerticalAlignment="Center"
                                    Opacity="0.8"/>
                         </Border>
-
                         <ControlTemplate.Triggers>
-
                             <!-- Hover -->
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="Border" Property="Background" Value="#EEF4FF"/>
                             </Trigger>
-
                             <!-- Selected -->
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter TargetName="Border" Property="Background" Value="#DCEAFF"/>
                                 <Setter TargetName="Border" Property="BorderBrush" Value="#1D4ED8"/>
                                 <Setter TargetName="Border" Property="BorderThickness" Value="1.5"/>
                             </Trigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="GroupName" Value="SmallSidebarGroup"/>
         </Style>
-
     </UserControl.Resources>
-
 
     <Grid>
         <StackPanel VerticalAlignment="Top" Margin="0,20,0,0">
@@ -65,53 +59,57 @@
             </Border>
 
             <!-- MENU ITEMS -->
-        <!--    <RadioButton 
-                Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Icons/dashboard.png"
-                IsChecked="True"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="Overview"/>
--->
-            <RadioButton 
-                Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Images/student-icon.png"
-                IsChecked="True"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="StudentManagement"/>
+            <!-- Lưu ý: Tất cả đều dùng Binding IsChecked="..." trỏ về ViewModel của Window cha -->
 
-            <RadioButton 
-                Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Images/teacher-icon.png"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="TeacherManagement"/>
+            <!-- 1. HỌC VIÊN -->
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Images/student-icon.png"
+                         IsChecked="{Binding DataContext.IsStudentPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                         Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         CommandParameter="StudentManagement"/>
 
-            <RadioButton 
-                Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Images/classroom-icon.png"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="ClassManagement"/>
+            <!-- 2. GIÁO VIÊN -->
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Images/teacher-icon.png"
+                         IsChecked="{Binding DataContext.IsTeacherPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                         Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         CommandParameter="TeacherManagement"/>
 
-            <RadioButton
-                Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Images/register-icon.png"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="RegistrationManagement"/>
+            <!-- 3. LỚP HỌC -->
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Images/classroom-icon.png"
+                         IsChecked="{Binding DataContext.IsClassPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                         Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         CommandParameter="ClassManagement"/>
 
-            <RadioButton
-                Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Images/course-icon.png"
-                Command="{Binding NavigateCommand}"
-                CommandParameter="CourseManagement"/>
+            <!-- 4. ĐĂNG KÝ -->
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Images/register-icon.png"
+                         IsChecked="{Binding DataContext.IsRegistrationPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                         Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         CommandParameter="RegistrationManagement"/>
 
+            <!-- 5. KHÓA HỌC -->
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Images/course-icon.png"
+                         IsChecked="{Binding DataContext.IsCoursePage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                         Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         CommandParameter="CourseManagement"/>
+
+            <!-- 6. HỌC PHÍ -->
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Images/tuitionFee-icon.png"
+                         IsChecked="{Binding DataContext.IsTuitionPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                         Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         CommandParameter="TuitionManagement"/>
 
         </StackPanel>
 
         <!-- Nút logout bên dưới -->
         <Border VerticalAlignment="Bottom" Margin="0,0,0,20">
-            <RadioButton
-                Style="{StaticResource SmallSidebarButton}"
-                Tag="/Resources/Icons/logout.png"
-                Command="{Binding LogoutCommand}"/>
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Icons/logout.png"
+                         Command="{Binding DataContext.LogoutCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"/>
         </Border>
 
     </Grid>

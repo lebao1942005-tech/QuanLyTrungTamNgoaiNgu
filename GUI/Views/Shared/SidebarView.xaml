@@ -15,11 +15,9 @@
             <!-- 1. TRẠNG THÁI MẶC ĐỊNH (BÌNH THƯỜNG) -->
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#64748B"/>
-            <!-- Màu xám Slate-500: Dịu mắt, không gây rối -->
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="20,12"/>
             <Setter Property="Margin" Value="15,4,15,4"/>
-            <!-- Tăng khoảng cách dọc một chút cho thoáng -->
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Cursor" Value="Hand"/>
@@ -35,7 +33,7 @@
                                         VerticalAlignment="Center" 
                                         Margin="{TemplateBinding Padding}">
 
-                                <!-- Icon: Mặc định hơi mờ (0.6) để hài hòa với chữ xám -->
+                                <!-- Icon -->
                                 <Image x:Name="Icon" 
                                        Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
                                        Width="20" Height="20" 
@@ -48,71 +46,53 @@
                             </StackPanel>
                         </Border>
 
-                        <!-- CÁC TRIGGERS QUẢN LÝ MÀU SẮC -->
                         <ControlTemplate.Triggers>
-
-                            <!-- 2. TRẠNG THÁI HOVER (KHI RÊ CHUỘT VÀO) -->
+                            <!-- Hover -->
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="#EFF6FF"/>
-                                <!-- Xanh rất nhạt (Blue-50) -->
                                 <Setter Property="Foreground" Value="#1D4ED8"/>
-                                <!-- Chữ chuyển thành Xanh chủ đạo -->
                                 <Setter TargetName="Icon" Property="Opacity" Value="1.0"/>
-                                <!-- Icon rõ nét lên -->
                             </Trigger>
 
-                            <!-- 3. TRẠNG THÁI SELECTED (ĐANG ĐƯỢC CHỌN) -->
+                            <!-- Selected -->
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter Property="Background" Value="#5683e9"/>
-                                <!-- Nền Xanh chủ đạo (Blue-700) -->
                                 <Setter Property="Foreground" Value="White"/>
-                                <!-- Chữ Trắng (Tương phản cao) -->
                                 <Setter Property="FontWeight" Value="Bold"/>
                                 <Setter TargetName="Icon" Property="Opacity" Value="1.0"/>
-                                <!-- Icon rõ nét -->
                             </Trigger>
 
-                            <!-- 4. TRẠNG THÁI VỪA CHỌN VỪA HOVER -->
+                            <!-- Selected + Hover -->
                             <MultiTrigger>
                                 <MultiTrigger.Conditions>
                                     <Condition Property="IsChecked" Value="True"/>
                                     <Condition Property="IsMouseOver" Value="True"/>
                                 </MultiTrigger.Conditions>
                                 <Setter Property="Background" Value="#1E40AF"/>
-                                <!-- Xanh đậm hơn (Blue-800) để tạo điểm nhấn -->
                             </MultiTrigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <!-- Style cho tiêu đề mục (Header Group) -->
         <Style TargetType="TextBlock" x:Key="SectionHeader">
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="#94A3B8"/>
-            <!-- Xám nhạt hơn (Slate-400) -->
             <Setter Property="Margin" Value="35,25,0,10"/>
-          
-            <!-- Viết hoa tạo cảm giác gọn gàng -->
-        
         </Style>
     </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
-            <!-- Tăng nhẹ chiều cao header cho thoáng -->
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <!-- Header / Logo -->
         <Border Grid.Row="0" Background="#EFF6FF" Margin="0,0,0,10">
-            <!-- Nền Header đồng bộ với màu Hover -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,0,0">
-                <!-- Bạn có thể thêm Logo ảnh vào đây nếu muốn -->
                 <TextBlock Text="Admin Center" 
                            FontSize="18" 
                            FontWeight="ExtraBold" 
@@ -125,38 +105,53 @@
             <StackPanel Margin="0,15,0,20">
                 <TextBlock Text="QUẢN LÝ" Style="{StaticResource SectionHeader}"/>
 
+                <!-- 1. HỌC VIÊN -->
                 <RadioButton Content="Học viên" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/student-icon.png"
-                             IsChecked="True"
+                             IsChecked="{Binding DataContext.IsStudentPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="StudentManagement"/>
 
+                <!-- 2. GIÁO VIÊN -->
                 <RadioButton Content="Giáo viên" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/teacher-icon.png"
+                             IsChecked="{Binding DataContext.IsTeacherPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="TeacherManagement"/>
 
+                <!-- 3. LỚP HỌC -->
                 <RadioButton Content="Lớp học" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/classroom-icon.png"
+                             IsChecked="{Binding DataContext.IsClassPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="ClassManagement"/>
 
-
+                <!-- 4. ĐĂNG KÝ -->
                 <RadioButton Content="Đăng ký" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/register-icon.png"
+                             IsChecked="{Binding DataContext.IsRegistrationPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="RegistrationManagement"/>
 
-
+                <!-- 5. KHÓA HỌC -->
                 <RadioButton Content="Khóa học" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/course-icon.png"
+                             IsChecked="{Binding DataContext.IsCoursePage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="CourseManagement"/>
+
+                <!-- 6. HỌC PHÍ -->
+                <RadioButton Content="Học phí" 
+                             Style="{StaticResource SidebarRadioButton}" 
+                             Tag="/Resources/Images/tuitionFee-icon.png"
+                             IsChecked="{Binding DataContext.IsTuitionPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                             CommandParameter="TuitionManagement"/>
 
             </StackPanel>
         </ScrollViewer>

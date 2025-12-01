@@ -1,0 +1,381 @@
+﻿<UserControl x:Class="GUI.Views.Pages.TuitionManagement.TuitionManagementView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GUI.Views.Pages.TuitionManagement"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000"
+             Background="#F1F5F9" FontFamily="Segoe UI">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <!-- COLORS -->
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#3B82F6"/>
+        <SolidColorBrush x:Key="PrimaryHover" Color="#2563EB"/>
+        <SolidColorBrush x:Key="TextDark" Color="#1F2937"/>
+        <SolidColorBrush x:Key="TextGray" Color="#6B7280"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#E5E7EB"/>
+        <SolidColorBrush x:Key="GreenBg" Color="#D1FAE5"/>
+        <SolidColorBrush x:Key="GreenText" Color="#065F46"/>
+        <SolidColorBrush x:Key="RedBg" Color="#FEE2E2"/>
+        <SolidColorBrush x:Key="RedText" Color="#991B1B"/>
+
+        <!-- ICONS -->
+        <Geometry x:Key="IconCreditCard">M20 4H4C2.89 4 2.01 4.89 2.01 6L2 18C2 19.11 2.89 20 4 20H20C21.11 20 22 19.11 22 18V6C22 4.89 21.11 4 20 4M20 18H4V12H20V18M20 8H4V6H20V8Z</Geometry>
+        <Geometry x:Key="IconCheck">M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z</Geometry>
+        <Geometry x:Key="IconAlert">M13,13H11V7H13M13,17H11V15H13M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z</Geometry>
+
+        <!-- COMBOBOX STYLE (MỚI) -->
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="24" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="6" Background="White" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" />
+                <Path x:Name="Arrow" Grid.Column="1" Fill="{StaticResource TextGray}" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M0,0 L4,4 L8,0 Z" Margin="0,2,0,0"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}" />
+                    <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource PrimaryBlue}" />
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}" />
+                    <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource PrimaryBlue}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="ModernComboBox" TargetType="{x:Type ComboBox}">
+            <Setter Property="SnapsToDevicePixels" Value="true"/>
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False" Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="12,0,23,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                            <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" Background="White" BorderThickness="1" BorderBrush="{StaticResource BorderColor}" CornerRadius="6" Margin="0,4,0,0">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="Black" Opacity="0.1" BlurRadius="10" ShadowDepth="2" Direction="270"/>
+                                        </Border.Effect>
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Resources>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="SnapsToDevicePixels" Value="true"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+                    <Setter Property="Padding" Value="10,8"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ComboBoxItem">
+                                <Border Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true" CornerRadius="4" Background="Transparent">
+                                    <ContentPresenter />
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsHighlighted" Value="true">
+                                        <Setter TargetName="Border" Property="Background" Value="#F3F4F6"/>
+                                        <Setter Property="Foreground" Value="{StaticResource PrimaryBlue}"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Style.Resources>
+        </Style>
+
+        <!-- BUTTON STYLES -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryBlue}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="6" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryHover}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="Transparent"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="1"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="#D1D5DB"/>
+                                <Setter Property="Foreground" Value="#9CA3AF"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="OutlineButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F9FAFB"/>
+                    <Setter Property="BorderBrush" Value="#D1D5DB"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <!-- MAIN CONTENT -->
+        <Border Background="White" CornerRadius="16" Margin="20">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Opacity="0.05" BlurRadius="15" ShadowDepth="4" Direction="270"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- TOOLBAR -->
+                <Border Grid.Row="0" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,0,0,1" Padding="32,24">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Quản Lý Học Phí" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextDark}" Margin="0,0,0,4"/>
+                            <TextBlock Text="Theo dõi và cập nhật trạng thái đóng học phí của học viên." FontSize="14" Foreground="{StaticResource TextGray}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <!-- [QUAN TRỌNG] Đã Binding ItemsSource và SelectedItem -->
+                            <ComboBox Width="200" Height="36" Margin="0,0,12,0" 
+                                      Style="{StaticResource ModernComboBox}"
+                                      ItemsSource="{Binding Classes}"
+                                      SelectedItem="{Binding SelectedClass}"
+                                      DisplayMemberPath="ClassName"/>
+
+                            <!-- Filter Status (Tạm thời tĩnh) -->
+                            <ComboBox Width="160" Height="36" 
+          SelectedIndex="{Binding SelectedStatusIndex}" 
+          Style="{StaticResource ModernComboBox}">
+                                <ComboBoxItem Content="Tất cả trạng thái"/>
+                                <ComboBoxItem Content="Chưa đóng"/>
+                                <ComboBoxItem Content="Đã hoàn thành"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- DATA GRID -->
+                <DataGrid Grid.Row="1" ItemsSource="{Binding TuitionList}"
+                          AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True"
+                          Background="White" BorderThickness="0"
+                          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#F1F5F9"
+                          HeadersVisibility="Column" RowHeight="70" Padding="0,0,0,20">
+
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Background" Value="#F9FAFB"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextGray}"/>
+                            <Setter Property="FontSize" Value="12"/>
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter Property="Padding" Value="24,16"/>
+                            <Setter Property="BorderBrush" Value="{StaticResource BorderColor}"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="24,0"/>
+                            <Setter Property="VerticalContentAlignment" Value="Center"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="DataGridCell">
+                                        <Border Background="{TemplateBinding Background}" BorderThickness="0" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Background" Value="#F8FAFC"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="#" Binding="{Binding Index}" Width="60" Foreground="#9CA3AF">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Header="HỌC VIÊN" Width="2*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding StudentName}" FontWeight="SemiBold" FontSize="14" Foreground="{StaticResource TextDark}"/>
+                                        <TextBlock Text="{Binding StudentCode}" FontSize="12" FontFamily="Consolas" Foreground="{StaticResource TextGray}" Margin="0,2,0,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="HỌC PHÍ" Binding="{Binding Amount, StringFormat={}{0:N0} ₫}" Width="1.5*" FontWeight="SemiBold" Foreground="{StaticResource TextDark}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTextColumn Header="NGÀY ĐÓNG" Binding="{Binding PaidAt, StringFormat=dd/MM/yyyy, TargetNullValue='—'}" Width="1.5*" Foreground="{StaticResource TextGray}">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <DataGridTemplateColumn Header="TRẠNG THÁI" Width="1.5*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="BadgeBorder" CornerRadius="12" Padding="10,4" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <StackPanel Orientation="Horizontal">
+                                            <Path x:Name="BadgeIcon" Width="10" Height="10" Stretch="Uniform" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=TextBlock}}" Margin="0,1,6,0" VerticalAlignment="Center"/>
+                                            <TextBlock x:Name="BadgeText" FontSize="12" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsPaid}" Value="True">
+                                            <Setter TargetName="BadgeBorder" Property="Background" Value="{StaticResource GreenBg}"/>
+                                            <Setter TargetName="BadgeText" Property="Text" Value="Paid"/>
+                                            <Setter TargetName="BadgeText" Property="Foreground" Value="{StaticResource GreenText}"/>
+                                            <Setter TargetName="BadgeIcon" Property="Fill" Value="{StaticResource GreenText}"/>
+                                            <Setter TargetName="BadgeIcon" Property="Data" Value="{StaticResource IconCheck}"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsPaid}" Value="False">
+                                            <Setter TargetName="BadgeBorder" Property="Background" Value="{StaticResource RedBg}"/>
+                                            <Setter TargetName="BadgeText" Property="Text" Value="Unpaid"/>
+                                            <Setter TargetName="BadgeText" Property="Foreground" Value="{StaticResource RedText}"/>
+                                            <Setter TargetName="BadgeIcon" Property="Fill" Value="{StaticResource RedText}"/>
+                                            <Setter TargetName="BadgeIcon" Property="Data" Value="{StaticResource IconAlert}"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="HÀNH ĐỘNG" Width="1.5*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button x:Name="ActionButton" Style="{StaticResource ModernButtonStyle}"
+                                            Command="{Binding DataContext.OpenPaymentDialogCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}" HorizontalAlignment="Right">
+                                        <Button.Content>Thu tiền</Button.Content>
+                                    </Button>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsPaid}" Value="True">
+                                            <Setter TargetName="ActionButton" Property="IsEnabled" Value="False"/>
+                                            <Setter TargetName="ActionButton" Property="Content" Value="Hoàn tất"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!-- POPUP CONFIRM -->
+        <Grid Visibility="{Binding IsPaymentPopupOpen, Converter={StaticResource BoolToVis}}" Panel.ZIndex="100">
+            <Border Background="#400F172A" MouseDown="Border_MouseDown">
+                <Border.Effect>
+                    <BlurEffect Radius="4"/>
+                </Border.Effect>
+            </Border>
+
+            <Border Background="White" Width="420" VerticalAlignment="Center" HorizontalAlignment="Center" CornerRadius="16" Padding="32">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="30" ShadowDepth="10" Opacity="0.2" Direction="270"/>
+                </Border.Effect>
+                <StackPanel>
+                    <Border Width="48" Height="48" Background="#EFF6FF" CornerRadius="12" HorizontalAlignment="Left" Margin="0,0,0,20">
+                        <Path Data="{StaticResource IconCreditCard}" Fill="{StaticResource PrimaryBlue}" Width="24" Height="24" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="Xác nhận thu học phí" FontSize="20" FontWeight="Bold" Foreground="{StaticResource TextDark}" Margin="0,0,0,8"/>
+                    <TextBlock Text="Vui lòng kiểm tra kỹ thông tin trước khi xác nhận." FontSize="14" Foreground="{StaticResource TextGray}" Margin="0,0,0,24"/>
+
+                    <Border Background="#F9FAFB" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="12" Padding="16">
+                        <StackPanel>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="Mã học viên" Foreground="{StaticResource TextGray}" FontSize="14"/>
+                                <!-- [QUAN TRỌNG] Binding vào StudentCode của dòng đang chọn -->
+                                <TextBlock Text="{Binding SelectedTuition.StudentCode}" FontWeight="SemiBold" HorizontalAlignment="Right" Foreground="{StaticResource TextDark}"/>
+                            </Grid>
+                            <Grid Margin="0,0,0,12">
+                                <TextBlock Text="Họ và tên" Foreground="{StaticResource TextGray}" FontSize="14"/>
+                                <!-- [QUAN TRỌNG] Binding vào StudentName của dòng đang chọn -->
+                                <TextBlock Text="{Binding SelectedTuition.StudentName}" FontWeight="SemiBold" HorizontalAlignment="Right" Foreground="{StaticResource TextDark}"/>
+                            </Grid>
+                            <Rectangle Height="1" Stroke="{StaticResource BorderColor}" StrokeDashArray="4 2" StrokeThickness="1" Margin="0,0,0,12" SnapsToDevicePixels="True"/>
+                            <Grid>
+                                <TextBlock Text="Tổng tiền thu" Foreground="{StaticResource TextDark}" FontWeight="SemiBold" FontSize="14"/>
+                                <!-- [QUAN TRỌNG] Binding vào Amount của dòng đang chọn -->
+                                <TextBlock Text="{Binding SelectedTuition.Amount, StringFormat={}{0:N0} ₫}" FontSize="16" FontWeight="Bold" Foreground="{StaticResource PrimaryBlue}" HorizontalAlignment="Right"/>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Grid Margin="0,32,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="12"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" Content="Hủy bỏ" Command="{Binding CancelPaymentCommand}" Style="{StaticResource OutlineButtonStyle}"/>
+                        <Button Grid.Column="2" Content="Xác nhận thu tiền" Command="{Binding ConfirmPaymentCommand}" Style="{StaticResource ModernButtonStyle}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

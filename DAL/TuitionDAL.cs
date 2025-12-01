@@ -95,5 +95,36 @@ namespace DAL
 
             return db.ExecuteNonQuery(query, parameters) > 0;
         }
+
+
+        public DataTable GetTuitionByClassID(int classId)
+        {
+            // CẬP NHẬT: Join thêm Class và Course để lấy BaseFee
+            string query = @"
+        SELECT 
+            t.TuitionID,
+            e.EnrollmentID, 
+            t.Amount,       -- Số tiền thực tế trong bảng Tuition (có thể null)
+            co.BaseFee,     -- Học phí gốc từ khóa học
+            t.Status,
+            t.PaidAt,
+            s.StudentID,
+            s.Name AS StudentName,
+            s.Phone         -- Lấy thêm nếu cần
+        FROM Enrollment e
+        JOIN Student s ON e.StudentID = s.StudentID
+        LEFT JOIN Tuition t ON e.EnrollmentID = t.EnrollmentID
+        JOIN Class c ON e.ClassID = c.ClassID       -- Join bảng Lớp
+        JOIN Course co ON c.CourseID = co.CourseID  -- Join bảng Khóa học để lấy tiền
+        WHERE e.ClassID = @ClassID";
+
+            SqlParameter[] parameters =
+            {
+        new SqlParameter("@ClassID", classId)
+    };
+
+            return db.ExecuteQuery(query, parameters);
+        }
+
     }
 }
