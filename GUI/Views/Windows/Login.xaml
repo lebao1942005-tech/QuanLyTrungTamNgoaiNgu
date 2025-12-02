@@ -111,7 +111,7 @@
             <StackPanel Grid.Row="1" VerticalAlignment="Center" Width="360">
 
                 <!-- LOGO -->
-                <TextBlock Text="LOGO"
+                <TextBlock Text="Star Edu"
                            FontSize="36"
                            FontWeight="Bold"
                            Foreground="{StaticResource PrimaryBlue}"

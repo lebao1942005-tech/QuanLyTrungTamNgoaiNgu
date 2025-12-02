@@ -96,7 +96,7 @@ namespace GUI.ViewModels
                             {
                                 EnrollmentID = Convert.ToInt32(row["EnrollmentID"]),
                                 StudentID = studentId,
-                                StudentCode = $"HV{studentId.ToString("D4")}", // Tạo mã giả lập
+                                StudentCode = studentId.ToString(), // Tạo mã giả lập
                                 Name = stuRow["Name"].ToString(),
                                 Phone = stuRow["Phone"].ToString(),
                                 DateOfBirth = dob,

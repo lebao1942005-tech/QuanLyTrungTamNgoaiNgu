@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\logout-icon.png" />
     <None Remove="Resources\Images\menu-icon.png" />
     <None Remove="Resources\Images\notification-icon.png" />
     <None Remove="Resources\Images\register-icon.png" />
@@ -18,6 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="iTextSharp" Version="5.5.13.4" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
   </ItemGroup>
 
@@ -28,6 +30,7 @@
   <ItemGroup>
     <Resource Include="Resources\Images\classroom-icon.png" />
     <Resource Include="Resources\Images\course-icon.png" />
+    <Resource Include="Resources\Images\logout-icon.png" />
     <Resource Include="Resources\Images\register-icon.png" />
     <Resource Include="Resources\Images\student-icon.png" />
     <Resource Include="Resources\Images\menu-icon.png" />

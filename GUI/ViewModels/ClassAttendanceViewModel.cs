@@ -2,8 +2,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DTO;
+using GUI.Utilities; // [QUAN TRỌNG] Cần namespace này để dùng UserSession
 using System;
-using System.Collections.Generic; // Cần cho List<DateTime>
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
@@ -11,13 +12,14 @@ using System.Windows;
 
 namespace GUI.ViewModels
 {
-   
-    
-
-
     public partial class ClassAttendanceViewModel : ObservableObject
     {
         private readonly AttendanceBLL _bll = new AttendanceBLL();
+
+        // --- 1. PROPERTY PHÂN QUYỀN (MỚI) ---
+        // Property này giúp View có thể binding để ẩn/hiện nút "Điểm danh"
+        // Admin chỉ xem -> Nút sẽ bị ẩn hoặc disable
+        public bool IsTeacher => UserSession.Role == "Teacher";
 
         [ObservableProperty] private ClassDTO _selectedClass;
 
@@ -68,22 +70,19 @@ namespace GUI.ViewModels
 
                 foreach (DataRow row in dt.Rows)
                 {
-                    string status = row["Status"] != DBNull.Value && row["Status"] != null
-                ? row["Status"].ToString()
-                : "";
-
+                    // Lấy status an toàn
+                    string status = row["Status"] != DBNull.Value ? row["Status"].ToString() : "";
 
                     list.Add(new AttendanceDisplayDTO
                     {
                         Index = index++,
                         EnrollmentID = Convert.ToInt32(row["EnrollmentID"]),
                         AttendanceID = row["AttendanceID"] != DBNull.Value ? Convert.ToInt32(row["AttendanceID"]) : (int?)null,
-                        Status = row["Status"] != DBNull.Value ? row["Status"].ToString() : "",
+                        Status = status,
 
                         StudentID = Convert.ToInt32(row["StudentID"]),
-                        StudentCode = $"HV{DateTime.Now.Year % 100}{row["StudentID"]:0000}",
+                        StudentCode = row["StudentID"].ToString(),
                         Name = row["Name"].ToString(),
-                        //Status = status,
                         Note = row["Note"] != DBNull.Value ? row["Note"].ToString() : "",
 
                         ParentVM = this
@@ -101,7 +100,7 @@ namespace GUI.ViewModels
             if (SelectedClass == null) return;
             try
             {
-                // Gọi hàm BLL lấy danh sách ngày (Cần thêm hàm này vào BLL/DAL)
+                // Gọi hàm BLL lấy danh sách ngày
                 var dates = _bll.GetHistoryDates(SelectedClass.ClassID);
                 AttendanceDates = new ObservableCollection<DateTime>(dates);
             }
@@ -118,7 +117,22 @@ namespace GUI.ViewModels
         }
 
         // --- COMMANDS ---
-        [RelayCommand] private void StartEdit() => IsEditing = true;
+
+        [RelayCommand]
+        private void StartEdit()
+        {
+            // --- 2. KIỂM TRA QUYỀN (MỚI) ---
+            // Chỉ giáo viên mới được phép bắt đầu điểm danh
+            if (!IsTeacher)
+            {
+                MessageBox.Show("Chỉ giáo viên phụ trách mới có quyền thực hiện điểm danh.",
+                                "Hạn chế quyền truy cập",
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            IsEditing = true;
+        }
 
         [RelayCommand]
         private void CancelEdit()
@@ -130,6 +144,13 @@ namespace GUI.ViewModels
         [RelayCommand]
         private void SaveAttendance()
         {
+            // --- 3. BẢO MẬT 2 LỚP (MỚI) ---
+            if (!IsTeacher)
+            {
+                MessageBox.Show("Bạn không có quyền lưu dữ liệu này.");
+                return;
+            }
+
             try
             {
                 int successCount = 0;
@@ -138,7 +159,7 @@ namespace GUI.ViewModels
                 {
                     var dto = new AttendanceDTO
                     {
-                        AttendanceID = item.AttendanceID ?? 0, // DAL upsert sẽ kiểm tra tồn tại
+                        AttendanceID = item.AttendanceID ?? 0,
                         StudentID = item.StudentID,
                         ClassID = SelectedClass.ClassID,
                         SessionDate = SelectedDate,
@@ -146,9 +167,9 @@ namespace GUI.ViewModels
                         Note = item.Note
                     };
 
-                    if (_bll.Insert(dto)) // Insert trong DAL đã upsert
+                    if (_bll.Insert(dto))
                     {
-                        // Nếu lưu thành công, cập nhật AttendanceID mới vào item
+                        // Nếu lưu thành công, cập nhật AttendanceID mới vào item để UI đồng bộ
                         if (item.AttendanceID == null || item.AttendanceID == 0)
                         {
                             item.AttendanceID = dto.AttendanceID;
@@ -159,14 +180,14 @@ namespace GUI.ViewModels
 
                 MessageBox.Show("Đã lưu điểm danh thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 IsEditing = false;
-                LoadData(); // Load lại dữ liệu sạch sẽ
-                LoadHistory();
+
+                LoadData();    // Load lại dữ liệu sạch sẽ
+                LoadHistory(); // Cập nhật lại lịch sử ngày điểm danh
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi lưu dữ liệu: " + ex.Message);
             }
         }
-
     }
 }

@@ -16,15 +16,13 @@ using System.Windows.Shapes;
 namespace GUI.Views.Shared
 {
     /// <summary>
-    /// Interaction logic for SlidebarView.xaml
+    /// Interaction logic for TeacherSidebarView.xaml
     /// </summary>
-    public partial class SidebarView : UserControl
+    public partial class TeacherSidebarView : UserControl
     {
-        public SidebarView()
+        public TeacherSidebarView()
         {
             InitializeComponent();
         }
-
-        
     }
 }

@@ -119,7 +119,7 @@ namespace GUI.ViewModels
                         {
                             Index = index++,
                             StudentName = row["StudentName"].ToString(),
-                            StudentCode = $"HV{row["StudentID"]:0000}"
+                            StudentCode = row["StudentID"].ToString(),
                         };
 
                         list.Add(displayDto);

@@ -5,12 +5,13 @@ using System.Windows.Controls;
 using System.Linq;
 using GUI.Views.Windows;
 using BLL;
+using DTO;          // Cần để dùng UserDTO
+using GUI.Utilities; // Cần để dùng UserSession
 
 namespace GUI.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
-        // KHỞI TẠO BLL TẠI ĐÂY
         private readonly LoginBLL _loginBLL = new LoginBLL();
 
         [ObservableProperty]
@@ -19,9 +20,7 @@ namespace GUI.ViewModels
         [ObservableProperty]
         private string _selectedRole;
 
-        public LoginViewModel()
-        {
-        }
+        public LoginViewModel() { }
 
         [RelayCommand]
         private void ForgotPassword()
@@ -36,7 +35,7 @@ namespace GUI.ViewModels
         {
             string password = passwordBox.Password;
 
-            // 1. Validate
+            // 1. Validate (Giữ nguyên)
             if (string.IsNullOrEmpty(SelectedRole) || SelectedRole == "Chọn vai trò của bạn")
             {
                 MessageBox.Show("Vui lòng chọn vai trò đăng nhập.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -53,54 +52,56 @@ namespace GUI.ViewModels
                 return;
             }
 
-            // 2. Mapping Role: UI (Tiếng Việt) -> Database (Tiếng Anh)
+            // 2. Mapping Role
             string dbRole = SelectedRole;
             if (SelectedRole == "Giáo viên") dbRole = "Teacher";
             if (SelectedRole == "Admin") dbRole = "Admin";
 
             // 3. Gọi BLL Login
-            bool isLoginSuccess = false;
             try
             {
-                isLoginSuccess = _loginBLL.Login(Email, password, dbRole);
+                // SỬA: Nhận về UserDTO thay vì bool
+                UserDTO user = _loginBLL.Login(Email, password, dbRole);
+
+                if (user != null)
+                {
+                    // --- QUAN TRỌNG: LƯU SESSION ---
+                    UserSession.CurrentUsername = user.Username;
+                    UserSession.Role = user.Role;
+                    UserSession.CurrentTeacherID = user.TeacherID;
+                    // Session này sẽ được dùng ở màn hình Lớp học để lọc danh sách
+                    // --------------------------------
+
+                    // 4. Điều hướng
+                    if (user.Role == "Admin")
+                    {
+                        var mainWindow = new AdminMainWindow();
+                        mainWindow.Show();
+                        CloseCurrentWindow();
+                    }
+                    else if (user.Role == "Teacher")
+                    {
+                        // Mở màn hình giáo viên
+                        var teacherWindow = new TeacherMainWindow();
+                        teacherWindow.Show();
+                        CloseCurrentWindow();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Thông tin đăng nhập không đúng!", "Thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             catch (System.Exception ex)
             {
-                MessageBox.Show("Lỗi kết nối: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            // 4. Xử lý kết quả phân quyền
-            if (isLoginSuccess)
-            {
-                if (dbRole == "Admin")
-                {
-                    // Mở trang Admin
-                    var mainWindow = new AdminMainWindow();
-                    mainWindow.Show();
-                    CloseCurrentWindow();
-                }
-                else if (dbRole == "Teacher")
-                {
-                    // TODO: Sau này tạo xong TeacherMainWindow thì bỏ comment dòng dưới
-                    // var teacherWindow = new TeacherMainWindow();
-                    // teacherWindow.Show();
-                    // CloseCurrentWindow();
-
-                    // Tạm thời hiện thông báo
-                    MessageBox.Show($"Xin chào Giáo viên: {Email}.\nGiao diện giáo viên đang được phát triển!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-            else
-            {
-                MessageBox.Show("Thông tin đăng nhập không đúng!", "Thất bại", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Lỗi hệ thống: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void CloseCurrentWindow()
         {
             var window = Application.Current.Windows.OfType<Window>()
-                                .FirstOrDefault(w => w.DataContext == this);
+                                        .FirstOrDefault(w => w.DataContext == this);
             window?.Close();
         }
     }

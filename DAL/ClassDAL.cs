@@ -180,5 +180,23 @@ namespace DAL
             }
             return list;
         }
+
+
+
+        public int CountStudentsInClass(int classID)
+        {
+            // Truy vấn đếm số dòng trong bảng Enrollment (hoặc bảng đăng ký tương ứng) có ClassID trùng khớp
+            string query = "SELECT COUNT(*) FROM Enrollment WHERE ClassID = @ClassID";
+
+            SqlParameter[] parameters = {
+                new SqlParameter("@ClassID", classID)
+            };
+
+            // Thực thi truy vấn và trả về số lượng (ExecuteScalar trả về object, cần ép kiểu)
+            object result = db.ExecuteScalar(query, parameters);
+            return result != null ? Convert.ToInt32(result) : 0;
+        }
+
+
     }
 }

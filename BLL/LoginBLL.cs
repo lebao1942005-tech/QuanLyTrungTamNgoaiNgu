@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using DTO;
 
 namespace BLL
 {
@@ -13,10 +14,18 @@ namespace BLL
     {
         private readonly LoginDAL login = new LoginDAL();
         //Dang nhap
-        public bool Login(string username, string password, string role)
+        /*    public bool Login(string username, string password, string role)
+            {
+                return login.Login(username, password, role);
+            }
+        */
+
+
+        public UserDTO Login(string username, string password, string role)
         {
             return login.Login(username, password, role);
         }
+
         //Doi mat khau
         public bool ChangePassword(string username, string newPassword)
         {

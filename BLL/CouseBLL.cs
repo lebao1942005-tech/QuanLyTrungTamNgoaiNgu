@@ -41,5 +41,15 @@ namespace BLL
         {
             return dal.DeleteCourse(courseID);
         }
+
+
+
+        public List<string> GetCourseNames()
+        {
+            var courses = GetAllCourses();
+            // Lấy cột CourseName và chuyển thành List<string>
+            return courses.Select(c => c.CourseName).ToList();
+        }
+
     }
 }

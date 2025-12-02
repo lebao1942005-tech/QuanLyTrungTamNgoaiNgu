@@ -5,63 +5,78 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         
         xmlns:shared="clr-namespace:GUI.Views.Shared"
-        xmlns:viewModel="clr-namespace:GUI.ViewModels"
+        xmlns:viewmodels="clr-namespace:GUI.ViewModels"
         
         xmlns:student="clr-namespace:GUI.Views.Pages.StudentManagement"
-        xmlns:teacher="clr-namespace:GUI.Views.Pages.TeacherManagement" 
+        xmlns:teacher="clr-namespace:GUI.Views.Pages.TeacherManagement"
         xmlns:class="clr-namespace:GUI.Views.Pages.ClassManagement"
         xmlns:register="clr-namespace:GUI.Views.Pages.RegistrationManagement"
         xmlns:course="clr-namespace:GUI.Views.Pages.CourseManagement"
         xmlns:tuition="clr-namespace:GUI.Views.Pages.TuitionManagement"
-
+        
         mc:Ignorable="d"
-        Title="Quản trị trung tâm" Height="720" Width="1280"
-        WindowStartupLocation="CenterScreen" Background="#FFFFFF">
+        Title="Admin Center - Management System" Height="720" Width="1280"
+        WindowStartupLocation="CenterScreen" 
+        Background="#F1F5F9"
+        FontFamily="Segoe UI">
 
     <Window.Resources>
-        <!-- DataTemplate: Mapping giữa ViewModel và View -->
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
-        <!-- 1. Student -->
-        <DataTemplate DataType="{x:Type viewModel:StudentManagementViewModel}">
+        <!-- DATA TEMPLATES -->
+        <DataTemplate DataType="{x:Type viewmodels:StudentManagementViewModel}">
             <student:StudentManagementView/>
         </DataTemplate>
-
-        <!-- 2. Teacher (ĐÃ SỬA: Dùng prefix 'teacher' đã khai báo ở trên) -->
-        <DataTemplate DataType="{x:Type viewModel:TeacherManagementViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:TeacherManagementViewModel}">
             <teacher:TeacherManagementView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewModel:ClassManagementViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:ClassManagementViewModel}">
             <class:ClassManagementView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewModel:RegistrationManagementViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:RegistrationManagementViewModel}">
             <register:RegistrationManagementView/>
         </DataTemplate>
-
-
-        <DataTemplate DataType="{x:Type viewModel:CourseManagementViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:CourseManagementViewModel}">
             <course:CourseManagementView/>
         </DataTemplate>
-
-        <DataTemplate DataType="{x:Type viewModel:TuitionViewModel}">
+        <DataTemplate DataType="{x:Type viewmodels:TuitionViewModel}">
             <tuition:TuitionManagementView/>
         </DataTemplate>
-
-
     </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="SidebarColumn" Width="240"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar -->
-        <shared:SidebarView x:Name="FullSidebar" Grid.Column="0" Visibility="Visible"/>
-        <shared:SmallSidebarView x:Name="SmallSidebar" Grid.Column="0" Visibility="Collapsed"/>
+        <!-- === 1. SIDEBAR AREA === -->
+        <Grid Grid.Column="0" Panel.ZIndex="100">
 
-        <!-- Main Content -->
+            <!-- Sidebar Lớn: Hiện khi IsSidebarOpen = True -->
+            <shared:SidebarView 
+                Visibility="{Binding IsSidebarOpen, Converter={StaticResource BoolToVis}}"/>
+
+            <!-- Sidebar Nhỏ: Dùng Style để xử lý logic ngược -->
+            <!-- ĐÃ SỬA: Xóa thuộc tính Visibility trực tiếp ở đây -->
+            <shared:SmallSidebarView>
+                <shared:SmallSidebarView.Style>
+                    <Style TargetType="UserControl">
+                        <!-- Mặc định là Hiện (cho trường hợp False) -->
+                        <Setter Property="Visibility" Value="Visible"/>
+
+                        <Style.Triggers>
+                            <!-- Khi SidebarOpen = True (Đang mở to) -> Thì ẨN cái nhỏ đi -->
+                            <DataTrigger Binding="{Binding IsSidebarOpen}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </shared:SmallSidebarView.Style>
+            </shared:SmallSidebarView>
+        </Grid>
+
+        <!-- === 2. MAIN CONTENT AREA === -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -69,12 +84,10 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <shared:HeaderView Grid.Row="0" ToggleSidebarClick="HeaderView_ToggleSidebarClick"/>
+            <shared:HeaderView Grid.Row="0"/>
 
-            <!-- Vùng hiển thị nội dung động -->
-            <ContentControl x:Name="MainContent"
-                            Grid.Row="1"
-                            Content="{Binding CurrentViewModel}" />
+            <!-- Nội dung thay đổi -->
+            <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" Margin="0"/>
         </Grid>
     </Grid>
 </Window>

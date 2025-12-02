@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DTO;
+using GUI.Utilities; // Cần namespace này để dùng UserSession
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
@@ -53,13 +54,18 @@ namespace GUI.ViewModels
     {
         private readonly ExamResultBLL _examBLL = new ExamResultBLL();
 
+        // --- 1. PROPERTY PHÂN QUYỀN (MỚI) ---
+        // Property này giúp View có thể binding để ẩn hiện nút nếu muốn
+        public bool IsTeacher => UserSession.Role == "Teacher";
+        // Hoặc dùng: public bool IsTeacher => UserSession.IsTeacher; (nếu bên UserSession đã có helper này)
+
         [ObservableProperty]
         private ClassDTO _selectedClass;
 
         partial void OnSelectedClassChanged(ClassDTO value)
         {
             LoadData();
-            // Reset chế độ sửa khi chuyển lớp
+            // Reset chế độ sửa khi chuyển lớp để tránh lỗi logic
             CancelEdit();
         }
 
@@ -103,14 +109,12 @@ namespace GUI.ViewModels
                         Index = index++,
                         EnrollmentID = Convert.ToInt32(row["EnrollmentID"]),
                         StudentID = Convert.ToInt32(row["StudentID"]),
-                        StudentCode = $"HV{DateTime.Now.Year % 100}{row["StudentID"]:0000}",
+                        StudentCode = row["StudentID"].ToString(),
                         Name = row["Name"].ToString(),
                         ResultID = row["ResultID"] != DBNull.Value ? Convert.ToInt32(row["ResultID"]) : 0,
                         Note = row["Note"].ToString(),
 
-                        // LƯU Ý QUAN TRỌNG: Thứ tự gán Score trước GradingDate là cần thiết để:
-                        // 1. Setter Score chạy -> Set GradingDate = Now (tạm)
-                        // 2. Sau đó gán GradingDate từ DB -> Ghi đè lại đúng ngày cũ từ DB
+                        // LƯU Ý: Gán Score trước GradingDate
                         Score = row["Score"] != DBNull.Value ? Convert.ToDecimal(row["Score"]) : null,
                         GradingDate = row["GradingDate"] != DBNull.Value ? Convert.ToDateTime(row["GradingDate"]) : DateTime.Now
                     };
@@ -138,6 +142,16 @@ namespace GUI.ViewModels
         [RelayCommand]
         private void StartEdit()
         {
+            // --- 2. KIỂM TRA QUYỀN (MỚI) ---
+            // Nếu không phải Giáo viên, chặn ngay lập tức
+            if (!IsTeacher)
+            {
+                MessageBox.Show("Chỉ giáo viên phụ trách mới có quyền chấm điểm/sửa điểm.",
+                                "Hạn chế quyền truy cập",
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             IsEditing = true;
         }
 
@@ -151,11 +165,20 @@ namespace GUI.ViewModels
         [RelayCommand]
         private void SaveGrading()
         {
+            // --- 3. BẢO MẬT 2 LỚP (MỚI) ---
+            // Đề phòng trường hợp hacker bypass nút bấm, check lại lần nữa
+            if (!IsTeacher)
+            {
+                MessageBox.Show("Bạn không có quyền lưu dữ liệu này.");
+                return;
+            }
+
             int successCount = 0;
             try
             {
                 foreach (var item in GradingList)
                 {
+                    // Chỉ lưu những dòng có điểm hoặc có ghi chú (hoặc logic tùy bạn)
                     if (item.Score != null || !string.IsNullOrEmpty(item.Note))
                     {
                         var dto = new ExamResultDTO

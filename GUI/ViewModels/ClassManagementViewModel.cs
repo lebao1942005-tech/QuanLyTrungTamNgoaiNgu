@@ -17,22 +17,27 @@ namespace GUI.ViewModels
         private readonly ClassBLL _classBLL = new ClassBLL();
         private readonly TeacherBLL _teacherBLL = new TeacherBLL();
 
+        // --- PHÂN QUYỀN ---
+        public bool IsAdmin => UserSession.IsAdmin;
+
         // --- DATA SOURCES ---
         [ObservableProperty] private ObservableCollection<ClassDTO> _classes;
         [ObservableProperty] private ObservableCollection<CourseDTO> _courses;
+
+        // Danh sách tất cả giáo viên (Dùng để cache)
         [ObservableProperty] private ObservableCollection<TeacherDTO> _teachers;
 
+        // [MỚI] Danh sách giáo viên phù hợp (Dùng để hiển thị trên ComboBox Thêm lớp)
+        [ObservableProperty] private ObservableCollection<TeacherDTO> _availableTeachers;
 
         // --- SELECTED ITEM ---
-        [ObservableProperty]
-        private ClassDTO _selectedClass;
+        [ObservableProperty] private ClassDTO _selectedClass;
 
         partial void OnSelectedClassChanged(ClassDTO value)
         {
             if (InfoVM != null) InfoVM.SelectedClass = value;
             if (StudentListVM != null) StudentListVM.SelectedClass = value;
             if (GradingVM != null) GradingVM.SelectedClass = value;
-
             if (AttendanceVM != null) AttendanceVM.SelectedClass = value;
         }
 
@@ -48,46 +53,88 @@ namespace GUI.ViewModels
         [ObservableProperty] private string _newClassName;
 
         [ObservableProperty] private CourseDTO _newSelectedCourse;
-        // Logic tính ngày kết thúc trên UI để người dùng xem trước (Preview)
-        partial void OnNewSelectedCourseChanged(CourseDTO value) => CalculateEndDatePreview();
+
+        // [CẬP NHẬT] Khi chọn khóa học -> Tính ngày kết thúc VÀ Lọc giáo viên
+        partial void OnNewSelectedCourseChanged(CourseDTO value)
+        {
+            CalculateEndDatePreview();
+            FilterTeachersForNewClass(); // <--- Gọi hàm lọc
+        }
 
         [ObservableProperty] private TeacherDTO _newSelectedTeacher;
         [ObservableProperty] private string _newSchedule;
         [ObservableProperty] private int _newMaxStudents = 20;
-
         [ObservableProperty] private DateTime _newStartDate = DateTime.Now;
         partial void OnNewStartDateChanged(DateTime value) => CalculateEndDatePreview();
-
-        // Biến này chỉ dùng để hiển thị cho người dùng xem trước, không gửi xuống DB
         [ObservableProperty] private DateTime _newEndDate = DateTime.Now.AddMonths(3);
 
-        // --- POPUP DELETE CLASS ---
+        // --- POPUP DELETE & EDIT (Giữ nguyên) ---
         [ObservableProperty] private bool _isDeletePopupOpen;
         private ClassDTO _classToDelete;
 
-
-
         [ObservableProperty] private bool _isEditPopupOpen;
-
         [ObservableProperty] private string _editingClassName;
-
-        // Khi thay đổi Khóa học -> Tự tính lại ngày kết thúc
         [ObservableProperty] private CourseDTO _editingSelectedCourse;
-        partial void OnEditingSelectedCourseChanged(CourseDTO value) => CalculateEditEndDate();
+        partial void OnEditingSelectedCourseChanged(CourseDTO value)
+        {
+            CalculateEditEndDate();
+            FilterTeachersForEdit(); // <--- THÊM DÒNG NÀY
+        }
 
         [ObservableProperty] private TeacherDTO _editingSelectedTeacher;
         [ObservableProperty] private string _editingSchedule;
         [ObservableProperty] private int _editingMaxStudents;
-
-        // Khi thay đổi Ngày bắt đầu -> Tự tính lại ngày kết thúc
         [ObservableProperty] private DateTime _editingStartDate;
         partial void OnEditingStartDateChanged(DateTime value) => CalculateEditEndDate();
-
         [ObservableProperty] private DateTime? _editingEndDate;
+
+
+
+        public List<string> PresetSchedules { get; } = new List<string>
+        {
+            "2-4-6 (17h30 - 19h00)",
+            "2-4-6 (19h30 - 21h00)",
+            "3-5-7 (17h30 - 19h00)",
+            "3-5-7 (19h30 - 21h00)"
+        };
+
+
+        private void FilterTeachersForEdit()
+        {
+            // Lưu lại giáo viên đang được chọn (để lát nữa gán lại nếu họ vẫn nằm trong danh sách phù hợp)
+            var currentTeacherId = EditingSelectedTeacher?.TeacherID;
+
+            if (EditingSelectedCourse == null || Teachers == null)
+            {
+                AvailableTeachers.Clear();
+                return;
+            }
+
+            // Lọc: Chỉ lấy giáo viên có môn dạy == Tên khóa học đang sửa
+            var filtered = Teachers.Where(t => t.Subject == EditingSelectedCourse.CourseName).ToList();
+
+            // Cập nhật danh sách hiển thị
+            AvailableTeachers = new ObservableCollection<TeacherDTO>(filtered);
+
+            // Kiểm tra xem giáo viên cũ có nằm trong danh sách mới lọc không
+            var stillValidTeacher = AvailableTeachers.FirstOrDefault(t => t.TeacherID == currentTeacherId);
+
+            if (stillValidTeacher != null)
+            {
+                // Nếu có, giữ nguyên lựa chọn
+                EditingSelectedTeacher = stillValidTeacher;
+            }
+            else
+            {
+                // Nếu giáo viên cũ không dạy môn này nữa (hoặc đổi khóa học khác), reset lựa chọn
+                EditingSelectedTeacher = null;
+            }
+        }
 
         public ClassManagementViewModel()
         {
             CurrentView = InfoVM;
+            AvailableTeachers = new ObservableCollection<TeacherDTO>(); // Khởi tạo list lọc
             Application.Current.Dispatcher.InvokeAsync(LoadData);
         }
 
@@ -95,8 +142,18 @@ namespace GUI.ViewModels
         {
             try
             {
-                var classList = _classBLL.GetAllClasses();
-                Classes = new ObservableCollection<ClassDTO>(classList);
+                var allClassList = _classBLL.GetAllClasses();
+
+                // Logic phân quyền load danh sách
+                if (UserSession.IsAdmin)
+                {
+                    Classes = new ObservableCollection<ClassDTO>(allClassList);
+                }
+                else
+                {
+                    var teacherClasses = allClassList.Where(c => c.TeacherID == UserSession.CurrentTeacherID).ToList();
+                    Classes = new ObservableCollection<ClassDTO>(teacherClasses);
+                }
 
                 var courseList = _classBLL.GetAllCourses();
                 Courses = new ObservableCollection<CourseDTO>(courseList);
@@ -105,10 +162,12 @@ namespace GUI.ViewModels
                 Teachers = new ObservableCollection<TeacherDTO>();
                 foreach (DataRow row in dtTeachers.Rows)
                 {
+                    // [QUAN TRỌNG] Cần lấy thêm cột Subject để lọc
                     Teachers.Add(new TeacherDTO
                     {
                         TeacherID = Convert.ToInt32(row["TeacherID"]),
-                        Name = row["Name"].ToString()
+                        Name = row["Name"].ToString(),
+                        Subject = row["Subject"] != DBNull.Value ? row["Subject"].ToString() : ""
                     });
                 }
 
@@ -116,6 +175,29 @@ namespace GUI.ViewModels
                     SelectedClass = Classes[0];
             }
             catch (Exception ex) { MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message); }
+        }
+
+        // [MỚI] Hàm lọc giáo viên theo môn học
+        private void FilterTeachersForNewClass()
+        {
+            NewSelectedTeacher = null; // Reset lựa chọn cũ
+
+            if (NewSelectedCourse == null || Teachers == null)
+            {
+                AvailableTeachers.Clear();
+                return;
+            }
+
+            // Logic lọc: Môn dạy của GV == Tên khóa học
+            var filtered = Teachers.Where(t => t.Subject == NewSelectedCourse.CourseName).ToList();
+
+            AvailableTeachers = new ObservableCollection<TeacherDTO>(filtered);
+
+            // UX: Nếu chỉ có 1 người dạy môn này, tự chọn luôn
+            if (AvailableTeachers.Count == 1)
+            {
+                NewSelectedTeacher = AvailableTeachers[0];
+            }
         }
 
         private void CalculateEndDatePreview()
@@ -143,9 +225,19 @@ namespace GUI.ViewModels
         [RelayCommand]
         private void OpenAddDialog()
         {
+            if (!IsAdmin)
+            {
+                MessageBox.Show("Bạn không có quyền thực hiện chức năng này.");
+                return;
+            }
+
             NewClassName = "";
             NewSelectedCourse = null;
             NewSelectedTeacher = null;
+
+            // Xóa danh sách lọc cũ để người dùng buộc phải chọn Khóa học trước
+            AvailableTeachers.Clear();
+
             NewSchedule = "";
             NewMaxStudents = 20;
             NewStartDate = DateTime.Now;
@@ -156,6 +248,8 @@ namespace GUI.ViewModels
         [RelayCommand]
         private void SaveNewClass()
         {
+            if (!IsAdmin) return;
+
             if (string.IsNullOrWhiteSpace(NewClassName)) { MessageBox.Show("Vui lòng nhập tên lớp học."); return; }
             if (NewSelectedCourse == null || NewSelectedTeacher == null) { MessageBox.Show("Vui lòng chọn khóa học và giáo viên."); return; }
 
@@ -167,7 +261,6 @@ namespace GUI.ViewModels
                 Schedule = NewSchedule,
                 MaxStudents = NewMaxStudents,
                 StartDate = NewStartDate,
-                // QUAN TRỌNG: Gửi null để Trigger SQL tự tính toán chính xác
                 EndDate = null
             };
 
@@ -177,7 +270,7 @@ namespace GUI.ViewModels
                 {
                     MessageBox.Show("Tạo lớp học thành công!");
                     IsAddPopupOpen = false;
-                    LoadData(); // Load lại để lấy EndDate chuẩn từ SQL
+                    LoadData();
                 }
                 else MessageBox.Show("Tạo lớp thất bại (Có thể do trùng lịch giáo viên).");
             }
@@ -187,12 +280,14 @@ namespace GUI.ViewModels
         [RelayCommand] private void CancelAdd() => IsAddPopupOpen = false;
 
         // ==========================================================
-        //  LOGIC XÓA LỚP HỌC
+        //  LOGIC XÓA LỚP HỌC (Giữ nguyên)
         // ==========================================================
 
         [RelayCommand]
         private void OpenDeleteDialog(ClassDTO classInfo)
         {
+            if (!IsAdmin) { MessageBox.Show("Bạn không có quyền xóa lớp."); return; }
+
             if (classInfo == null)
             {
                 if (SelectedClass != null) classInfo = SelectedClass;
@@ -206,13 +301,12 @@ namespace GUI.ViewModels
         [RelayCommand]
         private void ConfirmDeleteClass()
         {
-            if (_classToDelete == null) return;
-
+            if (!IsAdmin || _classToDelete == null) return;
             try
             {
                 if (_classBLL.DeleteClass(_classToDelete.ClassID))
                 {
-                    MessageBox.Show("Đã xóa lớp học thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Đã xóa lớp học thành công!");
                     Classes.Remove(_classToDelete);
                     if (SelectedClass == _classToDelete) SelectedClass = Classes.FirstOrDefault();
                     IsDeletePopupOpen = false;
@@ -220,7 +314,7 @@ namespace GUI.ViewModels
                 }
                 else
                 {
-                    MessageBox.Show("Xóa thất bại. Lớp học có thể đang có dữ liệu liên quan.", "Lỗi");
+                    MessageBox.Show("Xóa thất bại. Lớp học có thể đang có dữ liệu liên quan.");
                     IsDeletePopupOpen = false;
                 }
             }
@@ -238,63 +332,47 @@ namespace GUI.ViewModels
             _classToDelete = null;
         }
 
+        // ==========================================================
+        //  LOGIC SỬA LỚP HỌC
+        // ==========================================================
 
         private void CalculateEditEndDate()
         {
             if (EditingSelectedCourse != null)
-            {
-                // Logic: Ngày bắt đầu + Thời lượng khóa học (tháng)
                 EditingEndDate = EditingStartDate.AddMonths(EditingSelectedCourse.DurationMonths);
-            }
         }
 
-        // --- SỬA LẠI HÀM OPEN EDIT DIALOG (Fix lỗi CS0266) ---
         [RelayCommand]
         private void OpenEditDialog()
         {
-            if (SelectedClass == null)
-            {
-                MessageBox.Show("Vui lòng chọn lớp cần sửa.");
-                return;
-            }
+            if (!IsAdmin) { MessageBox.Show("Bạn không có quyền sửa lớp."); return; }
+            if (SelectedClass == null) { MessageBox.Show("Vui lòng chọn lớp cần sửa."); return; }
 
-            // 1. Copy dữ liệu cơ bản
             EditingClassName = SelectedClass.ClassName;
             EditingSchedule = SelectedClass.Schedule;
             EditingMaxStudents = SelectedClass.MaxStudents;
-
-            // 2. FIX LỖI CS0266 Ở ĐÂY:
-            // Nếu SelectedClass.StartDate là null thì lấy ngày hiện tại (hoặc xử lý tùy ý)
             EditingStartDate = SelectedClass.StartDate ?? DateTime.Now;
 
-            // 3. Gán ComboBox (Lưu ý: Việc gán này sẽ kích hoạt OnEditingSelectedCourseChanged -> Tự tính EndDate)
+            // 1. Gán khóa học
             EditingSelectedCourse = Courses.FirstOrDefault(c => c.CourseID == SelectedClass.CourseID);
+
+            // 2. Gán giáo viên tạm thời (để lấy ID)
             EditingSelectedTeacher = Teachers.FirstOrDefault(t => t.TeacherID == SelectedClass.TeacherID);
 
-            // 4. Cập nhật lại EndDate một lần nữa cho chắc chắn đúng logic tính toán
-            CalculateEditEndDate();
+            // 3. [QUAN TRỌNG] Gọi hàm lọc để nạp dữ liệu vào AvailableTeachers
+            FilterTeachersForEdit();
 
+            CalculateEditEndDate();
             IsEditPopupOpen = true;
         }
 
-        // 3. Command Lưu Thay Đổi
         [RelayCommand]
         private void SaveEditClass()
         {
-            // Validate dữ liệu
-            if (string.IsNullOrWhiteSpace(EditingClassName))
-            {
-                MessageBox.Show("Tên lớp không được để trống.");
-                return;
-            }
-            if (EditingSelectedCourse == null || EditingSelectedTeacher == null)
-            {
-                MessageBox.Show("Vui lòng chọn khóa học và giáo viên.");
-                return;
-            }
+            if (!IsAdmin) return;
+            if (string.IsNullOrWhiteSpace(EditingClassName)) { MessageBox.Show("Tên lớp không được để trống."); return; }
+            if (EditingSelectedCourse == null || EditingSelectedTeacher == null) { MessageBox.Show("Vui lòng chọn khóa học và giáo viên."); return; }
 
-            // Tạo đối tượng DTO cập nhật
-            // Lưu ý: Giữ nguyên ClassID của lớp đang chọn
             var updatedClass = new ClassDTO
             {
                 ClassID = SelectedClass.ClassID,
@@ -304,36 +382,22 @@ namespace GUI.ViewModels
                 Schedule = EditingSchedule,
                 MaxStudents = EditingMaxStudents,
                 StartDate = EditingStartDate,
-                EndDate = EditingEndDate // Hoặc để null nếu muốn SQL tự tính lại
+                EndDate = EditingEndDate
             };
 
             try
             {
-                // Gọi BLL để update (Giả sử bạn đã có hàm UpdateClass trong ClassBLL)
                 if (_classBLL.UpdateClass(updatedClass))
                 {
                     MessageBox.Show("Cập nhật lớp học thành công!");
                     IsEditPopupOpen = false;
-                    LoadData(); // Load lại danh sách để cập nhật giao diện
+                    LoadData();
                 }
-                else
-                {
-                    MessageBox.Show("Cập nhật thất bại. (Có thể trùng lịch hoặc lỗi CSDL)");
-                }
+                else MessageBox.Show("Cập nhật thất bại. (Có thể trùng lịch hoặc lỗi CSDL)");
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi hệ thống: " + ex.Message);
-            }
+            catch (Exception ex) { MessageBox.Show("Lỗi hệ thống: " + ex.Message); }
         }
 
-        // 4. Command Hủy Bỏ
-        [RelayCommand]
-        private void CancelEdit()
-        {
-            IsEditPopupOpen = false;
-        }
-
-
+        [RelayCommand] private void CancelEdit() => IsEditPopupOpen = false;
     }
 }

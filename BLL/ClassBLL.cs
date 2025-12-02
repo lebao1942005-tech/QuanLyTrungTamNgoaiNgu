@@ -66,6 +66,14 @@ namespace BLL
             return courseDal.GetAllCourses();
         }
 
+
+
+
+        public int GetStudentCount(int classID)
+        {
+            return dal.CountStudentsInClass(classID);
+        }
+
     }
     
 }

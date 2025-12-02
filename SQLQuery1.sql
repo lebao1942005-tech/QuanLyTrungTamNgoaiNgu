@@ -22,7 +22,8 @@ CREATE TABLE Users (
     Username VARCHAR(100) NOT NULL UNIQUE,
     PasswordHash VARCHAR(255) NOT NULL,
     Role VARCHAR(30) NOT NULL CHECK (Role IN ('Admin','Teacher')),
-    CreatedAt DATETIME DEFAULT GETUTCDATE()
+    CreatedAt DATETIME DEFAULT GETUTCDATE(),
+    TeacherID INT NULL
 );
 
 -------------------------------------------------------
@@ -227,8 +228,8 @@ VALUES (N'Hoàng David', N'TOEIC', '0935556677', 'david.hoang@email.com', @UserI
 -- Admin
 -------------------------------------------------------
 INSERT INTO Users (Username, PasswordHash, Role)
-VALUES ('lebao1942005@gmail.com', '123', 'Admin');  
+VALUES ('lebao1942005@gmail.com', '123456', 'Admin');  
 DECLARE @AdminUserID INT = SCOPE_IDENTITY();
 INSERT INTO Admin (Name, Birthday, Phone, Email, UserID)
-VALUES (N'Bao', '1990-01-01', '0999888777', 'admin@gmail.com', @AdminUserID);
+VALUES (N'Bao', '1990-01-01', '0999888777', 'lebao1942005@gmail.com', @AdminUserID);
 GO

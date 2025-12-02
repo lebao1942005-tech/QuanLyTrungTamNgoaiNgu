@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GUI.Utilities // Namespace sẽ là GUI.Utilities
+namespace GUI.Utilities
 {
     public static class UserSession
     {
@@ -14,18 +14,20 @@ namespace GUI.Utilities // Namespace sẽ là GUI.Utilities
         // Nếu là Giáo viên thì lưu ID vào đây để lọc lớp, Admin thì null
         public static int? CurrentTeacherID { get; set; }
 
-        // Lưu tên hiển thị (VD: "Nguyễn Văn A") để hiện lên góc màn hình cho đẹp
-        public static string CurrentUserName { get; set; }
+        // Lưu tên hiển thị (VD: "Nguyễn Văn A")
+        // [QUAN TRỌNG] Đặt tên là CurrentUsername để khớp với LoginViewModel
+        public static string CurrentUsername { get; set; }
 
         // Helper check nhanh
         public static bool IsAdmin => Role == "Admin";
+        public static bool IsTeacher => Role == "Teacher"; // Thêm helper này để check quyền giáo viên dễ hơn
 
         // Hàm đăng xuất (xóa dữ liệu phiên)
         public static void ClearSession()
         {
             Role = null;
             CurrentTeacherID = null;
-            CurrentUserName = null;
+            CurrentUsername = null;
         }
     }
 }

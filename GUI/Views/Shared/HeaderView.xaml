@@ -18,7 +18,7 @@
                 Width="48" Height="48"
                 Background="Transparent"
                 BorderThickness="0"
-                Click="MenuButton_Click"
+                Command="{Binding ToggleSidebarCommand}" 
                 VerticalAlignment="Center"
                 Cursor="Hand"
                 Margin="12,0,0,0">
@@ -33,28 +33,15 @@
                     VerticalAlignment="Center"
                     Margin="0,0,20,0">
 
-            <!-- Avatar -->
-            <Grid Width="36" Height="36" Margin="0,0,10,0">
-                <Ellipse Fill="#E3F2FD"/>
-                <TextBlock Text="A"
-                           FontSize="16"
-                           FontWeight="Bold"
-                           Foreground="#0D47A1"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"/>
-            </Grid>
+            <!-- Đã xóa phần Avatar -->
 
-            <!-- Tên -->
-            <TextBlock Text="Admin"
+            <!-- Tên người dùng (Email) + Lời chào -->
+            <TextBlock Text="{Binding CurrentUserName, StringFormat='Xin chào, {0}'}" 
                        Foreground="#0D47A1"
                        FontSize="14"
                        FontWeight="SemiBold"
                        VerticalAlignment="Center"
                        Margin="0,0,5,0"/>
-
-            
-
-           
         </StackPanel>
 
         <!-- Line dưới cùng -->

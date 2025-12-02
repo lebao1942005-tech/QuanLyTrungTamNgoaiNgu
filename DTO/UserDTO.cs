@@ -13,5 +13,8 @@ namespace DTO
         public string PasswordHash { get; set; }
         public string Role { get; set; }
         public DateTime CreatedAt { get; set; }
+
+
+        public int? TeacherID { get; set; }
     }
 }

@@ -1,18 +1,15 @@
-﻿<UserControl x:Class="GUI.Views.Shared.SidebarView"
+﻿<UserControl x:Class="GUI.Views.Shared.TeacherSidebarView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="240"
-             Width="240"
-             Background="White" 
-             FontFamily="Roboto">
+             Width="240" Background="White" FontFamily="Roboto">
 
     <UserControl.Resources>
-        <!-- Style cho RadioButton menu -->
+        <!-- Style cho RadioButton menu (Copy từ SidebarView để đồng bộ giao diện) -->
         <Style TargetType="RadioButton" x:Key="SidebarRadioButton">
-            <!-- 1. TRẠNG THÁI MẶC ĐỊNH (BÌNH THƯỜNG) -->
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="#64748B"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -21,61 +18,47 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="GroupName" Value="SidebarMenuItems"/>
+            <Setter Property="GroupName" Value="TeacherSidebarGroup"/>
+            <!-- GroupName riêng cho Teacher -->
 
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="8" 
-                                SnapsToDevicePixels="True">
-                            <StackPanel Orientation="Horizontal" 
-                                        VerticalAlignment="Center" 
-                                        Margin="{TemplateBinding Padding}">
-
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" SnapsToDevicePixels="True">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="{TemplateBinding Padding}">
                                 <!-- Icon -->
                                 <Image x:Name="Icon" 
                                        Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
                                        Width="20" Height="20" 
                                        Margin="0,0,15,0" 
-                                       Opacity="0.6"
+                                       Opacity="0.6" 
                                        RenderOptions.BitmapScalingMode="HighQuality"/>
 
-                                <ContentPresenter VerticalAlignment="Center" 
-                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
+                                <!-- Text -->
+                                <ContentPresenter VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}"/>
                             </StackPanel>
                         </Border>
-
                         <ControlTemplate.Triggers>
-                            <!-- Hover -->
+                            <!-- Hover Effect -->
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Background" Value="#EFF6FF"/>
                                 <Setter Property="Foreground" Value="#1D4ED8"/>
                                 <Setter TargetName="Icon" Property="Opacity" Value="1.0"/>
                             </Trigger>
-
-                            <!-- Selected -->
+                            <!-- Selected Effect -->
                             <Trigger Property="IsChecked" Value="True">
                                 <Setter Property="Background" Value="#5683e9"/>
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="FontWeight" Value="Bold"/>
                                 <Setter TargetName="Icon" Property="Opacity" Value="1.0"/>
                             </Trigger>
-
-                            <!-- Selected + Hover -->
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsChecked" Value="True"/>
-                                    <Condition Property="IsMouseOver" Value="True"/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" Value="#1E40AF"/>
-                            </MultiTrigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
+        <!-- Style cho tiêu đề mục -->
         <Style TargetType="TextBlock" x:Key="SectionHeader">
             <Setter Property="FontSize" Value="12"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -87,10 +70,14 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"/>
+            <!-- Dòng 1: Header -->
             <RowDefinition Height="*"/>
+            <!-- Dòng 2: Menu (Chiếm hết khoảng trống) -->
             <RowDefinition Height="Auto"/>
+            <!-- Dòng 3: Nút Đăng xuất (Luôn ở đáy) -->
         </Grid.RowDefinitions>
 
+        <!-- 1. HEADER LOGO (Giữ nguyên) -->
         <Border Grid.Row="0" Background="#EFF6FF" Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="25,0,0,0">
                 <TextBlock Text="Star Edu" 
@@ -100,24 +87,13 @@
             </StackPanel>
         </Border>
 
+        <!-- 2. MENU ITEMS (Giữ nguyên, chỉ thêm Grid.Row="1") -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
             <StackPanel Margin="0,15,0,20">
-                <TextBlock Text="QUẢN LÝ" Style="{StaticResource SectionHeader}"/>
 
-                <RadioButton Content="Học viên" 
-                             Style="{StaticResource SidebarRadioButton}" 
-                             Tag="/Resources/Images/student-icon.png"
-                             IsChecked="{Binding DataContext.IsStudentPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
-                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="StudentManagement"/>
+                <TextBlock Text="GIẢNG DẠY" Style="{StaticResource SectionHeader}"/>
 
-                <RadioButton Content="Giáo viên" 
-                             Style="{StaticResource SidebarRadioButton}" 
-                             Tag="/Resources/Images/teacher-icon.png"
-                             IsChecked="{Binding DataContext.IsTeacherPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
-                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="TeacherManagement"/>
-
+                <!-- NÚT LỚP HỌC -->
                 <RadioButton Content="Lớp học" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/classroom-icon.png"
@@ -125,31 +101,12 @@
                              Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                              CommandParameter="ClassManagement"/>
 
-                <RadioButton Content="Đăng ký" 
-                             Style="{StaticResource SidebarRadioButton}" 
-                             Tag="/Resources/Images/register-icon.png"
-                             IsChecked="{Binding DataContext.IsRegistrationPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
-                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="RegistrationManagement"/>
-
-                <RadioButton Content="Khóa học" 
-                             Style="{StaticResource SidebarRadioButton}" 
-                             Tag="/Resources/Images/course-icon.png"
-                             IsChecked="{Binding DataContext.IsCoursePage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
-                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="CourseManagement"/>
-
-                <RadioButton Content="Học phí" 
-                             Style="{StaticResource SidebarRadioButton}" 
-                             Tag="/Resources/Images/tuitionFee-icon.png"
-                             IsChecked="{Binding DataContext.IsTuitionPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
-                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                             CommandParameter="TuitionManagement"/>
-
             </StackPanel>
         </ScrollViewer>
 
+        <!-- 3. NÚT ĐĂNG XUẤT (Thêm mới vào Grid.Row="2") -->
         <StackPanel Grid.Row="2" Margin="0,0,0,20">
+            <!-- Đường kẻ mờ ngăn cách -->
             <Border BorderBrush="#F1F5F9" BorderThickness="0,1,0,0" Margin="15,0,15,10"/>
 
             <RadioButton Content="Đăng xuất" 

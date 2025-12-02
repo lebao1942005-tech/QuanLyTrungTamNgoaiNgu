@@ -6,6 +6,12 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Windows;
 using System.Text.RegularExpressions;
+using System.Collections.Generic;
+using System.Linq;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using System.IO;
+using Microsoft.Win32;
 
 namespace GUI.ViewModels
 {
@@ -17,6 +23,21 @@ namespace GUI.ViewModels
         // ====== Danh sách hiển thị lên DataGrid ======
         [ObservableProperty]
         private ObservableCollection<StudentDTO> _students;
+
+
+        // [MỚI 1] Danh sách gốc để lưu toàn bộ dữ liệu (Backup)
+        private List<StudentDTO> _originalStudentsList;
+
+        // [MỚI 2] Biến chứa từ khóa tìm kiếm
+        [ObservableProperty]
+        private string _searchText;
+
+        // Hàm này tự động chạy khi bạn gõ chữ vào ô tìm kiếm
+        partial void OnSearchTextChanged(string value)
+        {
+            FilterStudents();
+        }
+
 
         // ====== Thuộc tính dùng cho popup thêm học viên ======
         [ObservableProperty] private bool _isAddStudentPopupVisible;
@@ -73,6 +94,10 @@ namespace GUI.ViewModels
                     };
                     Students.Add(student);
                 }
+
+                // [MỚI 3] Lưu bản sao dữ liệu vào danh sách gốc
+                _originalStudentsList = Students.ToList();
+
             }
             catch (Exception ex)
             {
@@ -81,6 +106,34 @@ namespace GUI.ViewModels
         }
 
 
+
+        // [MỚI 4] Hàm xử lý logic tìm kiếm
+        private void FilterStudents()
+        {
+            // Nếu chưa có dữ liệu gốc thì không làm gì cả
+            if (_originalStudentsList == null) return;
+
+            // Nếu ô tìm kiếm trống -> Hiển thị lại toàn bộ danh sách gốc
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                Students = new ObservableCollection<StudentDTO>(_originalStudentsList);
+            }
+            else
+            {
+                // Lọc theo Tên, SĐT, Email (chữ thường không dấu)
+                string keyword = SearchText.ToLower();
+
+                var filteredList = _originalStudentsList.Where(s =>
+                    (s.Name != null && s.Name.ToLower().Contains(keyword)) ||
+                    (s.Phone != null && s.Phone.Contains(keyword)) ||
+                    (s.Email != null && s.Email.ToLower().Contains(keyword)) ||
+                    (s.StudentID.ToString().Contains(keyword)) // Tìm theo cả ID nếu muốn
+                ).ToList();
+
+                // Cập nhật lại danh sách hiển thị
+                Students = new ObservableCollection<StudentDTO>(filteredList);
+            }
+        }
 
 
         private bool IsValidName(string name)
@@ -300,6 +353,95 @@ namespace GUI.ViewModels
                 MessageBox.Show($"Cập nhật thất bại: {error}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+
+
+        [RelayCommand]
+        private void ExportToPdf()
+        {
+            // 1. Mở hộp thoại chọn nơi lưu file
+            SaveFileDialog saveFileDialog = new SaveFileDialog
+            {
+                Filter = "PDF Files (*.pdf)|*.pdf",
+                FileName = $"DanhSachHocVien_{DateTime.Now:ddMMyyyy_HHmm}.pdf"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // 2. Tạo tài liệu PDF
+                    // PageSize.A4.Rotate() để xoay ngang khổ giấy nếu bảng rộng
+                    Document doc = new Document(PageSize.A4, 20, 20, 20, 20);
+                    PdfWriter.GetInstance(doc, new FileStream(saveFileDialog.FileName, FileMode.Create));
+
+                    doc.Open();
+
+                    // 3. Cấu hình Font chữ Tiếng Việt (Quan trọng)
+                    // Tìm đường dẫn font Arial trong Windows
+                    string fontPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Fonts), "arial.ttf");
+                    BaseFont bf = BaseFont.CreateFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                    Font titleFont = new Font(bf, 18, Font.BOLD, BaseColor.BLUE);
+                    Font headerFont = new Font(bf, 12, Font.BOLD, BaseColor.WHITE);
+                    Font contentFont = new Font(bf, 11, Font.NORMAL, BaseColor.BLACK);
+
+                    // 4. Thêm Tiêu đề
+                    Paragraph title = new Paragraph("DANH SÁCH HỌC VIÊN", titleFont);
+                    title.Alignment = Element.ALIGN_CENTER;
+                    title.SpacingAfter = 20;
+                    doc.Add(title);
+
+                    // 5. Tạo Bảng (5 cột: STT, Tên, Ngày sinh, SĐT, Email)
+                    PdfPTable table = new PdfPTable(5);
+                    table.WidthPercentage = 100; // Chiều rộng 100%
+                                                 // Set tỉ lệ độ rộng các cột (VD: STT nhỏ, Email rộng...)
+                    table.SetWidths(new float[] { 10f, 30f, 15f, 20f, 25f });
+
+                    // --- Header ---
+                    AddCellToBody(table, "STT", headerFont, BaseColor.DARK_GRAY);
+                    AddCellToBody(table, "Họ Tên", headerFont, BaseColor.DARK_GRAY);
+                    AddCellToBody(table, "Ngày Sinh", headerFont, BaseColor.DARK_GRAY);
+                    AddCellToBody(table, "Điện Thoại", headerFont, BaseColor.DARK_GRAY);
+                    AddCellToBody(table, "Email", headerFont, BaseColor.DARK_GRAY);
+
+                    // --- Dữ liệu ---
+                    int stt = 1;
+                    // Lưu ý: Export danh sách đang hiển thị (Students) chứ không phải danh sách gốc
+                    foreach (var sv in Students)
+                    {
+                        AddCellToBody(table, stt++.ToString(), contentFont, BaseColor.WHITE);
+                        AddCellToBody(table, sv.Name, contentFont, BaseColor.WHITE);
+                        AddCellToBody(table, sv.Birthday?.ToString("dd/MM/yyyy"), contentFont, BaseColor.WHITE);
+                        AddCellToBody(table, sv.Phone, contentFont, BaseColor.WHITE);
+                        AddCellToBody(table, sv.Email, contentFont, BaseColor.WHITE);
+                    }
+
+                    doc.Add(table);
+                    doc.Close();
+
+                    MessageBox.Show("Xuất file PDF thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    // Tùy chọn: Mở file ngay sau khi lưu
+                    // System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(saveFileDialog.FileName) { UseShellExecute = true });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi xuất file: " + ex.Message);
+                }
+            }
+        }
+
+        // Hàm hỗ trợ thêm ô vào bảng cho gọn code
+        private void AddCellToBody(PdfPTable table, string text, Font font, BaseColor bgColor)
+        {
+            PdfPCell cell = new PdfPCell(new Phrase(text ?? "", font));
+            cell.BackgroundColor = bgColor;
+            cell.HorizontalAlignment = Element.ALIGN_CENTER;
+            cell.VerticalAlignment = Element.ALIGN_MIDDLE;
+            cell.Padding = 5;
+            table.AddCell(cell);
+        }
+
 
     }
 }

@@ -68,10 +68,11 @@
 
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Giáo viên phụ trách" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                        <ComboBox ItemsSource="{Binding Teachers}" 
-                                  SelectedItem="{Binding NewSelectedTeacher}"
-                                  DisplayMemberPath="Name"
-                                  Padding="10,8" BorderBrush="#E5E7EB" Background="White"/>
+
+                        <ComboBox ItemsSource="{Binding AvailableTeachers}" 
+          SelectedItem="{Binding NewSelectedTeacher}"
+          DisplayMemberPath="Name"
+          Padding="10,8" BorderBrush="#E5E7EB" Background="White"/>
                     </StackPanel>
                 </Grid>
 
@@ -84,8 +85,14 @@
                     </Grid.ColumnDefinitions>
 
                     <StackPanel Grid.Column="0">
-                        <TextBlock Text="Lịch học (VD: 2-4-6, 17h-19h)" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                        <TextBox Text="{Binding NewSchedule, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource InputControl}"/>
+                        <TextBlock Text="Lịch học" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+
+                        <ComboBox ItemsSource="{Binding PresetSchedules}"
+              SelectedItem="{Binding NewSchedule, UpdateSourceTrigger=PropertyChanged}"
+              Padding="10,8" 
+              BorderBrush="#E5E7EB" 
+              Background="White"
+              IsEditable="False"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2">

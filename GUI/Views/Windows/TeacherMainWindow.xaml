@@ -3,10 +3,68 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GUI.Views.Windows"
-        mc:Ignorable="d"
-        Title="TeacherMainWindow" Height="450" Width="800">
-    <Grid>
         
+        xmlns:shared="clr-namespace:GUI.Views.Shared"
+        xmlns:viewmodels="clr-namespace:GUI.ViewModels"
+        xmlns:pages="clr-namespace:GUI.Views.Pages.ClassManagement"
+        
+        mc:Ignorable="d"
+        Title="Teacher Portal - Admin Center" Height="768" Width="1366"
+        WindowStartupLocation="CenterScreen"
+        Background="#F1F5F9"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewmodels:ClassManagementViewModel}">
+            <pages:ClassManagementView/>
+        </DataTemplate>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- 1. SIDEBAR AREA -->
+        <Grid Grid.Column="0" Panel.ZIndex="100">
+
+            <!-- Sidebar Lớn: Hiện khi IsSidebarOpen = True -->
+            <shared:TeacherSidebarView 
+                Visibility="{Binding IsSidebarOpen, Converter={StaticResource BoolToVis}}"/>
+
+            <!-- Sidebar Nhỏ: Dùng Style Trigger để xử lý logic ngược -->
+            <!-- ĐÃ SỬA: Xóa thuộc tính Visibility trực tiếp ở đây -->
+            <shared:TeacherSmallSidebarView>
+                <shared:TeacherSmallSidebarView.Style>
+                    <Style TargetType="UserControl">
+                        <!-- Mặc định là Hiện -->
+                        <Setter Property="Visibility" Value="Visible"/>
+
+                        <Style.Triggers>
+                            <!-- Khi SidebarOpen = True (Đang mở to) -> Thì ẨN cái nhỏ đi -->
+                            <DataTrigger Binding="{Binding IsSidebarOpen}" Value="True">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </shared:TeacherSmallSidebarView.Style>
+            </shared:TeacherSmallSidebarView>
+
+        </Grid>
+
+        <!-- 2. MAIN CONTENT AREA -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <shared:HeaderView Grid.Row="0"/>
+
+            <ContentControl Grid.Row="1" Content="{Binding CurrentViewModel}" Margin="0"/>
+        </Grid>
     </Grid>
 </Window>

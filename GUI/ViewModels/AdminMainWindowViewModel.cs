@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using GUI.Utilities;      // Để dùng UserSession
+using GUI.Views.Windows;  // Để mở LoginWindow
 using System.Windows;
 
 namespace GUI.ViewModels
@@ -10,10 +12,23 @@ namespace GUI.ViewModels
         [ObservableProperty]
         private object _currentViewModel;
 
-        // --- QUẢN LÝ TRẠNG THÁI SIDEBAR ---
+        // --- 1. HEADER & SIDEBAR LOGIC (Thêm mới) ---
 
-        // 1. Biến lưu "Key" của trang đang đứng (Ví dụ: "StudentManagement")
-        // Khi biến này thay đổi, nó tự động báo cho các biến bool bên dưới cập nhật theo
+        // Lấy tên hiển thị từ Session để HeaderView binding vào
+        public string CurrentUserName => UserSession.CurrentUsername;
+
+        // Quản lý trạng thái mở/đóng của Sidebar (cho nút Hamburger ở Header)
+        [ObservableProperty]
+        private bool _isSidebarOpen = true;
+
+        [RelayCommand]
+        private void ToggleSidebar()
+        {
+            IsSidebarOpen = !IsSidebarOpen;
+        }
+
+        // --- 2. QUẢN LÝ TRẠNG THÁI TRANG (Navigation) ---
+
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsStudentPage))]
         [NotifyPropertyChangedFor(nameof(IsTeacherPage))]
@@ -23,64 +38,29 @@ namespace GUI.ViewModels
         [NotifyPropertyChangedFor(nameof(IsTuitionPage))]
         private string _currentPage;
 
-        // 2. Các biến Boolean để Binding vào RadioButton (IsChecked)
-        // Logic: Nếu CurrentPage đúng là trang này -> Trả về True -> RadioButton sáng đèn
-        public bool IsStudentPage
-        {
-            get => CurrentPage == "StudentManagement";
-            set { if (value) Navigate("StudentManagement"); }
-        }
-
-        public bool IsTeacherPage
-        {
-            get => CurrentPage == "TeacherManagement";
-            set { if (value) Navigate("TeacherManagement"); }
-        }
-
-        public bool IsClassPage
-        {
-            get => CurrentPage == "ClassManagement";
-            set { if (value) Navigate("ClassManagement"); }
-        }
-
-        public bool IsRegistrationPage
-        {
-            get => CurrentPage == "RegistrationManagement";
-            set { if (value) Navigate("RegistrationManagement"); }
-        }
-
-        public bool IsCoursePage
-        {
-            get => CurrentPage == "CourseManagement";
-            set { if (value) Navigate("CourseManagement"); }
-        }
-
-        public bool IsTuitionPage
-        {
-            get => CurrentPage == "TuitionManagement";
-            set { if (value) Navigate("TuitionManagement"); }
-        }
+        // Các biến Boolean để Binding vào RadioButton (IsChecked)
+        public bool IsStudentPage { get => CurrentPage == "StudentManagement"; set { if (value) Navigate("StudentManagement"); } }
+        public bool IsTeacherPage { get => CurrentPage == "TeacherManagement"; set { if (value) Navigate("TeacherManagement"); } }
+        public bool IsClassPage { get => CurrentPage == "ClassManagement"; set { if (value) Navigate("ClassManagement"); } }
+        public bool IsRegistrationPage { get => CurrentPage == "RegistrationManagement"; set { if (value) Navigate("RegistrationManagement"); } }
+        public bool IsCoursePage { get => CurrentPage == "CourseManagement"; set { if (value) Navigate("CourseManagement"); } }
+        public bool IsTuitionPage { get => CurrentPage == "TuitionManagement"; set { if (value) Navigate("TuitionManagement"); } }
 
         public AdminMainWindowViewModel()
         {
-            // Mặc định vào trang Học viên
-            // Gọi hàm Navigate để nó set cả CurrentViewModel lẫn CurrentPage
+            // Mặc định vào trang Học viên khi mở app
             Navigate("StudentManagement");
         }
 
-        // Command điều hướng
+        // --- 3. HÀM ĐIỀU HƯỚNG ---
         [RelayCommand]
         private void Navigate(string pageKey)
         {
             if (string.IsNullOrWhiteSpace(pageKey)) return;
+            if (CurrentPage == pageKey) return; // Tránh load lại nếu đang ở trang đó
 
-            // Cập nhật trạng thái trang hiện tại (để Sidebar đồng bộ)
-            if (CurrentPage != pageKey)
-            {
-                CurrentPage = pageKey;
-            }
+            CurrentPage = pageKey;
 
-            // Cập nhật View tương ứng
             switch (pageKey)
             {
                 case "Overview":
@@ -113,12 +93,23 @@ namespace GUI.ViewModels
             }
         }
 
-        // Command Logout nếu có
+        // --- 4. HÀM ĐĂNG XUẤT (Cập nhật) ---
+        // Nhận tham số là Window để đóng cửa sổ hiện tại
         [RelayCommand]
-        private void Logout()
+        private void Logout(Window currentWindow)
         {
-            System.Windows.MessageBox.Show("Đăng xuất thành công!");
-            // Tùy bạn mở LoginWindow,...
+            if (MessageBox.Show("Bạn có chắc chắn muốn đăng xuất?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                // 1. Xóa thông tin phiên làm việc
+                UserSession.ClearSession();
+
+                // 2. Mở lại màn hình đăng nhập
+                var loginScreen = new Login();
+                loginScreen.Show();
+
+                // 3. Đóng cửa sổ Admin hiện tại
+                currentWindow?.Close();
+            }
         }
     }
 }
