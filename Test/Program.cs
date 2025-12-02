@@ -1,74 +1,96 @@
 ﻿using System;
 using BLL;
 using DTO;
-using System.Data;
 
-class Program
+namespace ConsoleTestSQL
 {
-    static void Main(string[] args)
+    class Program
     {
-        TeacherBLL teacherBLL = new TeacherBLL();
-        string error;
-
-        Console.WriteLine("=== TEST TEACHER BLL ===");
-
-        // 1. Thêm giáo viên
-        TeacherDTO newTeacher = new TeacherDTO
+        static void Main(string[] args)
         {
-            Name = "Nguyen Van D",
-            Subject = "Math",
-            Phone = "0123456789",
-            Email = "teacherD@example.com",
-            UserID = 1 // Chỉ cần >0, sẽ tạo User trong BLL
-        };
+            Console.WriteLine("=== TEST KẾT NỐI SQL SERVER ===");
 
-        if (teacherBLL.AddTeacher(newTeacher, out error))
-            Console.WriteLine("✓ Thêm giáo viên thành công!");
-        else
-            Console.WriteLine("X Thêm thất bại: " + error);
+            // Nhập server
+            Console.Write("Nhập Server (ví dụ: .\\SQLEXPRESS): ");
+            string server = Console.ReadLine();
 
-        // 2. Lấy danh sách giáo viên
-        Console.WriteLine("\n--- Danh sách giáo viên ---");
-        DataTable dt = teacherBLL.GetAllTeachers();
-        foreach (DataRow row in dt.Rows)
-        {
-            Console.WriteLine($"{row["TeacherID"]} | {row["Name"]} | {row["Subject"]} | {row["Email"]}");
+            // Nhập database
+            Console.Write("Nhập Database: ");
+            string database = Console.ReadLine();
+
+            // Chọn chế độ đăng nhập
+            Console.WriteLine("Chọn chế độ:");
+            Console.WriteLine("1. Windows Authentication");
+            Console.WriteLine("2. SQL Server Authentication");
+            Console.Write("Lựa chọn: ");
+            string mode = Console.ReadLine();
+
+            SystemConfig cfg = new SystemConfig();
+            cfg.ServerName = server;
+            cfg.DatabaseName = database;
+
+            if (mode == "1")
+            {
+                cfg.UseWindowsAuth = true;
+            }
+            else
+            {
+                cfg.UseWindowsAuth = false;
+
+                Console.Write("User: ");
+                cfg.UserName = Console.ReadLine();
+
+                Console.Write("Password: ");
+                cfg.Password = ReadPassword();
+            }
+
+            // Tạo BLL
+            SystemConfigBLL bll = new SystemConfigBLL();
+            string connStr = bll.BuildConnectionString(cfg);
+
+            Console.WriteLine("\nConnection String:");
+            Console.WriteLine(connStr);
+
+            // Test connection
+            Console.WriteLine("\nĐang kiểm tra kết nối...");
+            bool ok = bll.TestConnection(connStr);
+
+            if (ok)
+                Console.WriteLine("🎉 KẾT NỐI THÀNH CÔNG!");
+            else
+                Console.WriteLine("❌ KẾT NỐI THẤT BẠI!");
+
+            Console.WriteLine("\nNhấn phím bất kỳ để thoát...");
+            Console.ReadKey();
         }
 
-        // 3. Lấy 1 giáo viên theo ID
-        Console.WriteLine("\nNhập ID giáo viên để xem chi tiết:");
-        int id = int.Parse(Console.ReadLine());
-        var teacher = teacherBLL.GetTeacherById(id);
-        if (teacher != null)
+        // ==============================
+        // Hàm nhập password không hiện ký tự
+        // ==============================
+        static string ReadPassword()
         {
-            Console.WriteLine($"ID: {teacher.TeacherID}");
-            Console.WriteLine($"Name: {teacher.Name}");
-            Console.WriteLine($"Email: {teacher.Email}");
-            Console.WriteLine($"UserID: {teacher.UserID}");
+            string pass = "";
+            ConsoleKeyInfo key;
+
+            do
+            {
+                key = Console.ReadKey(true);
+
+                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                {
+                    pass += key.KeyChar;
+                    Console.Write("*");
+                }
+                else if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+                {
+                    pass = pass.Substring(0, pass.Length - 1);
+                    Console.Write("\b \b");
+                }
+            }
+            while (key.Key != ConsoleKey.Enter);
+
+            Console.WriteLine();
+            return pass;
         }
-        else
-        {
-            Console.WriteLine("Không tìm thấy giáo viên!");
-        }
-
-        // 4. Cập nhật giáo viên
-        Console.WriteLine("\n=== Cập nhật giáo viên ===");
-        teacher.Name += " (Updated)";
-        if (teacherBLL.UpdateTeacher(teacher, out error))
-            Console.WriteLine("✓ Cập nhật thành công!");
-        else
-            Console.WriteLine("X Cập nhật thất bại: " + error);
-
-        // 5. Xóa giáo viên
-        Console.WriteLine("\nNhập ID giáo viên để xóa (tài khoản User cũng sẽ bị xóa):");
-        int deleteId = int.Parse(Console.ReadLine());
-
-        if (teacherBLL.DeleteTeacher(deleteId, out error))
-            Console.WriteLine("✓ Xóa giáo viên và tài khoản thành công!");
-        else
-            Console.WriteLine("X Xóa thất bại: " + error);
-
-        Console.WriteLine("\n--- KẾT THÚC TEST ---");
-        Console.ReadKey();
     }
 }
