@@ -9,11 +9,39 @@ public class StudentDAL
     private readonly Database db = new Database();
 
     // ✔ Lấy tất cả sinh viên
-   public DataTable GetAllStudents()
+    /*   public DataTable GetAllStudents()
+        {
+            string sql = "SELECT * FROM Student";
+            return db.ExecuteQuery(sql);
+        }
+    */
+
+
+    public DataTable GetAllStudents()
     {
-        string sql = "SELECT * FROM Student";
+        // SỬA: Thêm cột Status được tính toán bằng sub-query
+        // 2: Đang học (có trong Enrollment), 1: Không lớp (không có)
+        string sql = @"
+                SELECT 
+                    s.StudentID, 
+                    s.Name, 
+                    s.Birthday, 
+                    s.Phone, 
+                    s.Email,
+                    CASE 
+                        WHEN EXISTS (
+                            SELECT 1 
+                            FROM Enrollment e 
+                            WHERE e.StudentID = s.StudentID 
+                        ) 
+                        THEN 2  -- Đang học
+                        ELSE 1  -- Không lớp
+                    END AS Status
+                FROM Student s";
+
         return db.ExecuteQuery(sql);
     }
+
 
     // ✔ Lấy 1 sinh viên theo ID
     public StudentDTO GetStudentById(int id)

@@ -90,7 +90,7 @@ namespace GUI.ViewModels
                         Email = row["Email"] == DBNull.Value ? "" : row["Email"].ToString(),
 
                         // Lưu ý: Nếu database của bạn chưa có cột Status, bạn cần thêm vào hoặc giả lập
-                        // Status = row.Table.Columns.Contains("Status") ? Convert.ToInt32(row["Status"]) : 1 
+                        Status = row.Table.Columns.Contains("Status") ? Convert.ToInt32(row["Status"]) : 1 
                     };
                     Students.Add(student);
                 }
