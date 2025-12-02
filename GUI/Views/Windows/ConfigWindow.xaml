@@ -1,0 +1,251 @@
+﻿<Window x:Class="GUI.Views.Windows.ConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Cấu hình hệ thống" 
+        Height="520" Width="400"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="Transparent"
+        FontFamily="Segoe UI">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBlue" Color="#1D4ED8"/>
+        <SolidColorBrush x:Key="TextGray" Color="#374151"/>
+        <SolidColorBrush x:Key="LightBorder" Color="#E5E7EB"/>
+
+        <!-- Style cho TextBox có Icon -->
+        <Style TargetType="TextBox" x:Key="IconTextBox">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="12,0,35,0"/>
+            <!-- Padding phải chừa chỗ cho icon -->
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#F9FAFB"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Border x:Name="border" CornerRadius="8" Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <ScrollViewer x:Name="PART_ContentHost"/>
+                            </Border>
+                            <!-- Icon nằm đè lên bên phải -->
+                            <TextBlock Text="{TemplateBinding Tag}" FontFamily="Segoe MDL2 Assets" 
+                                       HorizontalAlignment="Right" VerticalAlignment="Center" 
+                                       Margin="0,0,12,0" Foreground="#9CA3AF" FontSize="14" IsHitTestVisible="False"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter TargetName="border" Property="Background" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style cho PasswordBox -->
+        <Style TargetType="PasswordBox" x:Key="IconPasswordBox">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Background" Value="#F9FAFB"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border x:Name="border" CornerRadius="8" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter TargetName="border" Property="Background" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style cho RadioButton dạng Toggle -->
+        <Style x:Key="ToggleRadioButton" TargetType="RadioButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" CornerRadius="6" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="4" ShadowDepth="1" Opacity="0.1" Direction="270"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <!-- Khung chính bo góc và đổ bóng -->
+    <Border Background="White" CornerRadius="16" BorderBrush="#E5E7EB" BorderThickness="1" Margin="10">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="5" Opacity="0.2" Color="Gray"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <!-- Top Bar -->
+                <RowDefinition Height="Auto"/>
+                <!-- Title -->
+                <RowDefinition Height="*"/>
+                <!-- Form -->
+                <RowDefinition Height="Auto"/>
+                <!-- Footer -->
+            </Grid.RowDefinitions>
+
+            <!-- 1. Top Bar -->
+            <Grid Grid.Row="0" Margin="20,15">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                    <Border Background="{StaticResource PrimaryBlue}" CornerRadius="4" Width="20" Height="20" Margin="0,0,8,0">
+                        <TextBlock Text="&#xE968;" FontFamily="Segoe MDL2 Assets" Foreground="White" FontSize="10" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <TextBlock Text="CẤU HÌNH HỆ THỐNG" FontSize="11" FontWeight="Bold" Foreground="#6B7280" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Nút đóng cửa sổ -->
+                <Button Content="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="12" 
+                        HorizontalAlignment="Right" Background="Transparent" BorderThickness="0"
+                        Click="btnExit_Click" Cursor="Hand" Foreground="#9CA3AF"/>
+            </Grid>
+
+            <!-- 2. Header Title -->
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,25">
+                <TextBlock Text="Kết Nối Máy Chủ" FontSize="24" FontWeight="ExtraBold" Foreground="#111827" HorizontalAlignment="Center"/>
+                <TextBlock Text="Thiết lập thông tin SQL Server" FontSize="13" Foreground="#6B7280" Margin="0,4,0,0" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- 3. Form Input -->
+            <StackPanel Grid.Row="2" Margin="30,0">
+
+                <!-- Server -->
+                <TextBlock Text="TÊN SERVER (DATA SOURCE)" FontSize="11" FontWeight="Bold" Foreground="#6B7280" Margin="0,0,0,6"/>
+                <!-- Tag="&#xE968;" là mã icon Server trong font Segoe MDL2 -->
+                <TextBox x:Name="txtServer" Text=".\SQLEXPRESS" Style="{StaticResource IconTextBox}" Tag="&#xE968;" Margin="0,0,0,15"/>
+
+                <!-- Database -->
+                <TextBlock Text="TÊN DATABASE" FontSize="11" FontWeight="Bold" Foreground="#6B7280" Margin="0,0,0,6"/>
+                <TextBox x:Name="txtDbName" Text="EducationDB" Style="{StaticResource IconTextBox}" Tag="&#xEA19;" Margin="0,0,0,20"/>
+
+                <!-- Auth Toggle Switch -->
+                <Border Background="#F3F4F6" CornerRadius="8" Padding="4" Margin="0,0,0,15">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Checked/Unchecked event để ẩn hiện ô user/pass -->
+                        <RadioButton x:Name="rbWindows" Content="Windows Auth" GroupName="Auth" Style="{StaticResource ToggleRadioButton}" Grid.Column="0"
+                                     Checked="rbAuth_Checked"/>
+                        <RadioButton x:Name="rbSQL" Content="SQL Server Auth" GroupName="Auth" Style="{StaticResource ToggleRadioButton}" Grid.Column="1" 
+                                     IsChecked="True" Checked="rbAuth_Checked"/>
+                    </Grid>
+                </Border>
+
+                <!-- User/Pass Group -->
+                <Grid x:Name="grpSqlAuth">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="15"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="TÀI KHOẢN" FontSize="10" FontWeight="Bold" Foreground="#9CA3AF" Margin="0,0,0,4"/>
+                        <TextBox x:Name="txtUser" Text="sa" Style="{StaticResource IconTextBox}" Tag="" Height="38" Padding="10,0"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Text="MẬT KHẨU" FontSize="10" FontWeight="Bold" Foreground="#9CA3AF" Margin="0,0,0,4"/>
+                        <PasswordBox x:Name="txtPass" Style="{StaticResource IconPasswordBox}" Height="38"/>
+                    </StackPanel>
+                </Grid>
+
+            </StackPanel>
+
+            <!-- 4. Footer Buttons -->
+            <Grid Grid.Row="3" Margin="30,25,30,30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="1.5*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="btnCheck" Content="Kiểm tra" Click="btnCheck_Click"
+                        Background="White" BorderBrush="#E5E7EB" BorderThickness="1" Foreground="#4B5563"
+                        Height="42" FontWeight="Bold" Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#F9FAFB"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button x:Name="btnSave" Click="btnSave_Click" Grid.Column="2"
+                        Background="{StaticResource PrimaryBlue}" Foreground="White" BorderThickness="0"
+                        Height="42" FontWeight="Bold" Cursor="Hand">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE74E;" FontFamily="Segoe MDL2 Assets" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="Lưu cấu hình" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Opacity" Value="0.9"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>

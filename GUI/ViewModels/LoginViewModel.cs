@@ -104,5 +104,14 @@ namespace GUI.ViewModels
                                         .FirstOrDefault(w => w.DataContext == this);
             window?.Close();
         }
+
+
+        // Thêm Command mở trang cấu hình
+        [RelayCommand]
+        private void OpenConfig()
+        {
+            var configWindow = new GUI.Views.Windows.ConfigWindow();
+            configWindow.ShowDialog(); // ShowDialog để chặn tương tác màn hình chính
+        }
     }
 }

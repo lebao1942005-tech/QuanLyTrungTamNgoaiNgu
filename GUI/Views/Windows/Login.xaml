@@ -101,6 +101,12 @@
 
             <!-- 1. Header: Window Controls (Góc phải trên) -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Button Content="&#xE713;" 
+                        Style="{StaticResource WindowControlButton}" 
+                        Command="{Binding OpenConfigCommand}" 
+                        ToolTip="Cấu hình kết nối Database"
+                        Margin="0,0,10,0"/>
+                
                 <Button Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="MinimizeButton_Click" ToolTip="Thu nhỏ"/>
                 <Button Style="{StaticResource MaximizeButtonStyle}" Click="MaximizeButton_Click" ToolTip="Phóng to"/>
                 <Button Content="&#xE8BB;" Style="{StaticResource WindowControlButton}" Click="CloseButton_Click" ToolTip="Đóng" Foreground="#EF4444"/>

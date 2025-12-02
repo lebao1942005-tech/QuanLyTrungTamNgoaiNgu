@@ -1,9 +1,9 @@
 ﻿<Application x:Class="GUI.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:GUI"
-             StartupUri="Views/Windows/Login.xaml">
+             xmlns:local="clr-namespace:GUI">
     <!-- 
+    StartupUri="Views/Windows/Login.xaml"
     Đảm bảo dòng trên là "LoginWindow.xaml" 
     (chữ L và W viết hoa), KHÔNG phải "loginwindow.xaml"
     -->
