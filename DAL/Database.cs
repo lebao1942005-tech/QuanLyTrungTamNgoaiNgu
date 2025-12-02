@@ -1,11 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DAL;
+using Microsoft.Data.SqlClient;
 using System;
 using System.Data;
 
 public class Database
 {
-    private readonly string connectionString =
-        "Data Source=LAPTOP-JH9IJG9F\\SQLEXPRESS;Initial Catalog=EducationDB;Integrated Security=True;Trust Server Certificate=True";
+    private readonly string connectionString = DatabaseHelper.ConnectionString;
+
 
     // ✔ Hàm SELECT, trả về DataTable
     public DataTable ExecuteQuery(string query, SqlParameter[] parameters = null)
