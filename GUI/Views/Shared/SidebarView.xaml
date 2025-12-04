@@ -104,7 +104,15 @@
             <StackPanel Margin="0,15,0,20">
                 <TextBlock Text="QUẢN LÝ" Style="{StaticResource SectionHeader}"/>
 
-                <RadioButton Content="Học viên" 
+                <RadioButton Content="Dashboard" 
+                             Style="{StaticResource SidebarRadioButton}" 
+                             Tag="/Resources/Images/dashboard-icon.png"
+                             IsChecked="{Binding DataContext.IsDashboardPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                             Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                             CommandParameter="Dashboard"/>
+
+
+                    <RadioButton Content="Học viên" 
                              Style="{StaticResource SidebarRadioButton}" 
                              Tag="/Resources/Images/student-icon.png"
                              IsChecked="{Binding DataContext.IsStudentPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"

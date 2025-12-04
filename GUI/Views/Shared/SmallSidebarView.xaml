@@ -64,7 +64,15 @@
             <!-- MENU ITEMS -->
             <!-- Lưu ý: Tất cả đều dùng Binding IsChecked="..." trỏ về ViewModel của Window cha -->
 
-            <!-- 1. HỌC VIÊN -->
+
+
+            <RadioButton Style="{StaticResource SmallSidebarButton}"
+                         Tag="/Resources/Images/dashboard-icon.png"
+                         IsChecked="{Binding DataContext.IsDashboardPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"
+                         Command="{Binding DataContext.NavigateCommand, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                         CommandParameter="Dashboard"/>
+
+                <!-- 1. HỌC VIÊN -->
             <RadioButton Style="{StaticResource SmallSidebarButton}"
                          Tag="/Resources/Images/student-icon.png"
                          IsChecked="{Binding DataContext.IsStudentPage, RelativeSource={RelativeSource AncestorType={x:Type Window}}, Mode=TwoWay}"

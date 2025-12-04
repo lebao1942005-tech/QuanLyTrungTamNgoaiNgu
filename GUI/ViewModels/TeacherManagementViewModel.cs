@@ -359,6 +359,20 @@ namespace GUI.ViewModels
         private void RequestDeleteTeacher(TeacherDTO teacher)
         {
             if (teacher == null) return;
+
+            // [MỚI] Kiểm tra ràng buộc dữ liệu trước khi xóa
+            // Gọi hàm HasClasses vừa viết bên BLL
+            if (_teacherBLL.HasClasses(teacher.TeacherID))
+            {
+                MessageBox.Show($"Không thể xóa giáo viên '{teacher.Name}' vì đang phụ trách lớp học.\n" +
+                                "Vui lòng xóa lớp hoặc phân công giáo viên khác cho các lớp đó trước.",
+                                "Thao tác bị chặn",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return; // Dừng lại ngay, không mở popup xóa
+            }
+
+            // Nếu không vướng bận gì thì mới cho xóa
             _teacherToDelete = teacher;
             IsDeleteTeacherPopupVisible = true;
         }

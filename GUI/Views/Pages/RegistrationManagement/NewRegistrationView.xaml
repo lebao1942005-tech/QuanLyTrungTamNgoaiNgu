@@ -178,7 +178,9 @@
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding ClassName}" FontWeight="Bold" FontSize="15" Foreground="#111827" Margin="0,0,10,4"/>
-                                    <TextBlock Grid.Row="0" Grid.Column="1" Text="5,000,000 đ" FontWeight="Bold" FontSize="14" Foreground="#1D4ED8" HorizontalAlignment="Right"/>
+                                    <TextBlock Grid.Row="0" Grid.Column="1" 
+           Text="{Binding TuitionFee, StringFormat='{}{0:N0} đ'}" 
+           FontWeight="Bold" FontSize="14" Foreground="#1D4ED8" HorizontalAlignment="Right"/>
 
                                     <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="0,4,0,0">
                                         <Border Background="#F3F4F6" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
@@ -248,11 +250,12 @@
                 <StackPanel Grid.Column="4" VerticalAlignment="Center">
                     <TextBlock Text="HỌC PHÍ TẠM TÍNH" FontSize="11" FontWeight="SemiBold" Foreground="#6B7280" Margin="0,0,0,4"/>
                     <!-- Giả lập hiển thị giá tiền, bạn có thể Bind nếu có -->
-                    <TextBlock Text="5,000,000 đ" FontSize="16" FontWeight="Bold" Foreground="#DC2626">
+                    <TextBlock Text="{Binding SelectedClass.TuitionFee, StringFormat='{}{0:N0} đ', TargetNullValue='0 đ'}" 
+           FontSize="16" FontWeight="Bold" Foreground="#DC2626">
                         <TextBlock.Style>
+                            <!-- Giữ nguyên Style Trigger ẩn hiện cũ của bạn -->
                             <Style TargetType="TextBlock">
                                 <Style.Triggers>
-                                    <!-- Ẩn giá tiền nếu chưa chọn lớp -->
                                     <DataTrigger Binding="{Binding SelectedClass}" Value="{x:Null}">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>

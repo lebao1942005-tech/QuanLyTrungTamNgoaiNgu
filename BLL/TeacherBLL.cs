@@ -135,4 +135,12 @@ public class TeacherBLL
         return true;
     }
 
+
+
+
+    public bool HasClasses(int id)
+    {
+        return dal.HasClasses(id);
+    }
+
 }

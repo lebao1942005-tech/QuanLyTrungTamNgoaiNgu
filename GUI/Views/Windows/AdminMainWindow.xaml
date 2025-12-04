@@ -7,6 +7,7 @@
         xmlns:shared="clr-namespace:GUI.Views.Shared"
         xmlns:viewmodels="clr-namespace:GUI.ViewModels"
         
+        xmlns:dashboard="clr-namespace:GUI.Views.Pages.Dashboard"
         xmlns:student="clr-namespace:GUI.Views.Pages.StudentManagement"
         xmlns:teacher="clr-namespace:GUI.Views.Pages.TeacherManagement"
         xmlns:class="clr-namespace:GUI.Views.Pages.ClassManagement"
@@ -24,6 +25,9 @@
         <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
         <!-- DATA TEMPLATES -->
+        <DataTemplate DataType="{x:Type viewmodels:DashboardViewModel}">
+            <dashboard:DashboardView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewmodels:StudentManagementViewModel}">
             <student:StudentManagementView/>
         </DataTemplate>

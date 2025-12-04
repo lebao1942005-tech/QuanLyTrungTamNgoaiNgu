@@ -30,6 +30,7 @@ namespace GUI.ViewModels
         // --- 2. QUẢN LÝ TRẠNG THÁI TRANG (Navigation) ---
 
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsDashboardPage))]
         [NotifyPropertyChangedFor(nameof(IsStudentPage))]
         [NotifyPropertyChangedFor(nameof(IsTeacherPage))]
         [NotifyPropertyChangedFor(nameof(IsClassPage))]
@@ -39,6 +40,8 @@ namespace GUI.ViewModels
         private string _currentPage;
 
         // Các biến Boolean để Binding vào RadioButton (IsChecked)
+        // [MỚI] Thuộc tính này dùng để binding với nút Dashboard trên Sidebar
+        public bool IsDashboardPage { get => CurrentPage == "Dashboard"; set { if (value) Navigate("Dashboard"); } }
         public bool IsStudentPage { get => CurrentPage == "StudentManagement"; set { if (value) Navigate("StudentManagement"); } }
         public bool IsTeacherPage { get => CurrentPage == "TeacherManagement"; set { if (value) Navigate("TeacherManagement"); } }
         public bool IsClassPage { get => CurrentPage == "ClassManagement"; set { if (value) Navigate("ClassManagement"); } }
@@ -49,7 +52,8 @@ namespace GUI.ViewModels
         public AdminMainWindowViewModel()
         {
             // Mặc định vào trang Học viên khi mở app
-            Navigate("StudentManagement");
+            // Navigate("StudentManagement");
+            Navigate("Dashboard");
         }
 
         // --- 3. HÀM ĐIỀU HƯỚNG ---
@@ -63,8 +67,8 @@ namespace GUI.ViewModels
 
             switch (pageKey)
             {
-                case "Overview":
-                    MessageBox.Show("Trang Dashboard đang phát triển và sẽ có trong phiên bản sau.");
+                case "Dashboard":
+                    CurrentViewModel = new DashboardViewModel();
                     break;
 
                 case "StudentManagement":

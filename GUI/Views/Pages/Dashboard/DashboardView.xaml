@@ -1,0 +1,181 @@
+﻿<UserControl x:Class="GUI.Views.Pages.Dashboard.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:GUI.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="700" d:DesignWidth="1000"
+             Background="#F3F4F6" FontFamily="Segoe UI">
+
+    <UserControl.DataContext>
+        <vm:DashboardViewModel/>
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <!-- (Giữ nguyên các Style cũ: DashboardCard, CardTitle, CardValue, IconBox) -->
+        <Style x:Key="DashboardCard" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="BorderBrush" Value="#E5E7EB"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.05" Color="Black"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CardTitle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="CardValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#111827"/>
+        </Style>
+
+        <Style x:Key="IconBox" TargetType="Border">
+            <Setter Property="Width" Value="48"/>
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="CornerRadius" Value="24"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header -->
+            <RowDefinition Height="Auto"/>
+            <!-- Cards -->
+            <RowDefinition Height="*"/>
+            <!-- Chart -->
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="Tổng quan trung tâm" FontSize="24" FontWeight="Bold" Foreground="#111827" Margin="10,0,0,20"/>
+
+        <!-- Cards Grid -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <!-- [ĐÃ SỬA] Giảm xuống còn 3 cột -->
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Card 1: Tổng học viên (Giữ nguyên - Cột 0) -->
+            <Border Grid.Column="0" Style="{StaticResource DashboardCard}">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="TỔNG HỌC VIÊN" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="{Binding TotalStudents, StringFormat='{}{0:N0}'}" Style="{StaticResource CardValue}"/>
+                        <TextBlock Text="Đang hoạt động" FontSize="12" Foreground="#10B981" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    <Border Style="{StaticResource IconBox}" Background="#DBEAFE">
+                        <TextBlock Text="&#xE77B;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="#1D4ED8" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Card 2: Doanh thu (Giữ nguyên - Cột 1) -->
+            <Border Grid.Column="1" Style="{StaticResource DashboardCard}">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="DOANH THU" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="{Binding TotalRevenue, StringFormat='{}{0:N0} đ'}" Style="{StaticResource CardValue}" Foreground="#059669"/>
+                        <TextBlock Text="Đã thu thực tế" FontSize="12" Foreground="#6B7280" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    <Border Style="{StaticResource IconBox}" Background="#D1FAE5">
+                        <TextBlock Text="&#xE8C7;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="#059669" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- [ĐÃ XÓA] Card 3: Nợ học phí -->
+
+            <!-- Card 4: Tỉ lệ chuyên cần -->
+            <!-- [ĐÃ SỬA] Chuyển từ Cột 3 sang Cột 2 -->
+            <Border Grid.Column="2" Style="{StaticResource DashboardCard}">
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text="TỈ LỆ CÓ MẶT" Style="{StaticResource CardTitle}"/>
+                        <TextBlock Text="{Binding AttendanceRate, StringFormat='{}{0:N1}%'}" Style="{StaticResource CardValue}" Foreground="#D97706"/>
+                        <TextBlock Text="Trung bình toàn trung tâm" FontSize="12" Foreground="#6B7280" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    <Border Style="{StaticResource IconBox}" Background="#FEF3C7">
+                        <TextBlock Text="&#xE823;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="#D97706" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Biểu đồ Doanh thu -->
+        <Border Grid.Row="2" Style="{StaticResource DashboardCard}" Margin="10,10,10,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Title -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,20">
+                    <Border Background="#EFF6FF" CornerRadius="8" Width="32" Height="32" Margin="0,0,10,0">
+                        <TextBlock Text="&#xE9D2;" FontFamily="Segoe MDL2 Assets" Foreground="#1D4ED8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel>
+                        <TextBlock Text="Biểu đồ Doanh thu" FontWeight="Bold" FontSize="16" Foreground="#111827"/>
+                        <TextBlock Text="6 tháng gần nhất" FontSize="12" Foreground="#6B7280"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Chart Area -->
+                <Grid Grid.Row="1" VerticalAlignment="Bottom" MinHeight="200">
+                    <!-- Chart Items -->
+                    <ItemsControl ItemsSource="{Binding RevenueChartData}" VerticalAlignment="Bottom">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="20,0" VerticalAlignment="Bottom" ToolTip="{Binding Tooltip}">
+                                    <!-- Cột -->
+                                    <Border Width="40" Height="{Binding Height}" 
+                                            Background="#3B82F6" CornerRadius="4,4,0,0" 
+                                            VerticalAlignment="Bottom">
+                                        <Border.Effect>
+                                            <DropShadowEffect BlurRadius="5" ShadowDepth="2" Opacity="0.2" Color="#3B82F6"/>
+                                        </Border.Effect>
+                                    </Border>
+
+                                    <!-- Nhãn -->
+                                    <TextBlock Text="{Binding Label}" 
+                                               HorizontalAlignment="Center" Margin="0,8,0,0" 
+                                               FontSize="12" Foreground="#6B7280" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Trục hoành -->
+                    <Border BorderBrush="#E5E7EB" BorderThickness="0,0,0,1" VerticalAlignment="Bottom" Margin="0,0,0,25" Panel.ZIndex="-1"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+    </Grid>
+</UserControl>

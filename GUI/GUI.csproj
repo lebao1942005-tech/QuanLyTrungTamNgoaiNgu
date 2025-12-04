@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Images\dashboard-icon.png" />
     <None Remove="Resources\Images\logout-icon.png" />
     <None Remove="Resources\Images\menu-icon.png" />
     <None Remove="Resources\Images\notification-icon.png" />
@@ -30,6 +31,7 @@
   <ItemGroup>
     <Resource Include="Resources\Images\classroom-icon.png" />
     <Resource Include="Resources\Images\course-icon.png" />
+    <Resource Include="Resources\Images\dashboard-icon.png" />
     <Resource Include="Resources\Images\logout-icon.png" />
     <Resource Include="Resources\Images\register-icon.png" />
     <Resource Include="Resources\Images\student-icon.png" />

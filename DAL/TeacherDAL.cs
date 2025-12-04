@@ -100,4 +100,21 @@ public class TeacherDAL
 
         return db.ExecuteNonQuery(sql, parameters) > 0;
     }
+
+
+
+    public bool HasClasses(int teacherId)
+    {
+        // Đếm số lớp trong bảng Class có TeacherID này
+        string query = "SELECT COUNT(*) FROM Class WHERE TeacherID = @TeacherID";
+
+        SqlParameter[] parameters =
+        {
+            new SqlParameter("@TeacherID", teacherId)
+        };
+
+        object result = db.ExecuteScalar(query, parameters);
+        return result != null && Convert.ToInt32(result) > 0;
+    }
+
 }

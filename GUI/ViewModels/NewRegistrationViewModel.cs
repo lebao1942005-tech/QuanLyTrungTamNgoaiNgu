@@ -15,6 +15,7 @@ namespace GUI.ViewModels
     public partial class NewRegistrationViewModel : ObservableObject
     {
         private readonly EnrollmentBLL _bll = new EnrollmentBLL();
+        private readonly ClassBLL _classBLL = new ClassBLL();
 
         // Danh sách gốc (dùng để cache dữ liệu cho tìm kiếm)
         private List<StudentDTO> _allStudents = new List<StudentDTO>();
@@ -73,19 +74,10 @@ namespace GUI.ViewModels
                 FilterStudents(); // Hiển thị ra UI
 
                 // 2. Load Lớp Học
-                var dtClass = _bll.GetAllClass();
-                _allClasses.Clear();
-                foreach (DataRow row in dtClass.Rows)
-                {
-                    _allClasses.Add(new ClassDTO
-                    {
-                        ClassID = Convert.ToInt32(row["ClassID"]),
-                        ClassName = row["ClassName"].ToString(),
-                        Schedule = row["Schedule"].ToString(),
-                        MaxStudents = Convert.ToInt32(row["MaxStudents"])
-                        // Map thêm CourseID, TeacherID nếu cần
-                    });
-                }
+                var detailedClasses = _classBLL.GetAllClasses();
+
+                _allClasses = detailedClasses; // Gán trực tiếp vào list gốc
+
                 FilterClasses(); // Hiển thị ra UI
             }
             catch (Exception ex)
