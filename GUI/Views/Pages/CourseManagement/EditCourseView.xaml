@@ -72,7 +72,9 @@
 
                     <StackPanel Grid.Column="2">
                         <TextBlock Text="Học phí cơ bản (VNĐ)" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                        <TextBox Text="{Binding EditingBaseFee, StringFormat=N0, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Text="{Binding EditingBaseFee, StringFormat=N0, UpdateSourceTrigger=LostFocus}"
+                                 PreviewTextInput="NumberValidationTextBox"
+                                 MaxLength="15"/>
                     </StackPanel>
                 </Grid>
 

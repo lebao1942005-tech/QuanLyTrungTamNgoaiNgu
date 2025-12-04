@@ -98,7 +98,7 @@ namespace GUI.ViewModels
             "3-5-7 (19h30 - 21h00)"
         };
 
-
+        /*
         private void FilterTeachersForEdit()
         {
             // Lưu lại giáo viên đang được chọn (để lát nữa gán lại nếu họ vẫn nằm trong danh sách phù hợp)
@@ -130,6 +130,50 @@ namespace GUI.ViewModels
                 EditingSelectedTeacher = null;
             }
         }
+        */
+
+
+
+        private void FilterTeachersForEdit()
+        {
+            var currentTeacherId = EditingSelectedTeacher?.TeacherID;
+
+            if (EditingSelectedCourse == null || Teachers == null)
+            {
+                AvailableTeachers.Clear();
+                return;
+            }
+
+            // [SỬA ĐOẠN NÀY TƯƠNG TỰ]
+            string targetSubject = EditingSelectedCourse.CourseName.Trim();
+
+            var filtered = Teachers.Where(t =>
+            {
+                if (string.IsNullOrEmpty(t.Subject)) return false;
+
+                var teacherSubjects = t.Subject.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                               .Select(s => s.Trim());
+
+                return teacherSubjects.Contains(targetSubject, StringComparer.OrdinalIgnoreCase);
+            }).ToList();
+
+            // Cập nhật danh sách hiển thị
+            AvailableTeachers = new ObservableCollection<TeacherDTO>(filtered);
+
+            // Kiểm tra xem giáo viên cũ có nằm trong danh sách mới lọc không
+            var stillValidTeacher = AvailableTeachers.FirstOrDefault(t => t.TeacherID == currentTeacherId);
+
+            if (stillValidTeacher != null)
+            {
+                EditingSelectedTeacher = stillValidTeacher;
+            }
+            else
+            {
+                EditingSelectedTeacher = null;
+            }
+        }
+
+
 
         public ClassManagementViewModel()
         {
@@ -178,6 +222,7 @@ namespace GUI.ViewModels
         }
 
         // [MỚI] Hàm lọc giáo viên theo môn học
+        /*
         private void FilterTeachersForNewClass()
         {
             NewSelectedTeacher = null; // Reset lựa chọn cũ
@@ -199,6 +244,45 @@ namespace GUI.ViewModels
                 NewSelectedTeacher = AvailableTeachers[0];
             }
         }
+        */
+
+
+        private void FilterTeachersForNewClass()
+        {
+            NewSelectedTeacher = null;
+
+            if (NewSelectedCourse == null || Teachers == null)
+            {
+                AvailableTeachers.Clear();
+                return;
+            }
+
+            // [SỬA ĐOẠN NÀY]
+            // Logic cũ: t.Subject == CourseName (Sai nếu GV dạy nhiều môn)
+            // Logic mới: Cắt chuỗi theo dấu phẩy, rồi tìm xem có chứa CourseName không
+
+            string targetSubject = NewSelectedCourse.CourseName.Trim();
+
+            var filtered = Teachers.Where(t =>
+            {
+                if (string.IsNullOrEmpty(t.Subject)) return false;
+
+                // 1. Tách chuỗi "IELTS, TOEIC" -> mảng ["IELTS", " TOEIC"]
+                var teacherSubjects = t.Subject.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)
+                                               .Select(s => s.Trim()); // Xóa khoảng trắng thừa
+
+                // 2. Kiểm tra xem trong mảng có chứa môn cần tìm không (So sánh không phân biệt hoa thường)
+                return teacherSubjects.Contains(targetSubject, StringComparer.OrdinalIgnoreCase);
+            }).ToList();
+
+            AvailableTeachers = new ObservableCollection<TeacherDTO>(filtered);
+
+            if (AvailableTeachers.Count == 1)
+            {
+                NewSelectedTeacher = AvailableTeachers[0];
+            }
+        }
+
 
         private void CalculateEndDatePreview()
         {

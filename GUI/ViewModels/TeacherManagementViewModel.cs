@@ -44,6 +44,10 @@ namespace GUI.ViewModels
         [ObservableProperty]
         private ObservableCollection<string> _subjectList;
 
+
+        [ObservableProperty]
+        private ObservableCollection<SelectableItem> _subjectSelectionList;
+
         // ====== POPUP VISIBILITY ======
         [ObservableProperty] private bool _isAddTeacherPopupVisible;
         [ObservableProperty] private bool _isDeleteTeacherPopupVisible;
@@ -67,8 +71,8 @@ namespace GUI.ViewModels
         public TeacherManagementViewModel()
         {
             Teachers = new ObservableCollection<TeacherDTO>();
-            SubjectList = new ObservableCollection<string>(); // Khởi tạo list rỗng
-
+            //SubjectList = new ObservableCollection<string>(); // Khởi tạo list rỗng
+            SubjectSelectionList = new ObservableCollection<SelectableItem>();
             LoadTeachers();
             LoadSubjects(); // Gọi hàm load môn học ngay khi khởi tạo
         }
@@ -105,7 +109,7 @@ namespace GUI.ViewModels
         }
 
         // [MỚI] Hàm load danh sách môn học từ CourseBLL
-        private void LoadSubjects()
+    /*    private void LoadSubjects()
         {
             try
             {
@@ -126,6 +130,34 @@ namespace GUI.ViewModels
                 SubjectList.Add("IELTS");
                 SubjectList.Add("TOEIC");
                 SubjectList.Add("Tiếng Anh Giao Tiếp");
+            }
+        }
+        */
+
+
+
+
+        private void LoadSubjects()
+        {
+            try
+            {
+                SubjectSelectionList.Clear();
+                var courseNames = _courseBLL.GetCourseNames(); // Lấy danh sách tên từ DB
+
+                // Loại bỏ trùng lặp tên môn (nếu có nhiều khóa cùng môn)
+                var distinctSubjects = courseNames.Distinct().ToList();
+
+                foreach (var name in distinctSubjects)
+                {
+                    // Mặc định là chưa chọn (false)
+                    SubjectSelectionList.Add(new SelectableItem(name, false));
+                }
+            }
+            catch
+            {
+                // Fallback nếu lỗi
+                SubjectSelectionList.Add(new SelectableItem("IELTS"));
+                SubjectSelectionList.Add(new SelectableItem("TOEIC"));
             }
         }
 
@@ -174,6 +206,7 @@ namespace GUI.ViewModels
         // COMMANDS: THÊM GIÁO VIÊN
         // ==========================================
 
+        /*
         [RelayCommand]
         private void OpenAddTeacherPopup()
         {
@@ -187,6 +220,23 @@ namespace GUI.ViewModels
 
             IsAddTeacherPopupVisible = true;
         }
+        */
+
+
+
+        [RelayCommand]
+        private void OpenAddTeacherPopup()
+        {
+            NewTeacherName = "";
+            NewTeacherPhone = "";
+            NewTeacherEmail = "";
+
+            // Reset lại các lựa chọn môn học về false
+            foreach (var item in SubjectSelectionList) item.IsSelected = false;
+
+            IsAddTeacherPopupVisible = true;
+        }
+
 
         [RelayCommand]
         private void CancelAddTeacher()
@@ -194,6 +244,8 @@ namespace GUI.ViewModels
             IsAddTeacherPopupVisible = false;
         }
 
+
+        /*
         [RelayCommand]
         private void SaveNewTeacher()
         {
@@ -238,6 +290,66 @@ namespace GUI.ViewModels
                 MessageBox.Show($"Thêm thất bại: {error}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        */
+
+
+        [RelayCommand]
+        private void SaveNewTeacher()
+        {
+            // 1. Validate
+            if (!IsValidName(NewTeacherName))
+            {
+                MessageBox.Show("Tên giáo viên không hợp lệ!\nTên không được chứa số hoặc ký tự đặc biệt.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!Regex.IsMatch(NewTeacherPhone ?? "", @"^\d{10,11}$"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ (phải là 10-11 số).", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (!Regex.IsMatch(NewTeacherEmail ?? "", @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                MessageBox.Show("Email không đúng định dạng.", "Lỗi nhập liệu", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // 2. Tạo DTO
+            // 1. Lấy danh sách các môn được tick chọn
+            var selectedSubjects = SubjectSelectionList
+                                    .Where(x => x.IsSelected)
+                                    .Select(x => x.Name)
+                                    .ToList();
+
+            // 2. Nối thành chuỗi: "IELTS, TOEIC"
+            string subjectString = selectedSubjects.Count > 0
+                                   ? string.Join(", ", selectedSubjects)
+                                   : "Chưa phân công";
+
+            var newTeacher = new TeacherDTO
+            {
+                Name = NewTeacherName.Trim(),
+                Phone = NewTeacherPhone.Trim(),
+                Email = NewTeacherEmail.Trim(),
+                Subject = subjectString // Lưu chuỗi đã nối xuống DB
+            };
+
+            // 3. Gọi BLL
+            string error = "";
+            if (_teacherBLL.AddTeacher(newTeacher, out error))
+            {
+                MessageBox.Show("Thêm giáo viên thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                IsAddTeacherPopupVisible = false;
+                LoadTeachers();
+            }
+            else
+            {
+                MessageBox.Show($"Thêm thất bại: {error}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+
 
         // ==========================================
         // COMMANDS: XÓA GIÁO VIÊN
@@ -280,7 +392,7 @@ namespace GUI.ViewModels
         // ==========================================
         // COMMANDS: SỬA GIÁO VIÊN
         // ==========================================
-
+        /*
         [RelayCommand]
         private void EditTeacher(TeacherDTO teacher)
         {
@@ -296,6 +408,39 @@ namespace GUI.ViewModels
 
             // Load lại danh sách môn cho chắc chắn
             LoadSubjects();
+
+            IsEditTeacherPopupVisible = true;
+        }
+        */
+
+
+
+        // [CẬP NHẬT] Hàm mở Popup Sửa (Quan trọng: Phải tick lại đúng môn cũ)
+        [RelayCommand]
+        private void EditTeacher(TeacherDTO teacher)
+        {
+            if (teacher == null) return;
+            _teacherToEdit = teacher;
+
+            EditingTeacherName = teacher.Name;
+            EditingTeacherPhone = teacher.Phone;
+            EditingTeacherEmail = teacher.Email;
+
+            // Reset list trước
+            foreach (var item in SubjectSelectionList) item.IsSelected = false;
+
+            // Tách chuỗi Subject cũ: "IELTS, TOEIC" -> ["IELTS", "TOEIC"]
+            if (!string.IsNullOrEmpty(teacher.Subject))
+            {
+                var currentSubjects = teacher.Subject.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+
+                foreach (var subjectName in currentSubjects)
+                {
+                    // Tìm item trong list và tick vào
+                    var item = SubjectSelectionList.FirstOrDefault(x => x.Name == subjectName);
+                    if (item != null) item.IsSelected = true;
+                }
+            }
 
             IsEditTeacherPopupVisible = true;
         }
@@ -326,9 +471,18 @@ namespace GUI.ViewModels
             }
 
             // 2. Cập nhật vào object tạm
+            var selectedSubjects = SubjectSelectionList
+                                .Where(x => x.IsSelected)
+                                .Select(x => x.Name)
+                                .ToList();
+
+            string subjectString = selectedSubjects.Count > 0
+                                   ? string.Join(", ", selectedSubjects)
+                                   : "Chưa phân công";
+
             _teacherToEdit.Name = EditingTeacherName.Trim();
             _teacherToEdit.Phone = EditingTeacherPhone.Trim();
-            _teacherToEdit.Subject = EditingTeacherSubject?.Trim();
+            _teacherToEdit.Subject = subjectString; // Cập nhật chuỗi môn
 
             // 3. Gọi BLL Update
             string error = "";

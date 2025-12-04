@@ -235,9 +235,11 @@
                     <DataGridTemplateColumn Header="ĐIỂM SỐ" Width="100">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <TextBox Text="{Binding Score, UpdateSourceTrigger=PropertyChanged}" 
+                                <TextBox Text="{Binding Score, UpdateSourceTrigger=LostFocus}" 
                                          Style="{StaticResource ScoreTextBoxStyle}"
-                                         IsReadOnly="{Binding DataContext.IsReadOnlyMode, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                         IsReadOnly="{Binding DataContext.IsReadOnlyMode, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         PreviewTextInput="ScoreValidationTextBox"
+                                         MaxLength="4"/>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

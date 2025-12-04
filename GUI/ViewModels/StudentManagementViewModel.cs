@@ -246,6 +246,7 @@ namespace GUI.ViewModels
         }
 
         // ====== Xóa học viên ======
+        /*
         [RelayCommand]
         private void RequestDeleteStudent(StudentDTO student)
         {
@@ -254,8 +255,33 @@ namespace GUI.ViewModels
             _studentToDelete = student; // Lưu lại để tí nữa xóa
             IsDeleteStudentPopupVisible = true; // Hiện popup
         }
+        */
 
 
+        [RelayCommand]
+        private void RequestDeleteStudent(StudentDTO student)
+        {
+            if (student == null) return;
+
+            // [QUAN TRỌNG] Kiểm tra trạng thái học viên
+            // Nếu Status == 2 (Đang học), chặn ngay lập tức
+            if (student.Status == 2)
+            {
+                MessageBox.Show($"Không thể xóa học viên '{student.Name}' vì đang có lớp học (Enrollment).\n" +
+                                "Vui lòng xóa thông tin đăng ký lớp học hoặc hủy lớp của học viên này trước.",
+                                "Thao tác bị chặn",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return; // Dừng lại, không mở popup xóa
+            }
+
+            // Nếu Status == 1 (Không lớp), cho phép mở popup xác nhận
+            _studentToDelete = student;
+            IsDeleteStudentPopupVisible = true;
+        }
+
+
+        /*
         [RelayCommand]
         private void ConfirmDeleteStudent()
         {
@@ -274,6 +300,42 @@ namespace GUI.ViewModels
             else
             {
                 MessageBox.Show($"Xóa thất bại: {error}");
+            }
+        }
+        */
+
+
+        [RelayCommand]
+        private void ConfirmDeleteStudent()
+        {
+            if (_studentToDelete == null) return;
+
+            // [An toàn] Kiểm tra lại lần nữa (Double check)
+            if (_studentToDelete.Status == 2)
+            {
+                MessageBox.Show("Học viên đang có lớp học, không thể xóa.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                IsDeleteStudentPopupVisible = false;
+                return;
+            }
+
+            string error = "";
+            // Gọi BLL để xóa trong Database
+            if (_studentBLL.DeleteStudent(_studentToDelete.StudentID, out error))
+            {
+                // Xóa thành công thì xóa luôn trên giao diện
+                Students.Remove(_studentToDelete);
+
+                // Cập nhật lại list gốc để tìm kiếm vẫn đúng
+                if (_originalStudentsList != null) _originalStudentsList.Remove(_studentToDelete);
+
+                IsDeleteStudentPopupVisible = false;
+                _studentToDelete = null;
+                MessageBox.Show("Đã xóa học viên thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                MessageBox.Show($"Xóa thất bại: {error}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                IsDeleteStudentPopupVisible = false; // Đóng popup kể cả khi lỗi để tránh kẹt
             }
         }
 

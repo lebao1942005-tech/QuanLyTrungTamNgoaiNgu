@@ -62,6 +62,7 @@ namespace DAL
         }
 
         // Xóa Enrollment
+        /*
         public bool DeleteEnrollment(int enrollmentID)
         {
             string query = "DELETE FROM Enrollment WHERE EnrollmentID = @EnrollmentID";
@@ -69,6 +70,30 @@ namespace DAL
             {
                 new SqlParameter("@EnrollmentID", enrollmentID)
             };
+            return db.ExecuteNonQuery(query, parameters) > 0;
+        }
+        */
+
+
+
+        // [ĐÃ SỬA] Xóa Enrollment (Và xóa luôn Tuition liên quan để tránh lỗi khóa ngoại)
+        public bool DeleteEnrollment(int enrollmentID)
+        {
+            // Thứ tự xóa quan trọng: Xóa con trước -> Xóa cha sau
+            // 1. Xóa Học phí (Tuition)
+            // 2. Xóa Điểm số (ExamResult)
+            // 3. Cuối cùng mới xóa Hợp đồng (Enrollment)
+            string query = @"
+                DELETE FROM Tuition WHERE EnrollmentID = @EnrollmentID;
+                DELETE FROM ExamResult WHERE EnrollmentID = @EnrollmentID;
+                DELETE FROM Enrollment WHERE EnrollmentID = @EnrollmentID";
+
+            SqlParameter[] parameters =
+            {
+                new SqlParameter("@EnrollmentID", enrollmentID)
+            };
+
+            // ExecuteNonQuery sẽ thực thi lần lượt các lệnh trên
             return db.ExecuteNonQuery(query, parameters) > 0;
         }
 

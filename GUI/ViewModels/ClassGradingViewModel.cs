@@ -27,7 +27,10 @@ namespace GUI.ViewModels
             get => _score;
             set
             {
-                // Khi giá trị điểm thay đổi, tự động cập nhật Ngày chấm là DateTime.Now
+                // Validate logic: Nếu nhỏ hơn 0 thì gán bằng 0, lớn hơn 10 thì gán bằng 10
+                if (value < 0) value = 0;
+                if (value > 10) value = 10;
+
                 if (SetProperty(ref _score, value))
                 {
                     GradingDate = DateTime.Now;
@@ -136,6 +139,9 @@ namespace GUI.ViewModels
                 MessageBox.Show("Lỗi tải bảng điểm: " + ex.Message);
             }
         }
+
+
+
 
         // --- CÁC COMMAND XỬ LÝ ---
 

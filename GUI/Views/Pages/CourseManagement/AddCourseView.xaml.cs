@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Text.RegularExpressions;
 
 namespace GUI.Views.Pages.CourseManagement
 {
@@ -23,6 +24,11 @@ namespace GUI.Views.Pages.CourseManagement
         public AddCourseView()
         {
             InitializeComponent();
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+"); // Chỉ cho phép số 0-9
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

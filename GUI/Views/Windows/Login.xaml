@@ -9,29 +9,29 @@
         AllowsTransparency="True"
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
-        FontFamily="Roboto"
+        FontFamily="Segoe UI"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         Width="450" Height="650">
 
     <Window.Resources>
-        <!-- Màu chủ đạo (Giữ màu xanh sáng của trang Login cũ) -->
         <SolidColorBrush x:Key="PrimaryBlue" Color="#3B82F6"/>
         <SolidColorBrush x:Key="GrayText" Color="#6B7280"/>
+        <SolidColorBrush x:Key="LightBorder" Color="#E5E7EB"/>
 
-        <!-- Style nút điều khiển cửa sổ -->
+        <!-- 1. Style Nút điều khiển cửa sổ -->
         <Style TargetType="Button" x:Key="WindowControlButton">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#555"/>
+            <Setter Property="Foreground" Value="#9CA3AF"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Width" Value="40"/>
-            <Setter Property="Height" Value="28"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Width" Value="32"/>
+            <Setter Property="Height" Value="32"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="6">
                             <TextBlock Text="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -39,12 +39,12 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#E5E5E5"/>
+                    <Setter Property="Background" Value="#F3F4F6"/>
+                    <Setter Property="Foreground" Value="#374151"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- Style nút Phóng to/Thu nhỏ -->
         <Style TargetType="Button" x:Key="MaximizeButtonStyle" BasedOn="{StaticResource WindowControlButton}">
             <Setter Property="Content" Value="&#xE922;"/>
             <Style.Triggers>
@@ -54,12 +54,14 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Style TextBox/PasswordBox bo góc -->
+        <!-- 2. Style TextBox/PasswordBox -->
         <Style TargetType="Control" x:Key="InputBoxStyle">
-            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="LightGray"/>
-            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBorder}"/>
+            <Setter Property="Background" Value="#F9FAFB"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Margin" Value="0,0,0,15"/>
             <Setter Property="Template">
@@ -69,23 +71,143 @@
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 CornerRadius="8">
-                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="0" VerticalAlignment="Center"/>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="White"/>
                                 <Setter TargetName="border" Property="BorderBrush" Value="#A5B4FC"/>
                             </Trigger>
                             <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="White"/>
                                 <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter TargetName="border" Property="BorderThickness" Value="1.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- 3. [MỚI] Template nút bấm cho ComboBox (Mũi tên + Viền) -->
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border" 
+                        Grid.ColumnSpan="2"
+                        CornerRadius="8"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}" />
+                <Path x:Name="Arrow" 
+                      Grid.Column="1" 
+                      Fill="#9CA3AF"
+                      HorizontalAlignment="Center" 
+                      VerticalAlignment="Center"
+                      Data="M0,0 L4,4 L8,0 Z"/>
+                <!-- Hình mũi tên -->
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="Border" Property="Background" Value="White" />
+                    <Setter TargetName="Border" Property="BorderBrush" Value="#A5B4FC" />
+                    <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource PrimaryBlue}"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="true">
+                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryBlue}" />
+                    <Setter TargetName="Arrow" Property="Fill" Value="{StaticResource PrimaryBlue}"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <!-- 4. [MỚI] Style ComboBox Hiện đại -->
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Foreground" Value="#374151"/>
+            <Setter Property="Background" Value="#F9FAFB"/>
+            <Setter Property="BorderBrush" Value="{StaticResource LightBorder}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <!-- Nút bấm chính -->
+                            <ToggleButton Name="ToggleButton" 
+                                          Template="{StaticResource ComboBoxToggleButton}" 
+                                          Grid.Column="2" 
+                                          Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press"
+                                          Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"/>
+
+                            <!-- Nội dung hiển thị -->
+                            <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="15,0,30,0"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left" />
+
+                            <!-- Popup thả xuống -->
+                            <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" Background="White" BorderThickness="1" BorderBrush="{StaticResource LightBorder}" CornerRadius="8" Margin="0,5,0,0">
+                                        <Border.Effect>
+                                            <!-- Đổ bóng nhẹ -->
+                                            <DropShadowEffect Color="Gray" BlurRadius="10" ShadowDepth="2" Opacity="0.2"/>
+                                        </Border.Effect>
+                                        <ScrollViewer Margin="2" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 5. [MỚI] Style cho từng dòng trong danh sách thả xuống -->
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border Name="Border" Padding="{TemplateBinding Padding}" Background="Transparent" CornerRadius="4" Margin="2,1">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="#EFF6FF"/>
+                                <!-- Xanh nhạt khi hover -->
+                                <Setter Property="Foreground" Value="{StaticResource PrimaryBlue}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource PrimaryBlue}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
     </Window.Resources>
 
-    <!-- KHUNG CHÍNH BO GÓC (Giống ResetPasswordWindow) -->
+    <!-- KHUNG CHÍNH -->
     <Border Background="White" CornerRadius="20" BorderBrush="#E5E7EB" BorderThickness="1" Margin="10">
         <Border.Effect>
             <DropShadowEffect BlurRadius="30" ShadowDepth="10" Opacity="0.1" Color="Gray"/>
@@ -94,92 +216,55 @@
         <Grid Margin="30">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <!-- Header Controls -->
                 <RowDefinition Height="*"/>
-                <!-- Login Form -->
             </Grid.RowDefinitions>
 
-            <!-- 1. Header: Window Controls (Góc phải trên) -->
+            <!-- 1. Header: Window Controls -->
             <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button Content="&#xE713;" 
-                        Style="{StaticResource WindowControlButton}" 
-                        Command="{Binding OpenConfigCommand}" 
-                        ToolTip="Cấu hình kết nối Database"
-                        Margin="0,0,10,0"/>
-                
+                <!-- Nút Cấu hình -->
+                <Button Content="&#xE713;" Style="{StaticResource WindowControlButton}" Command="{Binding OpenConfigCommand}" ToolTip="Cấu hình kết nối Database" Margin="0,0,10,0"/>
+
                 <Button Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="MinimizeButton_Click" ToolTip="Thu nhỏ"/>
                 <Button Style="{StaticResource MaximizeButtonStyle}" Click="MaximizeButton_Click" ToolTip="Phóng to"/>
                 <Button Content="&#xE8BB;" Style="{StaticResource WindowControlButton}" Click="CloseButton_Click" ToolTip="Đóng" Foreground="#EF4444"/>
             </StackPanel>
 
-            <!-- 2. Main Content (Căn giữa) -->
-            <!-- THÊM Width="360" để cố định chiều rộng form, tránh bị giãn khi phóng to -->
+            <!-- 2. Login Form -->
             <StackPanel Grid.Row="1" VerticalAlignment="Center" Width="360">
 
                 <!-- LOGO -->
-                <TextBlock Text="Star Edu"
-                           FontSize="36"
-                           FontWeight="Bold"
-                           Foreground="{StaticResource PrimaryBlue}"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,15"/>
+                <TextBlock Text="Star Edu" FontSize="36" FontWeight="Bold" Foreground="{StaticResource PrimaryBlue}" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                <TextBlock Text="Đăng Nhập" FontSize="26" FontWeight="Bold" Foreground="#111827" HorizontalAlignment="Center" Margin="0,0,0,5" />
+                <TextBlock Text="Chào mừng trở lại! Vui lòng nhập thông tin của bạn." FontSize="14" Foreground="{StaticResource GrayText}" HorizontalAlignment="Center" Margin="0,0,0,30" />
 
-                <TextBlock Text="Đăng Nhập"
-                           FontSize="26"
-                           FontWeight="Bold"
-                           Foreground="#111827"
-                           HorizontalAlignment="Center"
-                           Margin="0,0,0,5" />
-
-                <TextBlock Text="Chào mừng trở lại! Vui lòng nhập thông tin của bạn." 
-                           FontSize="14" 
-                           Foreground="{StaticResource GrayText}" 
-                           HorizontalAlignment="Center" 
-                           Margin="0,0,0,30" />
-
-                <!-- Vai trò -->
+                <!-- Vai trò (Đã áp dụng Style mới) -->
                 <Label Content="Vai trò" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
+
+                <!-- Áp dụng Style ModernComboBoxStyle tại đây -->
                 <ComboBox x:Name="RoleComboBox" 
-                          Padding="10,8" 
-                          BorderThickness="1" 
-                          BorderBrush="LightGray" 
-                          Background="White"
-                          Margin="0,0,0,15"
-                          Height="40"
+                          Style="{StaticResource ModernComboBoxStyle}"
                           SelectedValuePath="Content"
                           SelectedValue="{Binding SelectedRole, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
 
-                    <ComboBox.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="8"/>
-                        </Style>
-                    </ComboBox.Resources>
-
-                    <ComboBoxItem IsSelected="True" IsEnabled="False" Content="Chọn vai trò của bạn"/>
+                    <ComboBoxItem IsSelected="True" IsEnabled="False" Content="Chọn vai trò của bạn" Foreground="Gray"/>
                     <ComboBoxItem Content="Admin" />
                     <ComboBoxItem Content="Giáo viên" />
                 </ComboBox>
 
                 <!-- Email -->
                 <Label Content="Email" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
-                <TextBox x:Name="EmailTextBox" 
-                         Style="{StaticResource InputBoxStyle}"
-                         Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox x:Name="EmailTextBox" Style="{StaticResource InputBoxStyle}" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
 
                 <!-- Password -->
                 <Label Content="Mật khẩu" FontSize="13" FontWeight="SemiBold" Foreground="#374151"/>
-                <PasswordBox x:Name="PasswordBox" 
-                             Style="{StaticResource InputBoxStyle}"/>
+                <PasswordBox x:Name="PasswordBox" Style="{StaticResource InputBoxStyle}"/>
 
-                <!-- Remember - Forgot -->
+                <!-- Forgot Password -->
                 <Grid Margin="0,0,0,25">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
-                    
-
                     <TextBlock Grid.Column="1" HorizontalAlignment="Right">
                         <Hyperlink Foreground="{StaticResource PrimaryBlue}" TextDecorations="None" Click="ForgotPassword_Click" Cursor="Hand">
                             Quên mật khẩu?
@@ -189,6 +274,7 @@
 
                 <!-- Login Button -->
                 <Button Content="Đăng Nhập"
+                        IsDefault="True"
                         Background="{StaticResource PrimaryBlue}"
                         Foreground="White"
                         Height="50"

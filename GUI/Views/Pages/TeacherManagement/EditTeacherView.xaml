@@ -35,14 +35,6 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-
-        <!-- Style cho ComboBox -->
-        <Style TargetType="ComboBox">
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="BorderBrush" Value="#E5E7EB"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Background" Value="White"/>
-        </Style>
     </UserControl.Resources>
 
     <!-- Container chính -->
@@ -98,16 +90,33 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- Bộ môn -->
-                <TextBlock Text="Bộ môn giảng dạy" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                <ComboBox ItemsSource="{Binding SubjectList}" 
-                          SelectedItem="{Binding EditingTeacherSubject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          IsEditable="True"
-                          Text="{Binding EditingTeacherSubject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          Margin="0,0,0,15">
-                </ComboBox>
+                <!-- [CẬP NHẬT] Bộ môn (Dùng List CheckBox thay vì ComboBox) -->
+                <TextBlock Text="Bộ môn giảng dạy (Chọn nhiều)" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
 
-                
+                <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="10" Background="#F9FAFB" Height="120" Margin="0,0,0,15">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <!-- ItemsControl duyệt qua SubjectSelectionList -->
+                        <ItemsControl ItemsSource="{Binding SubjectSelectionList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <!-- WrapPanel để các checkbox dàn hàng ngang -->
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- CheckBox binding vào SelectableItem -->
+                                    <CheckBox Content="{Binding Name}" 
+                                              IsChecked="{Binding IsSelected}"
+                                              Margin="0,0,15,10"
+                                              Cursor="Hand"
+                                              Foreground="#374151"
+                                              FontSize="14"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
 
             </StackPanel>
 

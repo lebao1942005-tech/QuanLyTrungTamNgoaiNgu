@@ -26,13 +26,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style TargetType="ComboBox">
-            <Setter Property="Padding" Value="10,8"/>
-            <Setter Property="BorderBrush" Value="#E5E7EB"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Background" Value="White"/>
-        </Style>
     </UserControl.Resources>
 
     <!-- Container chính -->
@@ -82,20 +75,38 @@
                     </StackPanel>
                 </Grid>
 
-                <!-- Bộ môn (Thay cho Chức vụ/Phòng ban) -->
-                <TextBlock Text="Bộ môn giảng dạy" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
-                <!-- IsEditable="True" cho phép nhập môn mới nếu chưa có trong list -->
-                <ComboBox ItemsSource="{Binding SubjectList}" 
-          SelectedItem="{Binding NewTeacherSubject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-          IsEditable="True"
-          Text="{Binding NewTeacherSubject, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-          Margin="0,0,0,15">
-                </ComboBox>
+                <!-- [CẬP NHẬT] Bộ môn (Thay ComboBox bằng List CheckBox) -->
+                <TextBlock Text="Bộ môn giảng dạy (Chọn nhiều)" FontWeight="SemiBold" Margin="0,0,0,5" Foreground="#374151"/>
+
+                <Border BorderBrush="#E5E7EB" BorderThickness="1" CornerRadius="6" Padding="10" Background="#F9FAFB" Height="120" Margin="0,0,0,15">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <!-- ItemsControl duyệt qua SubjectSelectionList -->
+                        <ItemsControl ItemsSource="{Binding SubjectSelectionList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <!-- WrapPanel để các checkbox dàn hàng ngang nếu đủ chỗ -->
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <!-- Binding vào class SelectableItem -->
+                                    <CheckBox Content="{Binding Name}" 
+                                              IsChecked="{Binding IsSelected}"
+                                              Margin="0,0,15,10"
+                                              Cursor="Hand"
+                                              Foreground="#374151"
+                                              FontSize="14"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Border>
 
                 <!-- Note nhỏ về tài khoản -->
-                <StackPanel Orientation="Horizontal" Margin="0,15,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
                     <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" Foreground="#F59E0B" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                    <TextBlock Text="Hệ thống sẽ tự tạo tài khoản User với Username là Email và mật khẩu mặc định '123'." 
+                    <TextBlock Text="Hệ thống tự tạo tài khoản với Username là Email và mật khẩu mặc định '123'." 
                                Foreground="#6B7280" FontSize="12" FontStyle="Italic"/>
                 </StackPanel>
 
