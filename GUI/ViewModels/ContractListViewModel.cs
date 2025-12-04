@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DAL;
 using DTO;
+using iTextSharp.text;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -50,6 +51,17 @@ namespace GUI.ViewModels
         [ObservableProperty] private bool _isDeletePopupOpen;
         private ContractDisplayDTO _contractToDelete;
 
+
+
+
+        [ObservableProperty] private int _currentPage = 1;
+        [ObservableProperty] private int _pageSize = 10; // Số dòng mỗi trang
+        [ObservableProperty] private int _totalPages = 0;
+        [ObservableProperty] private string _pagingInfo; // Hiển thị "Trang 1 / 5"
+
+        // Danh sách tạm sau khi tìm kiếm (nhưng chưa cắt trang)
+        private List<ContractDisplayDTO> _filteredList = new List<ContractDisplayDTO>();
+
         public ContractListViewModel()
         {
             LoadData();
@@ -70,7 +82,7 @@ namespace GUI.ViewModels
                 {
                     int id = Convert.ToInt32(row["StudentID"]);
                     string name = row["Name"].ToString();
-                    string code = $"HV{DateTime.Now.Year % 100}{id.ToString("D4")}";
+                    string code = id.ToString();
                     if (!studentDict.ContainsKey(id)) studentDict.Add(id, (name, code));
                 }
 
@@ -120,15 +132,82 @@ namespace GUI.ViewModels
 
         private void FilterList()
         {
+            // 1. Lọc dữ liệu theo ô tìm kiếm trước
             if (string.IsNullOrWhiteSpace(SearchText))
-                Enrollments = new ObservableCollection<ContractDisplayDTO>(_allContracts);
+            {
+                _filteredList = _allContracts; // Lấy hết
+            }
             else
             {
                 var k = SearchText.ToLower();
-                var f = _allContracts.Where(c => c.EnrollmentId.ToString().Contains(k) || c.StudentName.ToLower().Contains(k) || c.ClassName.ToLower().Contains(k));
-                Enrollments = new ObservableCollection<ContractDisplayDTO>(f);
+                _filteredList = _allContracts.Where(c =>
+                    c.EnrollmentId.ToString().Contains(k) ||
+                    c.StudentName.ToLower().Contains(k) ||
+                    c.ClassName.ToLower().Contains(k)
+                ).ToList();
+            }
+
+            // 2. Tính toán lại số trang
+            if (_filteredList.Count > 0)
+            {
+                TotalPages = (int)Math.Ceiling((double)_filteredList.Count / PageSize);
+            }
+            else
+            {
+                TotalPages = 1;
+            }
+
+            // 3. Reset về trang 1 khi tìm kiếm mới
+            CurrentPage = 1;
+
+            // 4. Cắt dữ liệu hiển thị
+            UpdatePagedCollection();
+        }
+
+
+        private void UpdatePagedCollection()
+        {
+            // Cập nhật Text hiển thị
+            PagingInfo = $"Trang {CurrentPage} / {TotalPages}";
+
+            // Logic Skip & Take
+            var pagedData = _filteredList
+                            .Skip((CurrentPage - 1) * PageSize)
+                            .Take(PageSize)
+                            .ToList();
+
+            Enrollments = new ObservableCollection<ContractDisplayDTO>(pagedData);
+
+            // Cập nhật trạng thái nút (để disable khi cần)
+            NextPageCommand.NotifyCanExecuteChanged();
+            PreviousPageCommand.NotifyCanExecuteChanged();
+        }
+
+        // --- COMMANDS CHUYỂN TRANG ---
+
+        [RelayCommand(CanExecute = nameof(CanGoNext))]
+        private void NextPage()
+        {
+            if (CurrentPage < TotalPages)
+            {
+                CurrentPage++;
+                UpdatePagedCollection();
             }
         }
+        private bool CanGoNext() => CurrentPage < TotalPages;
+
+        [RelayCommand(CanExecute = nameof(CanGoPrevious))]
+        private void PreviousPage()
+        {
+            if (CurrentPage > 1)
+            {
+                CurrentPage--;
+                UpdatePagedCollection();
+            }
+        }
+        private bool CanGoPrevious() => CurrentPage > 1;
+
+
 
         // ================== LOGIC SỬA ==================
         [RelayCommand]

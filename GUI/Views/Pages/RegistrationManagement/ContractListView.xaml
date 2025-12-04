@@ -211,13 +211,35 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <!-- FOOTER (Giữ nguyên) -->
+                <!-- FOOTER -->
                 <Border Grid.Row="2" Padding="24,16" BorderBrush="{StaticResource BorderColor}" BorderThickness="0,1,0,0">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <TextBlock Text="Hiển thị 1-10 trên 128" VerticalAlignment="Center" Foreground="{StaticResource GrayText}" Margin="0,0,16,0"/>
-                        <Button Content="Trước" Padding="12,6" Background="White" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" Margin="0,0,8,0"/>
-                        <Button Content="Sau" Padding="12,6" Background="White" BorderBrush="{StaticResource BorderColor}" BorderThickness="1"/>
-                    </StackPanel>
+                    <Grid>
+                        <!-- Hiển thị thông tin trang bên trái -->
+                        <TextBlock Text="{Binding PagingInfo}" VerticalAlignment="Center" Foreground="#6B7280" FontWeight="SemiBold"/>
+
+                        <!-- Nút điều hướng bên phải -->
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                            <!-- Nút Trước -->
+                            <Button Content="Trước" 
+                    Command="{Binding PreviousPageCommand}"
+                    Padding="12,6" 
+                    Background="White" 
+                    BorderBrush="{StaticResource BorderColor}" 
+                    BorderThickness="1" 
+                    Margin="0,0,8,0"
+                    Cursor="Hand"/>
+
+                            <!-- Nút Sau -->
+                            <Button Content="Sau" 
+                    Command="{Binding NextPageCommand}"
+                    Padding="12,6" 
+                    Background="White" 
+                    BorderBrush="{StaticResource BorderColor}" 
+                    BorderThickness="1"
+                    Cursor="Hand"/>
+                        </StackPanel>
+                    </Grid>
                 </Border>
             </Grid>
         </Border>
